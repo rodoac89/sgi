@@ -1,0 +1,12 @@
+<html>
+    <header>
+
+    </header>
+    <body>
+        <form action="/inicio/" method="post">
+        {% csrf_token %}
+        {{ formulario }}
+        <input type="submit" value="Enviar">
+        </form>
+    </body>
+</html>
