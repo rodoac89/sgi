@@ -1,0 +1,34 @@
+version: "3"
+services:
+  # db:
+  #   image: postgres
+  #   environment:
+  #     POSTGRES_DB: labsdb
+  #     POSTGRES_USER: labs
+  #     POSTGRES_PASSWORD: 5dc2e8facd34375310256cf9f6721e8d
+
+  backend:
+    build: ./backend
+    image: labs_back
+    command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0:8000"
+    volumes:
+      - ./backend:/code/
+    ports:
+       - "8000:8000"
+    # environment:
+    #   NAME: labsdb
+    #   USER: labs
+    #   PASSWORD: 5dc2e8facd34375310256cf9f6721e8d
+    #   HOST: db
+
+  # frontend:
+  #   build: ./frontend
+  #   image: labs_front
+  #   command: npm run serve
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./frontend:/app/frontend
+  #   depends_on:
+  #     - backend
+
