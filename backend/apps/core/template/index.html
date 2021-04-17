@@ -1,12 +1,7 @@
-<html>
-    <header>
+{% extends '_partials/_base.html' %}
+{% load static %}
 
-    </header>
-    <body>
-        <form action="/inicio/" method="post">
-        {% csrf_token %}
-        {{ formulario }}
-        <input type="submit" value="Enviar">
-        </form>
-    </body>
-</html>
+
+
+{% block scripts %}
+{% endblock %}
