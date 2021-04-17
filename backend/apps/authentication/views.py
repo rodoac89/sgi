@@ -4,9 +4,12 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 def login_view(request):
+
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('index')) 
+    
     context = {}
     template_name = 'login.html'
-    logout(request)
     if request.POST:
         username = request.POST['username']
         password = request.POST['password']
