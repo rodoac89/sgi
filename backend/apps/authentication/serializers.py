@@ -17,11 +17,7 @@ class UserProfileSerializer(serializers.Serializer):
     user = serializers.StringRelatedField()
     image_profile = serializers.ImageField()
     since = serializers.DateTimeField()
-    is_admin = serializers.BooleanField()
-    director_access = serializers.BooleanField()
-    teacher_access = serializers.BooleanField()
-    manager_access = serializers.BooleanField()
-
+    role = serializers.StringRelatedField(many=True)
     class Meta:
         model = UserProfile
 
