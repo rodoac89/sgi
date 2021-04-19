@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'api',
     'apps.authentication',
     'apps.core',
+    'apps.schedules'
     'apps.licencemanager',
 ]
 
