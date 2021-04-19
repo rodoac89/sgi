@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.core',
     'apps.schedules'
+    'apps.licencemanager',
 ]
 
 MIDDLEWARE = [
