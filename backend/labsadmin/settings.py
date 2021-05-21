@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.monitoring',
     'apps.schedules',
-    'apps.licencemanager',
+    'apps.software_manager',
 ]
 
 MIDDLEWARE = [
