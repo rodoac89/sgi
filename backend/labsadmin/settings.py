@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.monitoring',
     'apps.schedules',
     'apps.software_manager',
+    'apps.notification',
 ]
 
 MIDDLEWARE = [

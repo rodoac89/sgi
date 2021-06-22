@@ -13,10 +13,6 @@ def photo_file_name(instance, filename):
     return path_to_file
 
 
-def get_date():
-    return datetime.now().strftime("%Y%m%d%H%M%S")
-
-
 class Role(models.Model):
     role_name = models.CharField(max_length=50, default="Role")
     weight = models.IntegerField()
@@ -29,8 +25,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(dj_user, on_delete=models.CASCADE)
     image_profile = models.ImageField(
         upload_to=photo_file_name, null=True, blank=True)
-    since = models.DateTimeField(auto_now_add=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
     def __str__(self):
         return "{} {}".format(self.user.first_name, self.user.last_name)
