@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+9
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'api',
     'apps.authentication',
     'apps.core',
+    'apps.licenses',
 ]
 
 MIDDLEWARE = [
