@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.monitoring',
     'apps.schedules',
     'apps.software_manager',
+    'apps.notification',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +87,6 @@ CORS_ALLOW_HEADERS = [
 ]
 
 #CORS_ORIGIN_WHITELIST = ['https://example.com']
-
 
 
 ROOT_URLCONF = 'labsadmin.urls'
@@ -142,7 +142,7 @@ TEMPLATES = [
             'template',
             'apps/authentication/template',
             'apps/core/template',
-            ],
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -213,7 +213,7 @@ STATICFILES_DIRS = [
 ]
 
 # Media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 # Login Required Setting
