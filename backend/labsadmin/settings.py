@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -177,7 +178,17 @@ sqlite = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES = sqlite  # if os.getenv('DEV_CHANNEL') else postgresql
+
+heroku_postgresql = {'default': dj_database_url.config(
+    conn_max_age=600, ssl_require=True)}
+
+DATABASES = ''
+if os.getenv('DEV_CHANNEL') == 'local':
+    DATABASES = sqlite
+elif os.getenv('DEV_CHANNEL') == 'heroku':
+    DATABASES = heroku_postgresql
+elif os.getenv('DEV_CHANNEL') == 'production':
+    DATABASES = postgresql
 
 
 # Password validation

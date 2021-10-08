@@ -1,3 +1,6 @@
+setup:
+  config:
+    DEV_CHANNEL: heroku
 build:
   docker:
     web: backend/Dockerfile
