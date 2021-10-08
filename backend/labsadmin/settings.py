@@ -190,6 +190,8 @@ elif os.getenv('DEV_CHANNEL') == 'heroku':
 elif os.getenv('DEV_CHANNEL') == 'production':
     DATABASES = postgresql
 
+print(DATABASES)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
