@@ -1,5 +1,11 @@
 version: "3"
 services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: laboratorios
+      POSTGRES_USER: labuser
+      POSTGRES_PASSWORD: labs2021
   
   backend:
     build: ./backend
@@ -9,4 +15,6 @@ services:
       - ./backend:/labs/
     ports:
        - "8080:8080"
+    environment:
+      DEV_CHANNEL: false
 

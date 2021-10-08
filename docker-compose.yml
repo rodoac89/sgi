@@ -1,5 +1,6 @@
 version: "3"
 services:
+  
   backend:
     build: ./backend
     image: backend_labsadmin_dev
@@ -8,3 +9,10 @@ services:
       - ./backend:/labs/
     ports:
       - "8000:8000"
+    environment:
+      HOST: db
+      NAME: laboratorios
+      USER: labuser
+      PASSWORD: labs2021
+      DEV_CHANNEL: true
+
