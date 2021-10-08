@@ -6,4 +6,4 @@ run:
 release:
   image: web
   command:
-    - python manage.py runserver 0:8000
+    - python manage.py runserver 0:$PORT
