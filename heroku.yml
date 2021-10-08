@@ -2,8 +2,8 @@ build:
   docker:
     web: backend/Dockerfile
 run:
-  web: python manage.py migrate
+  web: python manage.py runserver 0:$PORT
 release:
   image: web
   command:
-    - python manage.py runserver 0:$PORT
+    - python manage.py migrate
