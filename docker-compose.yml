@@ -14,5 +14,5 @@ services:
       NAME: laboratorios
       USER: labuser
       PASSWORD: labs2021
-      DEV_CHANNEL: true
+      DEV_CHANNEL: 'local'
 
