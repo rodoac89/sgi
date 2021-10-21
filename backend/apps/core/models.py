@@ -57,33 +57,3 @@ class Workstation(models.Model):
 
     def __unicode__(self):
         return "{}".format(self.name)
-
-
-# Link user with workstation for labs for remote work
-
-class UserWortation(models.Model):
-    email = models.CharField(primary_key=True)
-    name = models.CharField(max_length=50, blank=True, null=True)
-    identifier = models.CharField(max_length=50, blank=True, null=True)
-
-
-class Subject(models.Model):
-    code = models.CharField(max_length=50)
-    name = models.CharField(max_length=50)
-
-
-class Course(models.Model):
-    SHIFTS = (
-        ('D', 'Diurno'),
-        ('V', 'Vespertino'),
-    )
-    section = models.IntegerField()
-    code = models.IntegerField()
-    #period = foreign
-    shift = models.CharField(max_length=1, choices=SHIFTS)
-
-
-class ListCourse(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    user_worktation = models.ForeignKey(
-        UserWortation, on_delete=models.CASCADE)
