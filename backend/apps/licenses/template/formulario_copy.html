@@ -50,27 +50,29 @@
 												</div>
 											</div>
 											<!--begin::Form-->
-											<form>
+											<form action=" { % url 'guardarFormulario' % }" method="POST">
+
+												{% csrf_token %} 
 												<div class="card-body row justify-content-center">
 													
 													<div class="form-group row col-12">
 														<label class="col-2 col-form-label">Nombre</label>
 														<div class="col-4">
-															<input class="form-control" type="text" value="" id="example-text-input" />
+															<input class="form-control" type="text" name="name_user" value="" />
 														</div>
 														<label class="col-2 col-form-label">Apellido</label>
 														<div class="col-4">
-															<input class="form-control" type="text" value="" id="example-text-input" />
+															<input class="form-control" type="text" name="last_name" value="" />
 														</div>
 													</div>
 													<div class="form-group row col-12">
 														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
 														<div class="col-4">
-															<input class="form-control" type="search" value="" id="example-search-input" />
+															<input class="form-control" type="text" name="rut" value="" />
 														</div>
 														<label for="example-search-input" class="col-2 col-form-label">Correo institucional</label>
 														<div class="col-4">
-															<input class="form-control" type="search" value="" id="example-search-input" />
+															<input class="form-control" type="text" name="email" value="" />
 														</div>
 													</div>
 													<div class="form-group row col-12">
@@ -96,8 +98,8 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
-																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="subject" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="nrc" value="" id="example-text-input" /></th>
 																	
 																</tr>
 
@@ -139,7 +141,7 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="software_name" value="" id="example-text-input" /></th>
 																	<th ><input type="radio" name="radios"></th>
 																	<th ><input type="radio" name="radios"></th>
 																	<th ><input type="radio" name="radios"></th>
@@ -323,9 +325,8 @@
 												</div>
 												<div class="card-footer">
 													<div class="row col-12 justify-content-end">
-														<div class="col-4">
-															<button type="reset" class="btn btn-success mr-2">Submit</button>
-															<button type="reset" class="btn btn-secondary">Cancel</button>
+														<div class="col-2">
+															<a href="{% url 'licenses:form_create' %}" type="submit" class="btn btn-success mr-2">Submit</a>
 														</div>
 													</div>
 												</div>

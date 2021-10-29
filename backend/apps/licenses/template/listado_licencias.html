@@ -1,0 +1,108 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Modulo de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+{% block notificaciones %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container">
+	<!--begin::Card-->
+	<div class="card card-custom gutter-b">
+		<div class="card-body">
+			<!--begin: Datatable-->
+			<table id="example" class="table table-striped table-bordered" style="width:100%">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Nombre</th>
+						<th>Tipo</th>
+						<th>Cantidad</th>
+						<th>Activas</th>
+						<th>Fecha de caducidad</th>
+						<th>Editar</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in listado_de_licencias %}
+					<tr>
+						<td>{{ p.id_license }}</td>
+						<td>{{ p.license_name }}</td>
+						<td>{{ p.license_type }}</td>
+						<td>{{ p.license_stock }}</td>
+						<td>{{ p.license_in_use }}</td>
+						<td>{{ p.license_due_date }}</td>
+						<td><a href="" class="btn btn-success">Edit</a>
+					</tr>
+					{% endfor %}
+					
+				</tbody>
+				
+			</table>	
+			<div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
+			<!--end: Datatable-->
+		</div>
+	</div>
+	<!--end::Card-->
+	<!--begin::Modal-->
+	<div class="modal fade" id="kt_datatable_records_fetch_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Selected Records</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"></span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="kt-scroll" data-scroll="true" data-height="200">
+						<ul id="kt_apps_user_fetch_records_selected"></ul>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--end::Modal-->
+</div>
+
+    
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

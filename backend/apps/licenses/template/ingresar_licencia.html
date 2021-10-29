@@ -52,10 +52,10 @@
 											</div>
 											<div class="col-8 offset-2" style="margin-top: 2%;">
 											<!--begin::Form-->
-											<form action="{% url 'licenses:form_create' %}" method="POST">
+											<form action="{% url 'licenses:enter_license' %}" method="POST">
 
 												{% csrf_token %} 
-												{{form|crispy}}
+												{{license_form|crispy}}
 								
 
 												<div class="card-footer">

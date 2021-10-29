@@ -45,7 +45,10 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.core',
     'apps.licenses',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -140,6 +143,7 @@ TEMPLATES = [
             'template',
             'apps/authentication/template',
             'apps/core/template',
+            'apps/licenses/template'
             ],
         'APP_DIRS': True,
         'OPTIONS': {

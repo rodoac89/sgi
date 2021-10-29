@@ -1,17 +1,26 @@
+from apps.core.views import index
 from django.conf.urls import url, include
 """from django.urls.conf import path
 from django.urls.resolvers import URLPattern
 
 from apps.licenses.views import formulario"""
 from django.urls import path, include
-from .views import adm_licencias, formulario, home, labs, equipos, pc
+from .views import EnterLicensesView, SoftwareRequestView, adm_licencias, enter_licenses, form_info, form_list, home, labs, equipos, pc, SoftwareRequestForm, software_request_done, form_index, forms_view, form_list, enter_licenses
 
 
 urlpatterns = [
     path('', home, name = 'index' ),
-    path('formulario/', formulario, name = 'formulario'),
+    path('form_index/', form_index, name = 'form_index'),
     path('labs/', labs, name = 'labs'),
     path('adm_licencias/', adm_licencias, name = 'adm_licencias'),
     path('equipos/', equipos, name = 'equipos'),
     path('pc/', pc, name = 'pc'),
+    #path('formulario_creado/', formulario, name = 'formulario_creado'),
+    path('form_create/', SoftwareRequestView.form_create, name = 'form_create'),
+    path('software_request_done/', software_request_done, name = 'software_request_done'),
+    path('forms_view/', forms_view, name = 'forms_view'),
+    path('form_list/', form_list, name = 'form_list'),
+    path('enter_licenses/', enter_licenses, name = 'enter_licenses'),
+    path('enter_license/', EnterLicensesView.enter_license, name = 'enter_license'),
+    path('form_info/', form_info, name = 'form_info'),
 ]
