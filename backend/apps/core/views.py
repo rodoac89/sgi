@@ -18,8 +18,14 @@ def index(request):
         context['formulario'] = form
     return render(request, template_name, context)
 
-def saludo(request):
-    template_name="saludo.html"
+
+def dashboard(request):
+    template_name = "dashboard.html"
     context={}
-    #context['name'] = request.GET['name']
+    context['num_lab'] = 'A1 COM301'
+    context['cant_pc'] = 48
+    context['exp_lic'] = 3
+    context['active_lic'] = 10
+    context['mant_pc'] = 5
     return render(request, template_name, context)
+

@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('', include('apps.core.urls')),
+    path('monitoring/', include('apps.monitoring.urls')),
     path('login/', views.login_view, name="login"),
     path('logout/', views.logout_view, name="logout"),
     path('', include(('apps.licenses.urls','licenses'))),
