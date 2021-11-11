@@ -64,7 +64,11 @@
 						<td>{{ p.license_stock }}</td>
 						<td>{{ p.license_in_use }}</td>
 						<td>{{ p.license_due_date }}</td>
-						<td><a href="" class="btn btn-success">Edit</a>
+						<td>
+							<form method="get" action="{% url 'licenses:info_license' %}">
+								{% csrf_token %}
+								<button href="{%url 'licenses:info_license' %}" value="{{ p.id_license }}" name="id_serch" class="btn btn-success">Edit</a>
+							</form>
 					</tr>
 					{% endfor %}
 					

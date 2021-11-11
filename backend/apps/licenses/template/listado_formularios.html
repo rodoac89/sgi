@@ -79,7 +79,11 @@
 						<td>{{ p.subject }}</td>
 						<td>{{ p.nrc }}</td>
 						<td>{{ p.software_name }}</td>
-						<td> <a href="" class="btn btn-success"> Info </button> </a>
+						<td> 
+							<form method="get" action="{% url 'licenses:form_info1' %}">
+								{% csrf_token %}
+							<button href="{%url 'licenses:form_info1' %}" value="{{ p.id_request }}" name="id_user" class="btn btn-success"> Info </button> 
+							</form>
 					</tr>
 					{% endfor %}
 					

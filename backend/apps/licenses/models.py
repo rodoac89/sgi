@@ -8,13 +8,16 @@ software_form_status =[
 ]
 
 software_form_type =[
-    (1, 'Gratis'),
-    (2, 'Pagada'),
-    (3, 'Subscripción')
+    (1, 'Open Source'),   # Gratuita  
+    # Pagadas o convenio
+    (4, 'Estatica'),       # Por equipo
+    (5, 'Flotante'),       # En el servidor
+    (6, 'Fisica')         # Llave electronica
+
 ]
 
     
-class software_form(models.Model):
+class SoftwareForm(models.Model):
     id_request = models.AutoField(primary_key=True)
     status = models.IntegerField(
         null=False, blank=False,
@@ -43,14 +46,16 @@ class software_form(models.Model):
     def __str__(self):
         return self.name_user
 
-class licenses_list(models.Model):
+class TypeLicense(models.Model):
+    type_name = models.TextField(default='Open source')
+    description = models.TextField(default='')
+
+    
+
+class LicensesList(models.Model):
     id_license = models.AutoField(primary_key=True)
     license_name = models.CharField(max_length=40)
-    license_type = models.IntegerField(
-        null=False, blank=False,
-        choices = software_form_type,
-        default= 1
-    )      
+    license_type = models.ForeignKey(TypeLicense, blank=True, null=True, on_delete=models.SET_NULL)
     license_stock = models.PositiveSmallIntegerField() 
     license_in_use = models.PositiveSmallIntegerField()
     license_due_date = models.DateField()

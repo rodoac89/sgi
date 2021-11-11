@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='software_form',
+            model_name='SoftwareForm',
             name='software_type',
             field=models.IntegerField(choices=[(1, 'Gratis'), (2, 'Pagada'), (3, 'Subscripción')], default=1),
         ),

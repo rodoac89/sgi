@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='licenses_list',
+            name='LicensesList',
             options={'verbose_name': 'license', 'verbose_name_plural': 'licenses'},
         ),
     ]

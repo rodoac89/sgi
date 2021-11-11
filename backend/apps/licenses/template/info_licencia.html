@@ -45,7 +45,7 @@
 										<!--begin::Card-->
 										<div class="card card-custom gutter-b example example-compact">
 											<div class="card-header">
-												<h3 class="card-title">Solicitud</h3>
+												<h3 class="card-title">Licencia</h3>
 												<div class="card-toolbar">
 													<!--AQUI LOGO UNAB-->
 												</div>
@@ -59,81 +59,44 @@
 														<label class="col-2 col-form-label">Nombre</label>
 
 														<div class="col-4">
-															<input class="form-control" type="text" name="name_user" value="" />
+															<input class="form-control" type="text" name="name_user" value="{{ licencia.license_name }}" />
 														</div>
-														<label class="col-2 col-form-label">Apellido</label>
+														<label class="col-2 col-form-label">Tipo</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="last_name" value="" />
+															<input class="form-control" type="text" name="last_name" value="{{ licencia.license_type }}" />
 														</div>
 													</div>
 													<div class="form-group row col-12">
-														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
-														<div class="col-4">
-															<input class="form-control" type="text" name="rut" value="" />
+														<label for="example-search-input" class="col-2 col-form-label">Cantidad</label>
+														<div class="col-2">
+															<input class="form-control" type="text" name="rut" value="{{ licencia.license_stock }}" />
 														</div>
-														<label for="example-search-input" class="col-2 col-form-label">Correo</label>
+													</div>
+													<div class="form-group row col-12">
+														<label for="example-search-input" class="col-2 col-form-label">Cantidad en uso</label>
+														<div class="col-2">
+															<input class="form-control" type="text" name="rut" value="{{ licencia.license_in_use }}" />
+														</div>
+													</div>
+													<div class="form-group row col-12">
+														<label for="example-search-input" class="col-2 col-form-label">Fecha de caducidad</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="email" value="" />
+															<input class="form-control" type="text" name="rut" value="{{ licencia.license_due_date }}" />
 														</div>
 													</div>
 													
-													<div class="form-group row fv-plugins-icon-container col-12">
-														<table class="table table-bordered">
-															
-															<thead class="table-dark col-12">
-																<tr>
-																	<th class="" style="width: 70%;">Asignatura</th>
-																	<th class="" style="width: 15%;">Codigo del curso</th>
-																</tr>
-															</thead>
-															
 
-															<tbody>
-																<tr>
-																	<th ><input class="form-control" type="text" name="subject" value="" id="example-text-input" /></th>
-																	<th ><input class="form-control" type="text" name="nrc" value="" id="example-text-input" /></th>
-																	
-																</tr>
-
-															</tbody>
-
-															
-
-														</table>
-													</div>
-													<div class="form-group row fv-plugins-icon-container col-12">
-														<label for="">Software a instalar:</label>
-														<table class="table table-bordered">
-															
-															<thead class="table-dark">
-																<tr>
-																	<th class="" style="width: 70%;">Nombre</th>
-																	<th class="" style="width: 10%;">Con licencia</th>
-																	<th class="" style="width: 10%;">Open souce</th>
-																	<th class="" style="width: 10%;">Trial</th>
-																	<th class="" style="width: 10%;">Otro</th>
-																</tr>
-															</thead>
-															
-
-															<tbody>
-																<tr>
-																	<th ><input class="form-control" type="text" name="software_name" value="" id="example-text-input" /></th>
-																	<th ><input type="radio" name="radios"></th>
-																	<th ><input type="radio" name="radios"></th>
-																	<th ><input type="radio" name="radios"></th>
-																	<th ><input type="radio" name="radios"></th>
-																</tr>
-
-															</tbody>
-
-														</table>
+													<div class="col-12 row offset-6">
+														<div class="col-3">
+															<a href="{%url 'licenses:adm_licencias' %}" class="btn btn-success"> Volver </a> 
+														</div>
+														<div class="col-3 offset-1">
+															<button href="{%url 'licenses:adm_licencias' %}" class="btn btn-success"> Editar </button> 
+														</div>
 													</div>
 													
-													<div class="form-group row " style="width: 90%;">
-														<label for="exampleFormControlTextarea1">Detalles: </label>
-														<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-													</div>
+													
+													
 
 													
 													

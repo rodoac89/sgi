@@ -12,6 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RenameModel(
             old_name='SoftwareRequestModel',
-            new_name='software_form',
+            new_name='SoftwareForm',
         ),
     ]

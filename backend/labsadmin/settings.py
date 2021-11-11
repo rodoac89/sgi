@@ -187,13 +187,8 @@ sqlite = {
 heroku_postgresql = {'default': dj_database_url.config(
     conn_max_age=600, ssl_require=True)}
 
-DATABASES = ''
-if os.getenv('DEV_CHANNEL') == 'local':
-    DATABASES = sqlite
-elif os.getenv('DEV_CHANNEL') == 'heroku':
-    DATABASES = heroku_postgresql
-elif os.getenv('DEV_CHANNEL') == 'production':
-    DATABASES = postgresql
+DATABASES = sqlite
+
 
 
 # Password validation

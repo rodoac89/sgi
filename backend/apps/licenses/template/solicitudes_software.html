@@ -57,7 +57,7 @@
 												<div class="card-body row justify-content-center">									
 													<label class="col-2 col-form-label">ID</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="id_user" value="" />
+															<input class="form-control" type="text" name="id_user" value="" required="True" />
 														</div>	
 												</div>	
 
@@ -74,17 +74,17 @@
 														</div>
 														<label class="col-2 col-form-label">Apellido</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="last_name" value="" />
+															<input class="form-control" type="text" name="last_name" value="{{ formulario.last_name }}" />
 														</div>
 													</div>
 													<div class="form-group row col-12">
 														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="rut" value="" />
+															<input class="form-control" type="text" name="rut" value="{{ formulario.rut }}" />
 														</div>
 														<label for="example-search-input" class="col-2 col-form-label">Email</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="email" value="" />
+															<input class="form-control" type="text" name="email" value="{{ formulario.email }}" />
 														</div>
 													</div>
 
@@ -101,8 +101,8 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="subject" value="" id="example-text-input" /></th>
-																	<th ><input class="form-control" type="text" name="nrc" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="subject" value="{{ formulario.subject }}" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="nrc" value="{{ formulario.nrc }}" id="example-text-input" /></th>
 																	
 																</tr>
 
@@ -126,8 +126,8 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="software_name" value="" id="example-text-input" /></th>
-																	<th ><input class="form-control" type="text" name="software_name" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="software_type" value="{{ formulario.software_type }}" id="example-text-input" /></th>
 																</tr>
 
 															</tbody>
@@ -137,7 +137,7 @@
 													
 													<div class="form-group row " style="width: 90%;">
 														<label for="exampleFormControlTextarea1">Detalles: </label>
-														<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+														<input class="form-control" id="details" type="text" rows="3" value="{{ formulario.details }}"></input>
 													</div>
 
 													

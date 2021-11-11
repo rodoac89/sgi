@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='software_form',
+            model_name='SoftwareForm',
             name='status',
             field=models.IntegerField(choices=[(1, 'No realizada'), (2, 'Realizada')], default=1),
         ),

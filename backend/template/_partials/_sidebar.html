@@ -50,18 +50,19 @@
             <i class="menu-arrow"></i>
             <ul class="menu-subnav">
                 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                    <a href="{% url 'licenses:forms_view' %}" class="menu-link menu-toggle">
-                        <i class="menu-bullet menu-bullet-line">
-                            <span></span>
-                        </i>
-                        <span class="menu-text">Buscar formularios</span>
-                        <i class="menu-arrow"></i>
-                    </a>
+                    
                     <a href="{% url 'licenses:form_index' %}" class="menu-link menu-toggle">
                         <i class="menu-bullet menu-bullet-line">
                             <span></span>
                         </i>
                         <span class="menu-text">Realizar formulario</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <a href="{% url 'licenses:forms_view' %}" class="menu-link menu-toggle">
+                        <i class="menu-bullet menu-bullet-line">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">Buscar formularios</span>
                         <i class="menu-arrow"></i>
                     </a>
                     <a href="{% url 'licenses:form_list' %}" class="menu-link menu-toggle">

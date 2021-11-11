@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='licenses_list',
+            name='LicensesList',
             fields=[
                 ('id_license', models.AutoField(primary_key=True, serialize=False)),
                 ('license_name', models.CharField(max_length=40)),

@@ -1,10 +1,10 @@
 from django import forms
 from django.forms import fields, ModelForm
-from .models import licenses_list, software_form
+from .models import LicensesList, SoftwareForm
 
 class SoftwareRequestForm(forms.ModelForm):
     class Meta:
-        model = software_form
+        model = SoftwareForm
         fields = '__all__'
         labels = {
             'status' : 'Estado',
@@ -22,12 +22,12 @@ class SoftwareRequestForm(forms.ModelForm):
 
 class EnterLicensesForm(forms.ModelForm):
     class Meta:
-        model = licenses_list
+        model = LicensesList
         fields = '__all__'
         widgets = {'license_due_date': forms.DateInput(attrs={'type' : 'date'})}
         labels = {
             'license_name' : 'Nombre de la licencia',
-            'license_type' : 'Tipo de licencia (Pagada, Subscripción, Gratis)',
+            'license_type' : 'Tipo de licencia (Estatica, Flotante , Fisica)',
             'license_stock' : 'Cantidad de licencias',
             'license_in_use' : 'Cantidad en uso',
             'license_due_date' : 'Fecha de caducidad',
