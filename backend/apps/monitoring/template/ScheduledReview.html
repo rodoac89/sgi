@@ -4,7 +4,7 @@
 
 {% block pagetitle %}Revisiones Agendadas{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="{% static 'fullcalendar/lib/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock css %}
 
 {% block breadcumbs %}
@@ -77,8 +77,8 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'fullcalendar/lib/main.js' %}"></script>
-<script src="{% static 'fullcalendar/lib/locales-all.js' %}"></script>
+<script src="{% static 'js/pages/features/calendar/main.js' %}"></script>
+<script src="{% static 'js/pages/features/calendar/locales-all.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function(){
         var calendarUI = document.getElementById('calendar');
