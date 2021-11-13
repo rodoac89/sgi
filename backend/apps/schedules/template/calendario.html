@@ -1,0 +1,41 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Reservar{% endblock %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+{% block content %}
+
+<body>
+    <div class="card card-custom">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">Basic Calendar</h3>
+            </div>
+            <div class="card-toolbar">
+                <a href="#" class="btn btn-light-primary font-weight-bold">
+                    <i class="ki ki-plus icon-md mr-2"></i>Add Event</a>
+            </div>
+        </div>
+        <div class="card-body">
+            
+        </div>
+    </div>
+</body>
+{% endblock %}
+{% block scripts %}
+<link href="plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css">
+<script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>
+<script src="{%static 'plugins/custom/fullcalendar/fullcalendar.bundle.js'%}"></script>
+<script src="{%static 'js/pages/features/calendar/basic.js'%}"></script>
+{% endblock %}

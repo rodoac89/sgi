@@ -1,0 +1,12 @@
+setup:
+  config:
+    DEV_CHANNEL: heroku
+build:
+  docker:
+    web: backend/Dockerfile
+run:
+  web: python manage.py runserver 0:$PORT
+release:
+  image: web
+  command:
+    - python manage.py migrate

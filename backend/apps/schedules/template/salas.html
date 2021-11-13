@@ -1,0 +1,155 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Horarios</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Salas</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+
+<body>
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary font-weight-bold btn-lg dropdown-toggle" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sedes</button>
+                        <div class="dropdown-menu" style="">
+                            {% for campus in campus %}
+                            <a class="dropdown-item" href="#">{{ campus.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!--begin: Search Form-->
+            <form class="mb-10">
+                <div class="row mb-4">
+                    <div class="col-lg-2 mb-lg-0 mb-6">
+                        <label>N° Laboratorio</label>
+                        <input type="text" class="form-control datatable-input" placeholder="Ej: 340"
+                            data-col-index="0">
+                    </div>
+                    <div class="col-lg-2 mb-lg-0 mb-6">
+                        <label>Computadores</label>
+                        <input type="text" class="form-control datatable-input" placeholder="Ej: 46" data-col-index="1">
+                    </div>
+                    <div class="col-lg-2 mb-lg-0 mb-6">
+                        <label>Fecha</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control" readonly="readonly" value="27/10/2021" id="kt_datepicker_3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="la la-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-6">
+                    <div class="col-lg-12">
+                        <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                            <span>
+                                <i class="la la-search"></i>
+                                <span>Buscar</span>
+                            </span>
+                        </button>&nbsp;&nbsp;
+                        <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                            <span>
+                                <i class="la la-close"></i>
+                                <span>Borrar Filtro</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!--begin: Datatable-->
+            <!--begin: Datatable-->
+            <div id="kt_datatable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover table-checkable dataTable dtr-inline"
+                            id="kt_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="kt_datatable"
+                                        rowspan="1" colspan="1" style="width: 40px;" aria-sort="ascending"
+                                        aria-label="Laboratorio: activate to sort column descending">Laboratorio</th>
+                                    <th class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1"
+                                        colspan="1" style="width: 30px;"
+                                        aria-label="Pc: activate to sort column ascending">Pc</th>
+                                    <th class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1"
+                                        colspan="1" style="width: 850px;"
+                                        aria-label="Horario: activate to sort column ascending">
+                                        Horario</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th rowspan="1" colspan="1">Laboratorio</th>
+                                    <th rowspan="1" colspan="1">Pc</th>
+                                    <th rowspan="1" colspan="1">Horario</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for lab in laboratories %}
+                                <tr class="odd">
+                                    <td class="sorting_1 dtr-control"> <button type="button"
+                                            class="btn btn-transparent-primary font-weight-bold font-size-h3 px-4 py-2">{{lab.room_name}}</button>
+                                    </td>
+                                    <td>{{lab.room_name}}</td>
+                                    <td>
+                                        <div class="ion-range-slider">
+                                            <span class="irs irs--flat js-irs-2 irs-with-grid">
+                                                <span class="irs">
+                                                    <span class="irs-line" tabindex="0"></span>
+                                                    <span class="irs-from"
+                                                        style="visibility: visible; left: 3.8%;">9:30</span>
+                                                    <span class="irs-from"
+                                                        style="visibility: visible; left: 11.3%;">11:30</span>
+                                                    <span class="irs-to"
+                                                        style="visibility: visible; left: 40.8%;">15:00</span>
+                                                    <span class="irs-to"
+                                                        style="visibility: visible; left: 70.8%;">19:00</span>
+                                                </span>
+                                                <span class="irs-handle" style="left: 5%;"><i></i><i></i><i></i></span>
+                                                <span class="irs-handle"
+                                                    style="left: 12.5%;"><i></i><i></i><i></i></span>
+                                                <span class="irs-handle" style="left: 42%;"><i></i><i></i><i></i></span>
+                                                <span class="irs-handle" style="left: 72%;"><i></i><i></i><i></i></span>
+                                                <span class="irs-bar bg-primary text-center font-size-xs"
+                                                    style="left: 6%; width: 7.5%;">42</span>
+                                                <span class="irs-bar bg-primary text-center font-size-xs"
+                                                    style="left: 43%; width: 30%;">1</span>
+                                            </span>
+                                            <input type="hidden" id="kt_slider_3" class="irs-hidden-input" tabindex="-1"
+                                                readonly="" value="278;800">
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div id="kt_datatable_processing" class="dataTables_processing card" style="display: none;">
+                            Processing...</div>
+                        <!--end: Datatable-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

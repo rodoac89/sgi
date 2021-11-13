@@ -1,0 +1,151 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+{% block content %}
+
+<body>
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <h1>Editar solicitud</h1>
+            </div>
+        </div>
+        <div class="card-body">
+            <form action="" method="post">
+                <div class="form-group row">
+                    {% csrf_token %}
+                    <div class="col-lg-3">
+                        <label>{{ formlab.name_petition.label }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i
+                                        class="la la-user"></i></span>
+                            </div>
+                            {{ formlab.name_petition }}
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <label>{{ formlab.email_petition.label }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i
+                                        class="la la-info-circle"></i></span>
+                            </div>
+                            {{ formlab.email_petition }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>{{ formlab.nrc_petition.label }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i
+                                        class="flaticon2-browser"></i></span>
+                            </div>
+                            {{ formlab.nrc_petition }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>{{ formlab.campus_petition.label }}</label>
+                        {{ formlab.campus_petition }}
+                    </div>
+                    <div class="col-lg-2">
+                        <label>{{ formlab.laboratory_petition.label }}</label>
+                        {{ formlab.laboratory_petition }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-2">
+                        <label for="pc">{{ formlab.cant_pc_petition.label }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="flaticon2-browser"></i>
+                                </span>
+                            </div>
+                            {{ formlab.cant_pc_petition }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>{{ formlab.time_start_petition.label }}</label>
+                        <div class="input-group timepicker">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="la la-clock-o"></i>
+                                </span>
+                            </div>
+                            {{ formlab.time_start_petition }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>{{ formlab.time_finish_petition.label }}</label>
+                        <div class="input-group timepicker">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="la la-clock-o"></i>
+                                </span>
+                            </div>
+                            {{ formlab.time_finish_petition }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>{{ formlab.day_start_petition.label }}</label>
+                        <div class="input-group date">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="ki ki-calendar"></i>
+                                </span>
+                            </div>
+                            {{ formlab.day_start_petition }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>{{ formlab.day_finish_petition.label }}</label>
+                        <div class="input-group date">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="ki ki-calendar"></i>
+                                </span>
+                            </div>
+                            {{ formlab.day_finish_petition }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-8">
+                        <label>{{ formlab.memo_petition.label }}</label>
+                        {{ formlab.memo_petition }}
+                    </div>
+                    <div class="col-lg-4">
+                        <label>{{ formlab.status_petition.label }}</label>
+                        {{ formlab.status_petition }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-lg-9 ml-lg-auto">
+                            <div class="login-actions">
+                                <button class="button btn btn-primary btn-large">Guardar</button>
+                                <button class="button btn btn-primary btn-large">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+{% endblock %}
+{% block scripts %}
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-timepicker.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
+{% endblock %}

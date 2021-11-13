@@ -103,12 +103,27 @@ var KTBootstrapDatepicker = function () {
             templates: arrows
         });
 
+        $('#kt_datepicker_7, #kt_datepicker_7_validate').datepicker({
+            rtl: KTUtil.isRTL(),
+            lenguage: "es",
+            format: "dd/mm/yyyy",
+            startDate: new Date(),
+            weekStart: 1,
+            autoclose: true,
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            orientation: "bottom left",
+            templates: arrows
+        });
+
          // inline picker
         $('#kt_datepicker_6').datepicker({
             rtl: KTUtil.isRTL(),
             todayHighlight: true,
             templates: arrows
         });
+
     }
 
     return {
