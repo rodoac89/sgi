@@ -1,0 +1,172 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+{% block pagetitle %}Reportes Emitidos{% endblock %}
+{% block css %}
+
+{% endblock css %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+<style text="type/css">
+    div.container { max-width: 1200px }
+</style>
+<div class="card card-custom">
+    
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title">
+            <h3 class="card-label">Reportes Recibidos.
+            <span class="text-muted pt-2 font-size-sm d-block">Se mostrarán todos los reportes emitidos por los usuarios.</span></h3>
+        </div>
+        <div class="col-lg-9 col-xl-8">
+            <div class="row align-items-center">
+            <div class="col-md-4 my-2 my-md-0">
+            <div class="input-icon">
+			<input type="text" class="form-control" placeholder="Buscar" id="search" />
+			<span>
+			<i class="flaticon2-search-1 text-muted"></i>
+			</span>
+			</div>
+			</div>
+            </div>
+        </div>
+        <table  id="table" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Email Usuario</th>
+                    <th scope="col">PC</th>
+                    <th scope="col">Lab</th>
+                    <th scope="col">Mal Funcionamiento en</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Fecha de Reporte</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reporte in reports %}
+                <tr>
+                    <td>{{reporte.id}}</td>
+                    <td>{{reporte.email}}</td>
+                    <td>{{reporte.pc.name}}</td>
+                    <td>{{reporte.pc.room.room_name}}</td>
+                    <td>{{reporte.category}}</td>
+                    <td>{{reporte.description}}</td>
+                    <td>{{reporte.date_created}}</td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+      
+{% if reports.has_other_pages %}
+    <ul class="pagination">
+        {% if reports.has_previus %}
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+         <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in reports.paginator.page_range %}
+        {% if reports.number == i %}
+            <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+            <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if reports.has_next %}
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reports.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+    </div>  
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<!--<script src="https://code.jquery.com/jquery-3.4.1.js"
+integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/pages/datatablejquery/dataTables.responsive.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+-->
+<!--<script type="text/javascript">
+    function filterlab()
+    {
+        var input,table,tr,td,filter,i,displaydata;
+        input=document.getElementById("select");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("table");
+        tr=table.getElementsByTagName("tr");
+        for(i=0;tr.length;i++){
+
+            td=tr[i].getElementsByTagName("td")[6];
+            if(td){
+                displaydata=td.innerText;
+                if(displaydata.toUpperCase().indexOf(filter)>-1){
+                    tr[i].style.display="";
+                }
+                else{
+                    tr[i].style.display="none";
+                }
+            }
+        }
+    }
+
+
+</script>-->
+<script>
+    $(document).ready(function(){
+    $("#search").keyup(function(){
+    _this = this;
+    $.each($("#table tbody tr"), function() {
+    if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
+    $(this).hide();
+    else
+    $(this).show();
+    });
+    });
+   });
+</script>
+
+
+<!--
+<script>
+
+$(document).ready(function($) {
+  $('#select').change(function() {
+    $('table').show();
+    var selection = $(this).val();
+    var dataset = $('#table').find('tr');
+    // show all rows first
+    dataset.show();
+    // filter the rows that should be hidden
+    dataset.filter(function(index, item) {
+      return $(item).find('td:first-child').text().split(',').indexOf(selection) === -1;
+    }).hide();
+
+  });
+});
+
+
+</script>-->
+
+
+{% endblock %}
