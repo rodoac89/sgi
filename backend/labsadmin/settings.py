@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ["127.0.0.1", "labs2021.herokuapp.com"]
 
 
 # Application definition
-
+9
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,11 +45,15 @@ INSTALLED_APPS = [
     'api',
     'apps.authentication',
     'apps.core',
+    'apps.licenses',
+    'crispy_forms',
     'apps.monitoring',
     'apps.schedules',
     'apps.software_manager',
     'apps.notification',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -143,7 +147,8 @@ TEMPLATES = [
             'template',
             'apps/authentication/template',
             'apps/core/template',
-        ],
+            'apps/licenses/template'
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -182,13 +187,8 @@ sqlite = {
 heroku_postgresql = {'default': dj_database_url.config(
     conn_max_age=600, ssl_require=True)}
 
-DATABASES = ''
-if os.getenv('DEV_CHANNEL') == 'local':
-    DATABASES = sqlite
-elif os.getenv('DEV_CHANNEL') == 'heroku':
-    DATABASES = heroku_postgresql
-elif os.getenv('DEV_CHANNEL') == 'production':
-    DATABASES = postgresql
+DATABASES = sqlite
+
 
 
 # Password validation

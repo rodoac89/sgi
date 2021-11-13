@@ -1,0 +1,346 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Modulo de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+{% block notificaciones %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+<!--Probando git-->
+{% block content %}
+    <div class="d-flex flex-column-fluid">
+							<!--begin::Container-->
+							<div class="container">
+								<div class="row justify-content-center">
+									<div class="col-8">	
+										<!--begin::Card-->
+										<div class="card card-custom gutter-b example example-compact">
+											<div class="card-header">
+												<h3 class="card-title">Solicitud de software</h3>
+												<div class="card-toolbar">
+													<!--AQUI LOGO UNAB-->
+												</div>
+											</div>
+											<!--begin::Form-->
+											<form action=" { % url 'guardarFormulario' % }" method="POST">
+
+												{% csrf_token %} 
+												<div class="card-body row justify-content-center">
+													
+													<div class="form-group row col-12">
+														<label class="col-2 col-form-label">Nombre</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="name_user" value="" />
+														</div>
+														<label class="col-2 col-form-label">Apellido</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="last_name" value="" />
+														</div>
+													</div>
+													<div class="form-group row col-12">
+														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="rut" value="" />
+														</div>
+														<label for="example-search-input" class="col-2 col-form-label">Correo institucional</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="email" value="" />
+														</div>
+													</div>
+													<div class="form-group row col-12">
+														<label class="col-4 col-form-label">¿La licencias es para alguna asignatura?</label>
+														<div class="col-6">
+															<label class="col-2 col-form-label">No</label><input type="radio" name="radios">
+															<label class="col-2 col-form-label">Si</label><input type="radio" name="radios">
+
+														</div>
+
+													</div>
+
+													<div class="form-group row fv-plugins-icon-container col-12">
+														<table class="table table-bordered">
+															
+															<thead class="table-dark col-12">
+																<tr>
+																	<th class="" style="width: 70%;">Asignatura</th>
+																	<th class="" style="width: 15%;">Codigo del curso</th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="subject" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="nrc" value="" id="example-text-input" /></th>
+																	
+																</tr>
+
+															</tbody>
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																</tr>
+
+															</tbody>
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																</tr>
+
+															</tbody>
+															
+
+														</table>
+													</div>
+													<div class="form-group row fv-plugins-icon-container col-12">
+														<label for="">Software a instalar:</label>
+														<table class="table table-bordered">
+															
+															<thead class="table-dark">
+																<tr>
+																	<th class="" style="width: 60%;">Nombre</th>
+																	<th class="" style="width: 10%;">Con licencia</th>
+																	<th class="" style="width: 10%;">Open souce</th>
+																	<th class="" style="width: 10%;">Trial</th>
+																	<th class="" style="width: 10%;">Otro</th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="software_name" value="" id="example-text-input" /></th>
+																	<th ><input type="radio" name="radios"></th>
+																	<th ><input type="radio" name="radios"></th>
+																	<th ><input type="radio" name="radios"></th>
+																	<th ><input type="radio" name="radios"></th>
+																</tr>
+
+															</tbody>
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input type="radio" name="radios1"></th>
+																	<th ><input type="radio" name="radios1"></th>
+																	<th ><input type="radio" name="radios1"></th>
+																	<th ><input type="radio" name="radios"></th>
+																</tr>
+
+															</tbody>
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input type="radio" name="radios2"></th>
+																	<th ><input type="radio" name="radios2"></th>
+																	<th ><input type="radio" name="radios2"></th>
+																	<th ><input type="radio" name="radios"></th>
+																</tr>
+
+															</tbody>
+															
+
+														</table>
+													</div>
+													
+													<div class="form-group row " style="width: 90%;">
+														<label for="exampleFormControlTextarea1">Detalles por considerar para la instalación (Enlace de descarga, instrucciones específicas de instalación o configuración, etc.):</label>
+														<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+													</div>
+
+													<div class="form-group mb-8">
+														<div class="alert alert-custom alert-default" role="alert">
+															<div class="alert-text">
+																<p>Observaciones</p>
+																<p>•	Existe un plazo mínimo de 2 semanas a contar de la fecha solicitud para que el software esté instalado, el cual puede variar dependiendo de: 
+																	<br>	- Disponibilidad Laboratorio 
+																	<br>	- Licencia de software
+																	<br>	- Cara de trabajo una vez iniciado el semestre academico
+																</p>
+																<p>•	Si el software requiere licencia para ser utilizado, el equipo de Laboratorios, no se hace responsable por no disponer de licencias. Gestionar licencias con dirección de escuela.</p>
+																<p>•	Si dispone de software a instalar, favor facilitar a encargados de laboratorios, para disminuir los tiempos de instalación.</p>
+																<p>•	En caso de tener guía de instalación, o protocolos especiales, favor entregar al equipo de Laboratorios.</p>
+																<p style="color: red;">•	Si el software solicitado es “TRIAL” o es una versión de prueba, el software será desinstalado una vez que expire.</p>
+															</div>
+														</div>
+													</div>
+													
+													<!--begin: Code-->
+													<div class="example-code mt-10">
+														<div class="example-highlight">
+															<pre style="height:400px">
+																	<code class="language-html">
+																		&lt;div class="card card-custom"&gt;
+																			&lt;div class="card-header"&gt;
+																			&lt;h3 class="card-title"&gt;
+																			Textual HTML5 Inputs
+																			&lt;/h3&gt;
+																			&lt;/div&gt;
+																			&lt;!--begin::Form--&gt;
+																			&lt;form&gt;
+																			&lt;div class="card-body"&gt;
+																			&lt;div class="form-group mb-8"&gt;
+																			&lt;div class="alert alert-custom alert-default" role="alert"&gt;
+																				&lt;div class="alert-icon"&gt;&lt;i class="flaticon-warning text-primary"&gt;&lt;/i&gt;&lt;/div&gt;
+																				&lt;div class="alert-text"&gt;
+																				Here are examples of &lt;code&gt;.form-control&lt;/code&gt; applied to each textual HTML5 input type:
+																				&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label  class="col-2 col-form-label"&gt;Text&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="text" value="Artisanal kale" id="example-text-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-search-input" class="col-2 col-form-label"&gt;Search&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="search" value="How do I shoot web" id="example-search-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-email-input" class="col-2 col-form-label"&gt;Email&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="email" value="bootstrap@example.com" id="example-email-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-url-input" class="col-2 col-form-label"&gt;URL&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="url" value="https://getbootstrap.com" id="example-url-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-tel-input" class="col-2 col-form-label"&gt;Telephone&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="tel" value="1-(555)-555-5555" id="example-tel-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-password-input" class="col-2 col-form-label"&gt;Password&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="password" value="hunter2" id="example-password-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-number-input" class="col-2 col-form-label"&gt;Number&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="number" value="42" id="example-number-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-datetime-local-input" class="col-2 col-form-label"&gt;Date and time&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-date-input" class="col-2 col-form-label"&gt;Date&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="date" value="2011-08-19" id="example-date-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-month-input" class="col-2 col-form-label"&gt;Month&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="month" value="2011-08" id="example-month-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-week-input" class="col-2 col-form-label"&gt;Week&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="week" value="2011-W33" id="example-week-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-time-input" class="col-2 col-form-label"&gt;Time&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="time" value="13:45:00" id="example-time-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-color-input" class="col-2 col-form-label"&gt;Color&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="color" value="#563d7c" id="example-color-input"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="form-group row"&gt;
+																			&lt;label for="example-email-input" class="col-2 col-form-label"&gt;Range&lt;/label&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;input class="form-control" type="range"/&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;div class="card-footer"&gt;
+																			&lt;div class="row"&gt;
+																			&lt;div class="col-2"&gt;
+																			&lt;/div&gt;
+																			&lt;div class="col-10"&gt;
+																				&lt;button type="reset" class="btn btn-success mr-2"&gt;Submit&lt;/button&gt;
+																				&lt;button type="reset" class="btn btn-secondary"&gt;Cancel&lt;/button&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;/div&gt;
+																			&lt;/form&gt;
+																		&lt;/div&gt;
+																		</code>
+																	</pre>
+														</div>
+													</div>
+													<!--end: Code-->
+												</div>
+												<div class="card-footer">
+													<div class="row col-12 justify-content-end">
+														<div class="col-2">
+															<a href="{% url 'licenses:form_create' %}" type="submit" class="btn btn-success mr-2">Submit</a>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<!--end::Card-->
+										</div>
+									
+								</div>
+							</div>
+							<!--end::Container-->
+						</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

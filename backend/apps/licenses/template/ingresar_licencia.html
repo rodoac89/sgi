@@ -1,0 +1,82 @@
+{% extends '_partials/_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Modulo de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+{% block notificaciones %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex flex-column-fluid">
+							<!--begin::Container-->
+							<div class="container">
+								<div class="row justify-content-center">
+									<div class="col-8">	
+										<!--begin::Card-->
+										<div class="card card-custom gutter-b example example-compact">
+											<div class="card-header">
+												<h3 class="card-title">Solicitud de software</h3>
+												<div class="card-toolbar">
+													<!--AQUI LOGO UNAB-->
+												</div>
+											</div>
+											<div class="col-8 offset-2" style="margin-top: 2%;">
+											<!--begin::Form-->
+											<form action="{% url 'licenses:enter_license' %}" method="POST">
+
+												{% csrf_token %} 
+												{{license_form|crispy}}
+								
+
+												<div class="card-footer">
+													<div class="row col-12 justify-content-end">
+														<div class="col-2">
+															<button type="submit" class="btn btn-success mr-2">Submit</button>
+														</div>
+													</div>
+												</div>
+											</form>
+											</div>
+										</div>
+										<!--end::Card-->
+										</div>
+									
+								</div>
+							</div>
+							<!--end::Container-->
+						</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
