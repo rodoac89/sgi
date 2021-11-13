@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Campus, Room, Workstation
+from apps.core.models import Room, Campus, Workstation
 
-admin.site.register(Campus)
 admin.site.register(Room)
+admin.site.register(Campus)
 admin.site.register(Workstation)
-

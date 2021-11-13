@@ -33,7 +33,6 @@ class Room(models.Model):
     def __unicode__(self):
         return "{} - {}".format(self.campus.name, self.room_name)
 
-    
 
 class Workstation(models.Model):
     name = models.CharField(max_length=25)

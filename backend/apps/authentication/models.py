@@ -12,6 +12,8 @@ def photo_file_name(instance, filename):
 
     return path_to_file
 
+# TODO: Crear realicion de jerarquia y relacion de adminsitracion de labs
+
 
 class Role(models.Model):
     role_name = models.CharField(max_length=50, default="Role")
