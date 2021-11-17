@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" onsubmit="return validateForm()">
+<form method="POST" id="myform" onsubmit="return validateForm();">
     {% csrf_token %}
     <input type="hidden" name="user" value="{{ request.user.username }}">
 <!-- Modal Monitor-->
@@ -470,7 +470,7 @@
                         <label ALIGN="CENTER" for="exampleTextarea">Observaciones<span class="text-danger">*</span></label>
                             <textarea id="description" class="form-control" name="observaciones"  rows="3"></textarea>
           <div class="card-footer" ALIGN="CENTER">
-            <button  type="submit" class="btn btn-success">Enviar Revisión</button> 
+            <button  type="submit" class="btn btn-success" onclick="return validateForm()">Enviar Revisión</button> 
     </div>  
 </form>
 {% endblock %}
@@ -479,8 +479,9 @@
 
 <script type="text/javascript">
 
-    function validateForm() {
-        var observation = document.getElementById("description").value;
+    function validateForm(){
+
+        var observation = document.forms["myform"]["observaciones"].value;
         if (observation == ""){
             alert("Favor de colocar alguna observación");
             return false;

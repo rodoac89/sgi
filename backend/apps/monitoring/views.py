@@ -237,7 +237,11 @@ def generalreports(request):
     total_m = []
     i= 1
     j=1
-    review = Revision.objects.filter(date_created__range=('2021-01-01','2021-12-31')) 
+    date = datetime.today()
+    year = date.strftime("%Y")
+    begin = year+'-01-01'
+    end = year+'-12-31'
+    review = Revision.objects.filter(date_created__range=(begin,end)) 
     for r in review:
         if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
             if r.pc.room.room_name not in count_room_m_h:
@@ -259,7 +263,7 @@ def generalreports(request):
                count_room_m_so[r.pc.room.room_name] = 0
             count_room_m_so[r.pc.room.room_name] +=1
             total_m.append(j)                      
-    reports = Report.objects.filter(date_created__range=('2021-01-01','2021-12-31'))     
+    reports = Report.objects.filter(date_created__range=(begin,end))     
     for r in reports:
         if r.category=="Hardware":
             if r.pc.room.room_name not in count_room_hardware:
@@ -288,7 +292,11 @@ def generalreports(request):
 
 def chart_report_lab(request):
     count_room = {}
-    reports = Report.objects.filter(date_created__range=('2021-01-01','2021-12-31'))
+    date = datetime.today()
+    year = date.strftime("%Y")
+    begin = year+'-01-01'
+    end = year+'-12-31'
+    reports = Report.objects.filter(date_created__range=(begin,end))
     for r in reports:
         if r.pc.room.room_name not in count_room:
             count_room[r.pc.room.room_name] = 0
@@ -303,7 +311,11 @@ def chart_report_lab(request):
 
 def chart_maintenance_lab(request):
     count_room = {}
-    review = Revision.objects.filter(date_created__range=('2021-01-01','2021-12-31'))
+    date = datetime.today()
+    year = date.strftime("%Y")
+    begin = year+'-01-01'
+    end = year+'-12-31'
+    review = Revision.objects.filter(date_created__range=(begin,end))
     for r in review:
         if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
             if r.pc.room.room_name not in count_room:

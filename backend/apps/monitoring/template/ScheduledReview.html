@@ -1,7 +1,5 @@
 {% extends '_partials/_base.html' %}
 {% load static %}
-
-
 {% block pagetitle %}Revisiones Agendadas{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -32,7 +30,7 @@
                     <i aria-hidden="true" class="ki ki-close"></i>
                 </button>
             </div>
-            <form method="POST">
+            <form method="POST" onsubmit="return validate_form();">
                 {% csrf_token %}
                 <input type="hidden" name="user" value="{{ request.user.username }}">
             <div class="modal-body">
@@ -43,18 +41,18 @@
                   <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                 </div>
               </div>
-            </br>
+            <br>
             {{form.title.label}}
             {{form.title}}
-        </br>
+        <br>
             {{form.room.label}}
             {{form.room}}
             
-        </br> 
+        <br> 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary font-weight-bold">Guardar</button>
+                <button type="submit" class="btn btn-success font-weight-bold">Agendar</button>
             </div>
         </form>
         </div>
@@ -117,5 +115,15 @@
       format: 'MM/DD/YYYY HH:mm',
     });
   });</script>
+
+<script type="text/javascript">
+    function validate_form(){
+        var room = document.getElementById("id_room").value;
+        if (room == ""){
+            alert("Debe seleccionar un laboratorio");
+            return false;
+        }
+    }
+</script>  
 
 {% endblock %}
