@@ -17,6 +17,7 @@ var KTIONRangeSlider = function () {
         // custom prefix
         $('#kt_slider_3').ionRangeSlider({
             type: "double",
+            skin: "sharp",
             grid: true,
             min: 0,
             max: 1000,

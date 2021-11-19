@@ -6,7 +6,7 @@ from datetime import date, datetime
 from django.forms import widgets
 from django.forms.forms import Form
 from django.forms.widgets import DateInput, EmailInput, TimeInput
-from apps.schedules.models import LabPetition, modulepetition
+from apps.schedules.models import LabPetition, modulepetition, module
 from django.forms import ModelForm, Textarea
 
 class LabPetitionForm(forms.ModelForm):
@@ -21,8 +21,6 @@ class LabPetitionForm(forms.ModelForm):
             'cant_pc_petition',
             'day_start_petition',
             'day_finish_petition',
-            #'time_start_petition',
-            #'time_finish_petition',
             'memo_petition',
             'status_petition',
         ]
@@ -35,8 +33,6 @@ class LabPetitionForm(forms.ModelForm):
             'cant_pc_petition':'Computadores:',
             'day_start_petition':'Fecha inicio:',
             'day_finish_petition':'Fecha termino:',
-            #'time_start_petition':'Hora inicio:',
-            #'time_finish_petition':'Hora termino:',
             'memo_petition':'Mensaje:',
             'status_petition':'Status:',
         }
@@ -45,8 +41,6 @@ class LabPetitionForm(forms.ModelForm):
             'email_petition':EmailInput(attrs={}),
             'day_start_petition':DateInput(attrs={'id':'kt_datepicker_7', 'data-date-format':'dd/mm/yyyy', 'readonly':'readonly'}),
             'day_finish_petition':DateInput(attrs={'id':'kt_datepicker_7', 'data-date-format':'dd/mm/yyyy', 'readonly':'readonly'}),
-            #'time_start_petition':TimeInput(attrs={'id':'kt_timepicker_5'}),
-            #'time_finish_petition':TimeInput(attrs={'id':'kt_timepicker_5'}),
             'memo_petition':Textarea(attrs={'cols': 40, 'rows': 5})
         }
 
@@ -60,32 +54,54 @@ class LabPetitionForm(forms.ModelForm):
         self.fields['cant_pc_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['day_start_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['day_finish_petition'].widget.attrs.update({'class':'form-control'})
-        #self.fields['time_start_petition'].widget.attrs.update({'class':'form-control'})
-        #self.fields['time_finish_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['memo_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['status_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['day_start_petition'].input_formats=[ '%d/%m/%Y' ]
         self.fields['day_finish_petition'].input_formats=[ '%d/%m/%Y' ]
 
-class modulepetitionForm(forms.ModelForm):
+
+class ModuleForm(forms.ModelForm):
+    class Meta:
+        model = module
+        fields = [ 
+            'name_module',
+            'start_module',
+            'finish_module',
+        ]
+        labels = {
+            'name_module':'Nombre del Modulo',
+            'start_module':'Hora de inicio',
+            'finish_module':'Hora de termino',
+        }
+        widgets={
+            'start_module':TimeInput(attrs={'id':'kt_timepicker_5'}),
+            'finish_module':TimeInput(attrs={'id':'kt_timepicker_5'}),
+        }
+    def __init__(self,*args, **kwargs):
+        super(ModuleForm, self).__init__(*args,**kwargs)
+        self.fields['name_module'].widget.attrs.update({'class':'form-control'})
+        self.fields['start_module'].widget.attrs.update({'class':'form-control'})
+        self.fields['finish_module'].widget.attrs.update({'class':'form-control'})
+
+class ModulePetitionForm(forms.ModelForm):
     class Meta:
         model = modulepetition
         fields = [ 
-            'day_module',
-            'start_module',
-            'finish_module',
-            'labpetition_module',
+            'day_mp',
+            'module_start_mp',
+            'module_finish_mp',
+            'labpetition_mp',
         ]
         labels = {
-            'day_module':'Dia:',
-            'start_module':'Modulo:',
-            'finish_module':'Hasta el:',
+            'day_mp':'Dia:',
+            'module_start_mp': 'Modulo inicio:',
+            'module_finish_mp': 'Modulo final:',
         }
         widgets={
 
         }
     def __init__(self,*args, **kwargs):
-        super(modulepetitionForm, self).__init__(*args,**kwargs)
-        self.fields['day_module'].widget.attrs.update({'class':'form-control'})
-        self.fields['start_module'].widget.attrs.update({'class':'form-control'})
-        self.fields['finish_module'].widget.attrs.update({'class':'form-control'})
+        super(ModulePetitionForm, self).__init__(*args,**kwargs)
+        self.fields['day_mp'].widget.attrs.update({'class':'form-control'})
+        self.fields['module_start_mp'].widget.attrs.update({'class':'form-control'})
+        self.fields['module_finish_mp'].widget.attrs.update({'class':'form-control'})

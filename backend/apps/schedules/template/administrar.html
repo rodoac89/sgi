@@ -21,15 +21,12 @@
         <!--<div class="card-header"></div>-->
         <div class="card-body">
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-5 border">
                     <div class="card card-custom card-stretch gutter-b">
                         <div class="card-header border-0">
-                            <h1 class="card-title font-weight-bolder text-dark">Peticiones</h1>
-                            <form method="get" class="form-inline">
-                                <input class="form-control my-2 mx-2" type="search" placeholder="Buscar..." aria-label="Search">
-                                <button class="btn btn-outline-success my-2 mx-2" type="submit">Buscar</button>
-                            </form>
-                            <div class="card-toolbar">
+                            <h1 class="card-title font-weight-bolder text-dark py-2">Peticiones</h1>
+                            <input type="text" class="form-control datatable-input" id="name_lab" onkeyup="Name()" placeholder="Nombre">
+                            <div class="card-toolbar col-lg-12">
                                 <ul class="nav nav-tabs nav-bold nav-tabs-line">
                                     <li class="nav-item">
                                         <a class="nav-link active" data-toggle="tab" role="tab" href="#first-tab" aria-selected="false">
@@ -53,7 +50,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="tab-content card-scroll" style="height: 480px;">
+                        <div class="tab-content card-scroll" id="pills" style="height: 480px;">
                             <div class="tab-pane fade active show" id="first-tab" role="tabpanel">
                                 <div class="flex-column card-stretch gutter-b">
                                     <ul class="nav flex-column nav-warning nav-pills nav-fill" role="tablist">
@@ -114,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-7 border">
                     <div class="tab-content">
                         {% for labpetition in labpetition %}
                         <div class="tab-pane" role="tabpanel" id="href{{labpetition.id}}" aria-labelledby="id{{labpetition.id}}">
@@ -178,6 +175,10 @@
                                                                 <span class="text-dark-75 font-size-lg font-weight-bolder">{{ labpetition.cant_pc_petition }}</span>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="d-flex flex-column flex-grow-1">
                                                         <div class="d-flex align-items-center pb-5">
                                                             <div class="symbol symbol-45 symbol-light mr-2">
                                                                 <span class="nav-icon input-group-text"><i class="flaticon2-browser"></i></span>
@@ -187,10 +188,6 @@
                                                                 <span class="text-dark-75 font-size-lg font-weight-bolder">{{ labpetition.nrc_petition }}</span>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <div class="d-flex flex-column flex-grow-1">
                                                         <div class="d-flex align-items-center pb-5">
                                                             <div class="symbol symbol-45 symbol-light mr-2">
                                                                 <span class="nav-icon input-group-text"><i class="flaticon2-calendar-1"></i></span>
@@ -209,26 +206,23 @@
                                                                 <span class="text-dark-75 font-size-lg font-weight-bolder">{{ labpetition.day_finish_petition }}</span>
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex align-items-center pb-5">
-                                                            <div class="symbol symbol-45 symbol-light mr-2">
-                                                                <span class="nav-icon input-group-text"><i class="flaticon2-chronometer"></i></span>
-                                                            </div>
-                                                            <div class="d-flex flex-column flex-grow-1">
-                                                                <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Hora Inicio:</a>
-                                                                <span class="text-dark-75 font-size-lg font-weight-bolder">{{ labpetition.time_start_petition }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="d-flex align-items-center pb-5">
-                                                            <div class="symbol symbol-45 symbol-light mr-2">
-                                                                <span class="nav-icon input-group-text"><i class="flaticon2-chronometer"></i></span>
-                                                            </div>
-                                                            <div class="d-flex flex-column flex-grow-1">
-                                                                <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Hora Final:</a>
-                                                                <span class="text-dark-75 font-size-lg font-weight-bolder">{{ labpetition.time_finish_petition }}</span>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="d-flex flex-column flex-grow-1">
+                                                <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Dias y horas:</a>
+                                            </div>
+                                            <div class="card-scroll" style="height: 150px;">
+                                                {% for modpetition in modpetition %}
+                                                {% if modpetition.labpetition_mp == labpetition %}
+                                                <div class="d-flex bg-light-primary rounded-xl flex-column flex-center py-2">
+                                                    <a class="font-weight-bolder text-dark-75 text-hover-primary font-size-h6 m-0 pb-2 pt-5">{{ modpetition }}</a>
+                                                    <div class="font-weight-bold text-dark-50 font-size-lg pb-2">Inicio {{ modpetition.module_start_mp }} {{ modpetition.get_module_start_mp_display }}</div>
+                                                    <div class="font-weight-bold text-dark-50 font-size-lg pb-2">Final {{ modpetition.module_finish_mp }} {{ modpetition.get_module_finish_mp_display }}</div>
+                                                </div>
+                                                <div class="pt-6"></div>
+                                                {% endif %}
+                                                {% endfor %}
                                             </div>
                                         </div>
                                         <div class="row pt-4">
@@ -265,5 +259,25 @@
     $("#third-tab").click(function(){
         $(".nav-link").removeClass("active");
     });
+</script>
+<script>
+    function Name() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("name_lab");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("pills");
+        tr = table.getElementsByTagName("li");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("h4")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
 </script>
 {% endblock %}
