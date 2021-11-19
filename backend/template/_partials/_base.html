@@ -22,6 +22,8 @@
 		<link href="{% static 'css/themes/layout/aside/dark.css' %}" rel="stylesheet" type="text/css" />
 		<!--end::Layout Themes-->
 		<link rel="shortcut icon" href="{% static 'media/logos/favicon.ico' %}" />
+		{% block css %}
+		{% endblock css %}
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
@@ -74,7 +76,7 @@
 					<div class="brand flex-column-auto" id="kt_brand">
 						<!--begin::Logo-->
 						<a href="{% url 'dashboard' %}" class="brand-logo">
-							
+							<img alt="Logo" src="{% static 'media/logos/logo-light.png' %}" />
 						</a>
 						<!--end::Logo-->
 						<!--begin::Toggle-->

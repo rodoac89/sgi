@@ -1,7 +1,6 @@
 {% load static %}
 <!--begin::Menu Nav-->
 <ul class="menu-nav">
-    
     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
         <a href="{% url 'dashboard' %}" class="menu-link menu-toggle">
             <span class="svg-icon menu-icon">
@@ -20,40 +19,8 @@
         </a>
     </li>
 
-
     <!-- Modulo de licencias -->
     {% include '_partials/license_sidebar.html' %}  
-    
-    <li class="menu-section">
-        <h4 class="menu-text">Modulo de monitoreo</h4>
-        <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
-    </li>
-
-    <li class="menu-item menu-item-submenu" aria-haspopup="true">
-        <a href="javascript:;" class="menu-link menu-toggle">
-            <span class="svg-icon menu-icon">
-                <i class="fas fa-hard-hat" style="margin-right:auto"></i>
-            </span>
-            <span class="menu-text">En construcción</span>
-            
-        </a>
-    </li> 
-    
-    <li class="menu-section">
-        <h4 class="menu-text">Modulo de horarios</h4>
-        <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
-    </li>
-
-    <li class="menu-item menu-item-submenu" aria-haspopup="true">
-        <a href="javascript:;" class="menu-link menu-toggle">
-            <span class="svg-icon menu-icon">
-                <i class="fas fa-hard-hat" style="margin-right:auto"></i>
-            </span>
-            <span class="menu-text">En construcción</span>
-            
-        </a>
-    </li> 
-
-   
+    {% include '_partials/monitoring_sidebar.html' %}
 </ul>
 <!--end::Menu Nav-->

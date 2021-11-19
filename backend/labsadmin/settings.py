@@ -147,6 +147,7 @@ TEMPLATES = [
             'template',
             'apps/authentication/template',
             'apps/core/template',
+            'apps/monitoring/template',
             'apps/licenses/template'
             ],
         'APP_DIRS': True,
