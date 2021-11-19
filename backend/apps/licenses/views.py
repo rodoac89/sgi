@@ -2,7 +2,7 @@
 """from Labs.backend.apps.licenses.models import form_software"""
 from apps.licenses.forms import SoftwareRequestForm, EnterLicensesForm
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import LicensesList, SoftwareForm
 
@@ -100,8 +100,36 @@ def info_license(request):
         if 'id_serch' in request.GET:
             data_forms = LicensesList.objects.get(id_license=int(request.GET['id_serch']))
             context['licencia'] = data_forms
+    
 
     return render(request, "info_licencia.html", context)
+
+
+def edit_license(request, id):
+
+    license_form = get_object_or_404(LicensesList, id_license=id)
+
+    data={
+        'license_form' : EnterLicensesForm(instance=license_form)
+    }
+
+    data["info"]=id
+    print(data)
+    if request.method == 'POST':
+        form = EnterLicensesForm(data=request.POST, instance=license_form)
+        if form.is_valid():
+            form.save()
+            return redirect(to="licenses:adm_licencias")
+        data["license_form"] = form   
+
+    return render(request, 'editar_licencia.html', data)
+
+def delete_license(request, id):
+
+     license_form = get_object_or_404(LicensesList, id_license=id)   
+     license_form.delete()
+     return redirect(to='licenses:adm_licencias')
+   
 
 
 
