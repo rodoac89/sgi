@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,11 +26,11 @@ SECRET_KEY = 'django-insecure-qr_5n+&dx%l3-1t)-&m84nw-id707e#@$f9_e*)jdb6*e6ri6+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "labs2021.herokuapp.com"]
 
 
 # Application definition
-
+9
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,7 +45,15 @@ INSTALLED_APPS = [
     'api',
     'apps.authentication',
     'apps.core',
+    'apps.licenses',
+    'crispy_forms',
+    'apps.monitoring',
+    'apps.schedules',
+    'apps.software_manager',
+    'apps.notification',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -83,7 +92,6 @@ CORS_ALLOW_HEADERS = [
 ]
 
 #CORS_ORIGIN_WHITELIST = ['https://example.com']
-
 
 
 ROOT_URLCONF = 'labsadmin.urls'
@@ -139,6 +147,8 @@ TEMPLATES = [
             'template',
             'apps/authentication/template',
             'apps/core/template',
+            'apps/monitoring/template',
+            'apps/licenses/template'
             ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -158,12 +168,28 @@ WSGI_APPLICATION = 'labsadmin.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
+postgresql = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('USER'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),
+    }
+}
+
+sqlite = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+heroku_postgresql = {'default': dj_database_url.config(
+    conn_max_age=600, ssl_require=True)}
+
+DATABASES = sqlite
+
 
 
 # Password validation
@@ -210,7 +236,7 @@ STATICFILES_DIRS = [
 ]
 
 # Media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 # Login Required Setting

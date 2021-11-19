@@ -8,5 +8,11 @@ services:
     volumes:
       - ./backend:/labs/
     ports:
-       - "8000:8000"
+      - "8000:8000"
+    environment:
+      HOST: db
+      NAME: laboratorios
+      USER: labuser
+      PASSWORD: labs2021
+      DEV_CHANNEL: 'local'
 

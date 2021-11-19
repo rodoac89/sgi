@@ -1,8 +1,8 @@
 {% extends '_partials/_base.html' %}
 {% load static %}
-{% block pagetitle %}Pagina en blanco{% endblock %}
 
-{% block title %}Blanco{% endblock %}
+
+{% block pagetitle %}Pagina inicial{% endblock %}
 
 {% block breadcumbs %}
 
@@ -85,7 +85,21 @@
                         <small>sub title</small></h3>
                     </div>
                 </div>
-                <div class="card-body">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</div>
+                <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-form-label text-right col-lg-3 col-sm-12">Basic Example</label>
+                    <div class="col-lg-4 col-md-9 col-sm-12">
+                        <div class="input-group date" id="kt_datetimepicker_1" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" placeholder="Select date &amp; time" data-target="#kt_datetimepicker_1" />
+                            <div class="input-group-append" data-target="#kt_datetimepicker_1" data-toggle="datetimepicker">
+                                <span class="input-group-text">
+                                    <i class="ki ki-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
             <!--end::Card-->
         </div>            
@@ -95,4 +109,5 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datetimepicker.js'%}"></script>
 {% endblock %}
