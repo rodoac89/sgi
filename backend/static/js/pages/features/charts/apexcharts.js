@@ -6,37 +6,38 @@ const success = '#1BC5BD';
 const info = '#8950FC';
 const warning = '#FFA800';
 const danger = '#F64E60';
+const free = '#FFFFFF';
 
 // Class definition
 function generateBubbleData(baseval, count, yrange) {
-    var i = 0;
-    var series = [];
-    while (i < count) {
-      var x = Math.floor(Math.random() * (750 - 1 + 1)) + 1;;
-      var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-      var z = Math.floor(Math.random() * (75 - 15 + 1)) + 15;
-  
-      series.push([x, y, z]);
-      baseval += 86400000;
-      i++;
-    }
-    return series;
-  }
+	var i = 0;
+	var series = [];
+	while (i < count) {
+		var x = Math.floor(Math.random() * (750 - 1 + 1)) + 1;;
+		var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+		var z = Math.floor(Math.random() * (75 - 15 + 1)) + 15;
+
+		series.push([x, y, z]);
+		baseval += 86400000;
+		i++;
+	}
+	return series;
+}
 
 function generateData(count, yrange) {
-    var i = 0;
-    var series = [];
-    while (i < count) {
-        var x = 'w' + (i + 1).toString();
-        var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+	var i = 0;
+	var series = [];
+	while (i < count) {
+		var x = 'w' + (i + 1).toString();
+		var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
 
-        series.push({
-            x: x,
-            y: y
-        });
-        i++;
-    }
-    return series;
+		series.push({
+			x: x,
+			y: y
+		});
+		i++;
+	}
+	return series;
 }
 
 var KTApexChartsDemo = function () {
@@ -55,7 +56,7 @@ var KTApexChartsDemo = function () {
 					enabled: false
 				}
 			},
-			dataLabels: { 	
+			dataLabels: {
 				enabled: false
 			},
 			stroke: {
@@ -714,7 +715,7 @@ var KTApexChartsDemo = function () {
 					enabled: true
 				}
 			},
-			colors: [success,danger]
+			colors: [success, danger]
 		};
 
 		var chart = new ApexCharts(document.querySelector(apexChart), options);
@@ -727,31 +728,31 @@ var KTApexChartsDemo = function () {
 			series: [{
 				name: 'Bubble1',
 				data: generateBubbleData(new Date('11 Feb 2017 GMT').getTime(), 20, {
-				  min: 10,
-				  max: 60
+					min: 10,
+					max: 60
 				})
-			  },
-			  {
+			},
+			{
 				name: 'Bubble2',
 				data: generateBubbleData(new Date('11 Feb 2017 GMT').getTime(), 20, {
-				  min: 10,
-				  max: 60
+					min: 10,
+					max: 60
 				})
-			  },
-			  {
+			},
+			{
 				name: 'Bubble3',
 				data: generateBubbleData(new Date('11 Feb 2017 GMT').getTime(), 20, {
-				  min: 10,
-				  max: 60
+					min: 10,
+					max: 60
 				})
-			  },
-			  {
+			},
+			{
 				name: 'Bubble4',
 				data: generateBubbleData(new Date('11 Feb 2017 GMT').getTime(), 20, {
-				  min: 10,
-				  max: 60
+					min: 10,
+					max: 60
 				})
-			  }],
+			}],
 			chart: {
 				height: 350,
 				type: 'bubble',

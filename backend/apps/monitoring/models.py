@@ -60,5 +60,3 @@ class Revision (models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.pc,self.observation)
-
-   

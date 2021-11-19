@@ -15,6 +15,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATE_FORMAT = 'd/m/Y'
 
 
 # Quick-start development settings - unsuitable for production
@@ -147,9 +148,11 @@ TEMPLATES = [
             'template',
             'apps/authentication/template',
             'apps/core/template',
+            'apps/schedules/template',
             'apps/monitoring/template',
             'apps/licenses/template'
             ],
+        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -197,8 +200,6 @@ else:
     
 DATABASES = config
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -221,7 +222,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 

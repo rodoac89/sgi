@@ -20,5 +20,4 @@ urlpatterns = [
     path('chart_maintenance_lab/',views.chart_maintenance_lab,name="chart_maintenance_lab")
     
 
-    
 ]

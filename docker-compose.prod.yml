@@ -15,9 +15,5 @@ services:
       - ./backend:/labs/
     ports:
        - "8080:8080"
-<<<<<<< HEAD
-=======
     environment:
       DEV_CHANNEL: false
->>>>>>> 30dc8d05465a3e2d3dcfda299182c02e3876f593
-

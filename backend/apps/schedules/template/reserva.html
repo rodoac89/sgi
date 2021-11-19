@@ -1,0 +1,155 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Blanco{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+<form class="form" id="kt_form_1">
+    <div class="card card-custom gutter-b">
+        <!--begin::Header-->
+        <div class="card-header border-0 py-6">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label font-weight-bolder text-dark">Reservas</span>
+            </h3>
+            <div class="card-toolbar">
+                <a href="#" class="btn btn-info font-weight-bolder font-size-sm">Borrar Selección</a>
+            </div>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body py-0">
+            <!--begin::Table-->
+            <div class="table-responsive">
+                <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_2">
+                    <thead>
+                        <tr class="text-uppercase">
+                            <th class="pl-0" style="width: 40px">
+                                <label class="checkbox checkbox-lg checkbox-inline mr-2">
+                                    <input type="checkbox" value="1">
+                                    <span></span>
+                                </label>
+                            </th>
+                            <th class="pl-0" style="min-width: 100px">Laboratorio</th>
+                            <th style="min-width: 120px">Computadores</th>
+                            <th style="min-width: 120px">Licencia</th>
+                            <th style="min-width: 150px">Fecha</th>
+                            <th style="min-width: 150px">Hora Inicio</th>
+                            <th style="min-width: 150px">Hora Termino</th>
+                            <th style="min-width: 130px">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pl-0 py-6">
+                                <label class="checkbox checkbox-lg checkbox-inline">
+                                    <input type="checkbox" value="1">
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td class="pl-0">
+                                <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">301</a>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">42</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Simio</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">05/28/2020</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">9:30</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">12:00</span>
+                            </td>
+                            <td>
+                                <span class="label label-lg label-light-success label-inline">Aprobado</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0 py-6">
+                                <label class="checkbox checkbox-lg checkbox-inline">
+                                    <input type="checkbox" value="1">
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td class="pl-0">
+                                <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">302</a>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">31</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Ej2</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">05/14/2020</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">17:00</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">18:30</span>
+                            </td>
+                            <td>
+                                <span class="label label-lg label-light-warning label-inline">En proceso</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0 py-6">
+                                <label class="checkbox checkbox-lg checkbox-inline">
+                                    <input type="checkbox" value="1">
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td class="pl-0">
+                                <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">303</a>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">40</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Simio</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">05/28/2020</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">17:00</span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">18:30</span>
+                            </td>
+                            <td>
+                                <span class="label label-lg label-light-danger label-inline">Denegado</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--end::Table-->
+        </div>
+        <!--end::Body-->
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

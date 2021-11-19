@@ -32,6 +32,14 @@ var KTBootstrapTimepicker = function () {
             showMeridian: true
         });
 
+        // Schedules time
+        $('#kt_timepicker_5, #kt_timepicker_5_modal').timepicker({
+            defaultTime: 'current',
+            minuteStep: 10,
+            showSeconds: false,
+            showMeridian: false
+        });
+
         // validation state demos
         // minimum setup
         $('#kt_timepicker_1_validate, #kt_timepicker_2_validate, #kt_timepicker_3_validate').timepicker({
