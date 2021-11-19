@@ -126,3 +126,4 @@ class modulepetition(models.Model):
 #     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 #     user_worktation = models.ForeignKey(
 #         UserWortation, on_delete=models.CASCADE)
+

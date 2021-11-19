@@ -1,0 +1,99 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+{% block pagetitle %}Selecciona una Revisión{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="card card-custom">
+    
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title">
+            <h3 class="card-label">Visualizar Revisiones de los PC 
+             <span class="text-muted pt-2 font-size-sm d-block">Selecciona una revisión para continuar</span></h3>
+        </div>
+        <div class="col-lg-9 col-xl-8">
+            <div class="row align-items-center">
+            </div>
+        </div>
+        <br>
+        <br>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Título</th>
+                <th>Fecha</th>
+                <th>Seleccionar</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            {% for i in sch %}
+
+                <tr>
+                    <td>{{ i.title}}</td>
+                    <td>{{ i.date_scheduled}}</td>
+                    <form action="{% url 'selectreviewpc' %}" method="POST">
+                       {% csrf_token %} 
+                    <td><button name="id" {request.session.id} value="{{i.id}}" class="btn btn-light-primary font-weight-bold mr-2">Visualizar</button></td>
+                    </form>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>    
+    {% if reviews.has_other_pages %}
+    <ul class="pagination">
+        {% if reviews.has_previus %}
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reviews.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+         <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in reviews.paginator.page_range %}
+        {% if reviews.number == i %}
+            <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+            <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if reviews.has_next %}
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reviews.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+    </div>    
+{% endblock %}
+
+{% block scripts %}
+
+
+<!--<script>
+    $(document).ready(function(){
+    $("#search").keyup(function(){
+    _this = this;
+    $.each($("#table tbody tr"), function() {
+    if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
+    $(this).hide();
+    else
+    $(this).show();
+    });
+    });
+   });
+   </script>-->
+{% endblock %}
