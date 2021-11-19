@@ -52,6 +52,7 @@
 											</div>
 											<div class="col-12" style="margin-top: 2%;">
 											<!--begin::Form-->
+											
 												<div class="card-body row justify-content-center">
 													
 													<div class="form-group row col-12">
@@ -59,29 +60,29 @@
 														<label class="col-2 col-form-label">Nombre</label>
 
 														<div class="col-4">
-															<input class="form-control" type="text" name="name_user" value="{{ licencia.license_name }}" />
+															<input class="form-control" type="text" name="name_user" value="{{ licencia.license_name }}" readonly/>
 														</div>
 														<label class="col-2 col-form-label">Tipo</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="last_name" value="{{ licencia.license_type }}" />
+															<input class="form-control" type="text" name="last_name" value="{{ licencia.license_type }}" readonly/>
 														</div>
 													</div>
 													<div class="form-group row col-12">
 														<label for="example-search-input" class="col-2 col-form-label">Cantidad</label>
 														<div class="col-2">
-															<input class="form-control" type="text" name="rut" value="{{ licencia.license_stock }}" />
+															<input class="form-control" type="text" name="stock" value="{{ licencia.license_stock }}" readonly/>
 														</div>
 													</div>
 													<div class="form-group row col-12">
 														<label for="example-search-input" class="col-2 col-form-label">Cantidad en uso</label>
 														<div class="col-2">
-															<input class="form-control" type="text" name="rut" value="{{ licencia.license_in_use }}" />
+															<input class="form-control" type="text" name="in_use" value="{{ licencia.license_in_use }}" readonly/>
 														</div>
 													</div>
 													<div class="form-group row col-12">
 														<label for="example-search-input" class="col-2 col-form-label">Fecha de caducidad</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="rut" value="{{ licencia.license_due_date }}" />
+															<input class="form-control" type="text" name="due_date" value="{{ licencia.license_due_date }}" readonly/>
 														</div>
 													</div>
 													
@@ -91,7 +92,7 @@
 															<a href="{%url 'licenses:adm_licencias' %}" class="btn btn-success"> Volver </a> 
 														</div>
 														<div class="col-3 offset-1">
-															<button href="{%url 'licenses:adm_licencias' %}" class="btn btn-success"> Editar </button> 
+															<a href="{%url 'licenses:edit_license' licencia.id_license %}" class="btn btn-success"> Editar </a> 
 														</div>
 													</div>
 													
