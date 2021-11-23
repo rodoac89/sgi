@@ -4,19 +4,31 @@ from django.contrib.auth.decorators import login_required
 from apps.core.models import Room
 
 
+def index(request):
+    template_name = "index.html"
+    context={}
+    return render(request, template_name, context)
+
 @login_required
 def dashboard(request):
     template_name = "dashboard.html"
     context={}
     rooms= Room.objects.all()
     context['rooms'] = rooms
-    print(rooms)
+    if rooms.count() == 0:
+        context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
     return render(request, template_name, context)
 
-def load(request):
-    from django.contrib.auth.models import User
-    user = User.objects.create_user(username='labs',
-                                 email='',
-                                 password='1234')
-    return redirect('dashboard')
+@login_required
+def administration(request):
+    if request.user.is_superuser:        
+        template_name = "dashboard.html"
+        context={}
+        rooms= Room.objects.all()
+        context['rooms'] = rooms
+        if rooms.count() == 0:
+            context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
+    return render(request, template_name, context)
+
+
 

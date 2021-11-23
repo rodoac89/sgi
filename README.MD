@@ -5,4 +5,3 @@
 * Docker
 
 Para ejecutar el proyecto abra la terminal y escriba `docker-compose up`
-

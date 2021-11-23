@@ -29,8 +29,16 @@
 
 
 {% block content %}
+
+
+
 <div class="d-flex flex-row justify-content-center">
-	
+	{% if rooms.count == 0 %}
+
+	<p align="center">¡Vaya! Aún no hay mucho aquí.<br/> {{ msg }}</p>
+
+	{% else %}
+
 	{% for r in rooms %}
 	<!-- separacion de columnas -->
 	<div class="card-body border border-dark rounded col-3 offset-1" style="background-color: white;">
@@ -188,8 +196,9 @@
 		<!--end::Wrapper-->
 	</div>
 	{% endfor %}
-	
+	{% endif %}
 </div>	
+
 
 
 {% endblock %}

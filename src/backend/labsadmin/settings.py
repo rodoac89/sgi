@@ -193,10 +193,10 @@ heroku_postgresql = {'default': dj_database_url.config(
 
 if os.getenv('CHANNEL') == 'heroku':
     config = heroku_postgresql
-elif os.getenv('CHANNEL') == 'local':
-    config = sqlite
-else:
+elif os.getenv('CHANNEL') == 'production':
     config = postgresql
+else:
+    config = sqlite
     
 DATABASES = config
 
