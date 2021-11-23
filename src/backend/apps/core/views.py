@@ -30,5 +30,17 @@ def administration(request):
             context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
     return render(request, template_name, context)
 
+def load(request, dato):
+    from django.contrib.auth.models import User
+    try:
+        user = User.objects.get(pk=1)
+        return redirect('index')
+    except:
+        user = User.objects.create_user(dato, '', '1234')
+        user.is_staff = True
+        user.is_superuser = True
+        return redirect('login')
+
+
 
 

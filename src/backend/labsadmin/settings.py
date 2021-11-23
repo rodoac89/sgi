@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'apps.monitoring',
     'apps.schedules',
-    'apps.software_manager',
     'apps.notification',
 ]
 
