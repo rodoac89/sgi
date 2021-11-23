@@ -190,12 +190,12 @@ sqlite = {
 heroku_postgresql = {'default': dj_database_url.config(
     conn_max_age=600, ssl_require=True)}
 
-if os.getenv('CHANNEL') == 'heroku':
-    config = heroku_postgresql
+if os.getenv('CHANNEL') == 'local':
+    config = sqlite
 elif os.getenv('CHANNEL') == 'production':
     config = postgresql
 else:
-    config = sqlite
+    config = heroku_postgresql
     
 DATABASES = config
 
