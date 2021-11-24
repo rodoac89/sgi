@@ -1,7 +1,6 @@
 from django.http.response import JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Report, Revision, ScheduledReview, Externuser
-from .forms import ScheduledReviewForm
 from django.http import HttpResponse
 from apps.core.models import Workstation, Room
 from apps.notification.models import Notif
@@ -122,19 +121,16 @@ def gratitude(request):
 @login_required
 def ShowScheduledReview(request):
     schedule = ScheduledReview.objects.all()
-    if request.method=='POST':
-        form = ScheduledReviewForm(request.POST)
-        if form.is_valid:
-            form.save()
-            #noti = Notif()
-            #noti.user = dj_user.objects.get(username = request.POST['user'])
-            #noti.message = "se agendó una nueva revisón"
-            #noti.save()
-            return redirect ('ScheduledReview')
-    else:
-        form = ScheduledReviewForm()        
-        context = {'form':form,
-        'schedule':schedule }
+    room = Room.objects.all()
+    if request.method=='POST': 
+        schedulere = ScheduledReview()
+        schedulere.date_scheduled = request.POST['date']
+        schedulere.title = request.POST['title']
+        schedulere.room = Room.objects.get( pk = request.POST['room'])
+        schedulere.save()
+        return redirect ('ScheduledReview')   
+    context = {'room':room,
+    'schedule':schedule }
     template_name="ScheduledReview.html"
     return render(request,template_name,context)
 

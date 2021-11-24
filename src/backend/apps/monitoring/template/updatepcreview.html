@@ -43,7 +43,7 @@
                             Presente
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-success">
                                 <input type="radio" name="monitor" value="P"/>
                                 <span></span>
                                 Presente
@@ -83,7 +83,7 @@
                                 Dañado
                             </label>
                             {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-danger">
                                 <input type="radio" name="monitor" value="D"/>
                                 <span></span>
                                 Dañado
@@ -122,7 +122,7 @@
                             Presente
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-success">
                                 <input type="radio" name="mouse" value="P"/>
                                 <span></span>
                                 Presente
@@ -160,7 +160,7 @@
                                 Dañado
                             </label>
                             {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-danger">
                                 <input type="radio" name="mouse" value="D"/>
                                 <span></span>
                                 Dañado
@@ -199,7 +199,7 @@
                             Presente
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-success">
                                 <input type="radio" name="keyboard" value="P"/>
                                 <span></span>
                                 Presente
@@ -237,7 +237,7 @@
                                 Dañado
                             </label>
                             {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-danger">
                                 <input type="radio" name="keyboard" value="D"/>
                                 <span></span>
                                 Dañado
@@ -276,7 +276,7 @@
                             Presente
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-success">
                                 <input type="radio" name="cpu" value="P"/>
                                 <span></span>
                                 Presente
@@ -314,7 +314,7 @@
                                 Dañado
                             </label>
                             {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-danger">
                                 <input type="radio" name="cpu" value="D"/>
                                 <span></span>
                                 Dañado
@@ -353,7 +353,7 @@
                             Operativo
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-success">
                                 <input type="radio" name="so" value="O"/>
                                 <span></span>
                                 Operativo
@@ -366,7 +366,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                             {% if edit_review.SO == "F" %}
-                        <label class="radio radio-success">
+                        <label class="radio radio-primary">
                             <input type="radio" checked="checked" name="so" value="F"/>
                             <span></span>
                             Falla
@@ -385,13 +385,13 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             {% if edit_review.SO == "N" %}
-                        <label class="radio radio-success">
+                        <label class="radio radio-danger">
                             <input type="radio" checked="checked" name="so" value="N"/>
                             <span></span>
                             No Presente
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-danger">
                                 <input type="radio" name="so" value="N"/>
                                 <span></span>
                                 No Presente
@@ -430,7 +430,7 @@
                             Operativo
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-success">
                                 <input type="radio" name="sw" value="O"/>
                                 <span></span>
                                 Operativo
@@ -443,7 +443,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                                 {% if edit_review.software == "F" %}
-                        <label class="radio radio-success">
+                        <label class="radio radio-primary">
                             <input type="radio" checked="checked" name="sw" value="F"/>
                             <span></span>
                             Falla
@@ -462,13 +462,13 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             {% if edit_review.software == "N" %}
-                        <label class="radio radio-success">
+                        <label class="radio radio-danger">
                             <input type="radio" checked="checked" name="sw" value="N"/>
                             <span></span>
                             No Presente
                         </label>
                         {% else %}
-                              <label class="radio radio-primary">
+                              <label class="radio radio-danger">
                                 <input type="radio" name="sw" value="N"/>
                                 <span></span>
                                 No Presente

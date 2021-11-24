@@ -34,19 +34,30 @@
                 {% csrf_token %}
                 <input type="hidden" name="user" value="{{ request.user.username }}">
             <div class="modal-body">
-                {{ form.date_scheduled.label }}
-            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-                {{form.date_scheduled}}
-                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                <div class="form-group row">
+                    <label for="example-datetime-local-input" class="col-2 col-form-label">Fecha</label>
+                    <div class="col-10">
+                        <input id="date" class="form-control" name="date" type="datetime-local" id="example-datetime-local-input" />
+                    </div>
                 </div>
-              </div>
-            <br>
-            {{form.title.label}}
-            {{form.title}}
+                <div class="form-group row">
+                    <label  class="col-2 col-form-label">Titulo</label>
+                    <div class="col-10">
+                     <input class="form-control" name="title" type="text"  id="title"/>
+                    </div>
+                   </div>
+                   <div class="form-group">
+                    <label for="exampleSelect1">Seleccionar un laboratorio<span class="text-danger">*</span></label>
+                    <select class="form-control" name="room" id="room">
+                        <option selected disabled="true"></option>
+                        {% for i in room %}
+                            <option value="{{i.id}}">{{i.room_name}}</option>  
+                            {% endfor %}
+
+                    </select>
+                   </div>   
         <br>
-            {{form.room.label}}
-            {{form.room}}
+            
             
         <br> 
             </div>
@@ -110,20 +121,27 @@
         calendar.setOption('locales','es')
     });
 </script>
-<script>$(function () {
-    $("#datetimepicker1").datetimepicker({
-      format: 'MM/DD/YYYY HH:mm',
-    });
-  });</script>
+
 
 <script type="text/javascript">
     function validate_form(){
-        var room = document.getElementById("id_room").value;
-        if (room == ""){
+        var room = document.getElementById("room").value;
+        var date = document.getElementById("date").value;
+        var title = document.getElementById("title").value;
+        if (date == ""){
+            alert("Debe seleccionar una fecha");
+            return false;
+        }
+        else if (title == ""){
+            alert("Debe ingresar un título");
+            return false;
+        }
+        else if (room == ""){
             alert("Debe seleccionar un laboratorio");
             return false;
         }
     }
 </script>  
 
+   
 {% endblock %}
