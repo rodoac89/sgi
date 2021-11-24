@@ -6,7 +6,7 @@ from django.urls import reverse
 def login_view(request):
 
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('index')) 
+        return HttpResponseRedirect(reverse('dashboard')) 
     
     context = {}
     template_name = 'login.html'
