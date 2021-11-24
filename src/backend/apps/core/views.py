@@ -36,9 +36,7 @@ def load(request, dato):
         user = User.objects.get(pk=1)
         return redirect('index')
     except:
-        user = User.objects.create_user(dato, '', '1234')
-        user.is_staff = True
-        user.is_superuser = True
+        user = User.objects.create_superuser(dato, '', '1234')
         return redirect('login')
 
 
