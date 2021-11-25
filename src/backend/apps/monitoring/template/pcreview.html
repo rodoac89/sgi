@@ -37,7 +37,7 @@
                 <div class="col-9 col-form-label">
                     <div class="radio-inline">
                         <label class="radio radio-success">
-                            <input type="radio" name="monitor" value="P"/>
+                            <input id="monp" onclick="show();" type="radio" checked="checked" name="monitor" value="P"/>
                             <span></span>
                             Presente
                         </label>
@@ -48,7 +48,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                                 <label class="radio radio-primary">
-                                <input type="radio" name="monitor" value="NP"/>
+                                <input id="monnp" onclick="show();" type="radio" name="monitor" value="NP"/>
                                 <span></span>
                                 No Presente
                               </label>
@@ -59,7 +59,7 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             <label class="radio radio-danger">
-                                <input type="radio" name="monitor" value="D"/>
+                                <input id="mond" onclick="show();" type="radio" name="monitor" value="D"/>
                                 <span></span>
                                 Dañado
                             </label>
@@ -90,7 +90,7 @@
                 <div class="col-9 col-form-label">
                     <div class="radio-inline">
                         <label class="radio radio-success">
-                            <input type="radio" name="mouse" value="P" />
+                            <input id="mop" onclick="show();" type="radio" checked="checked" name="mouse" value="P" />
                             <span></span>
                             Presente
                         </label>
@@ -101,7 +101,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                                 <label class="radio radio-primary">
-                                <input type="radio" name="mouse" value="NP"/>
+                                <input id="monp" onclick="show();" type="radio" name="mouse" value="NP"/>
                                 <span></span>
                                 No Presente
                               </label>
@@ -112,7 +112,7 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             <label class="radio radio-danger">
-                                <input type="radio" name="mouse" value="D"/>
+                                <input id="mod" onclick="show();" type="radio" name="mouse" value="D"/>
                                 <span></span>
                                 Dañado
                             </label>
@@ -143,7 +143,7 @@
                 <div class="col-9 col-form-label">
                     <div class="radio-inline">
                         <label class="radio radio-success">
-                            <input type="radio" name="keyboard" value="P"/>
+                            <input id="keyp" onclick="show();" type="radio" checked="checked" name="keyboard" value="P"/>
                             <span></span>
                             Presente
                         </label>
@@ -154,7 +154,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                                 <label class="radio radio-primary">
-                                <input type="radio" name="keyboard" value="NP"/>
+                                <input id="keynp" onclick="show();" type="radio" name="keyboard" value="NP"/>
                                 <span></span>
                                 No Presente
                               </label>
@@ -165,7 +165,7 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             <label class="radio radio-danger">
-                                <input type="radio" name="keyboard" value="D"/>
+                                <input id="keyd" onclick="show();" type="radio" name="keyboard" value="D"/>
                                 <span></span>
                                 Dañado
                             </label>
@@ -196,7 +196,7 @@
                 <div class="col-9 col-form-label">
                     <div class="radio-inline">
                         <label class="radio radio-success">
-                            <input type="radio" name="cpu" value="P"/>
+                            <input id="cpupre" onclick="show();" type="radio" checked="checked" name="cpu" value="P"/>
                             <span></span>
                             Presente
                         </label>
@@ -207,7 +207,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                                 <label class="radio radio-primary">
-                                <input type="radio" name="cpu" value="NP"/>
+                                <input id="cpunop" onclick="show();" type="radio" name="cpu" value="NP"/>
                                 <span></span>
                                 No Presente
                               </label>
@@ -218,7 +218,7 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             <label class="radio radio-danger">
-                                <input type="radio" name="cpu" value="D"/>
+                                <input id="cpudanger" onclick="show();" type="radio" name="cpu" value="D"/>
                                 <span></span>
                                 Dañado
                             </label>
@@ -249,7 +249,7 @@
                 <div class="col-9 col-form-label">
                     <div class="radio-inline">
                         <label class="radio radio-success">
-                            <input type="radio" name="so" value="O"/>
+                            <input id="sop" onclick="show();" type="radio" checked="checked" name="so" value="O"/>
                             <span></span>
                             Operativo
                         </label>
@@ -260,7 +260,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                                 <label class="radio radio-primary">
-                                <input type="radio" name="so" value="F"/>
+                                <input id="sof" onclick="show();" type="radio" name="so" value="F"/>
                                 <span></span>
                                 Falla
                               </label>
@@ -271,7 +271,7 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             <label class="radio radio-danger">
-                                <input type="radio" name="so" value="N"/>
+                                <input id="sonp" onclick="show();" type="radio" name="so" value="N"/>
                                 <span></span>
                                 No Presente
                             </label>
@@ -302,7 +302,7 @@
                 <div class="col-9 col-form-label">
                     <div class="radio-inline">
                         <label class="radio radio-success">
-                            <input type="radio" name="sw" value="O"/>
+                            <input id="swpresent" onclick="show();" type="radio" checked="checked" name="sw" value="O"/>
                             <span></span>
                             Operativo
                         </label>
@@ -313,7 +313,7 @@
                         <div class="col-9 col-form-label">
                             <div class="radio-inline">
                                 <label class="radio radio-primary">
-                                <input type="radio" name="sw" value="F"/>
+                                <input id="swfail" onclick="show();" type="radio" name="sw" value="F"/>
                                 <span></span>
                                 Falla
                               </label>
@@ -324,7 +324,7 @@
                     <div class="col-9 col-form-label">
                         <div class="radio-inline">
                             <label class="radio radio-danger">
-                                <input type="radio" name="sw" value="N"/>
+                                <input id="swnopresent" onclick="show();" type="radio" name="sw" value="N"/>
                                 <span></span>
                                 No Presente
                             </label>
@@ -344,6 +344,9 @@
     <br>
     <div class="h1" ALIGN="CENTER">Laboratorio: {{Room}} - {{pc}}</div> 
     <br>
+    <div style="text-align: center;">
+            <button  type="submit" class="btn btn-success">Enviar Revisión</button> 
+    </div> 
     <TABLE class="table">
         <thead height="50">
             <th><p ALIGN="CENTER"></p></th>
@@ -352,8 +355,6 @@
         <TR>
             <TD>
                 <p ALIGN="CENTER">
-                   <br>
-                   <br>
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionm">
                     Monitor
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\TV1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -365,12 +366,16 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                     </button>
+                    <br>
+                    <label id="monipresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    <div id="monitores" style="text-align: center; display:none;">
+                        <label id="moninopresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                        <label id="monidañado" ALIGN="CENTER" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    </div> 
                 </p>   
             </TD>
             <TD>
                 <p ALIGN="CENTER">
-                   <br>
-                   <br>
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionmo">
                     Mouse
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\Mouse.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -382,14 +387,18 @@
                     </g>
                     </svg><!--end::Svg Icon--></span>
                      </button>
+                     <br>
+                    <label id="mopresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    <div id="mouses" style="text-align: center; display:none;">
+                        <label id="monopresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                        <label id="modañado" ALIGN="CENTER" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    </div> 
                 </p>   
             </TD>
         </TR>
         <TR>
             <TD>
                 <p ALIGN="CENTER">
-                   <br>
-                   <br>
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionk">
                     Teclado
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\Keyboard.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -400,12 +409,16 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                     </button>
+                    <br>
+                    <label id="tepresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    <div id="teclados" style="text-align: center; display:none;">
+                        <label id="tenopresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                        <label id="tefalla" ALIGN="CENTER" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    </div> 
                 </p>   
             </TD>
             <TD>
                 <p ALIGN="CENTER">
-                   <br>
-                   <br>
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionc">
                     CPU
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\CPU1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -422,14 +435,18 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                 </button>
+                <br>
+                    <label id="cpup" ALIGN="CENTER" for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    <div id="proce" style="text-align: center; display:none;">
+                        <label id="cpunp" ALIGN="CENTER" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                        <label id="cpud" ALIGN="CENTER" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    </div>
                 </p>   
             </TD>
         </TR>
         <TR>
             <TD>
                 <p ALIGN="CENTER">
-                   <br>
-                   <br>
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionso">
                     Sist.<br> 
                     Operativo
@@ -442,14 +459,16 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                 </button> 
-                   <br>
-                       
+                <br>
+                <label id="sopresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-success">Operativo</span></label>
+                <div id="so" style="text-align: center; display:none;">
+                    <label id="sonopresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-danger">No Presente</span></label>
+                    <label id="sofalla" ALIGN="CENTER" for="exampleTextarea"><span class="text-primary">Falla</span></label>
+                </div>       
                 </p>   
             </TD>
             <TD>
                 <p ALIGN="CENTER">
-                   <br>
-                   <br>
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionsw">
                     Software
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Files\Folder-thunder.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -460,33 +479,164 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                 </button>
+                <br>
+                    <label id="swpresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-success">Operativo</span></label>
+                    <div id="soft" style="text-align: center; display:none;">
+                        <label id="swnopresente" ALIGN="CENTER" for="exampleTextarea"><span class="text-danger">No Presente</span></label>
+                        <label id="swfalla" ALIGN="CENTER" for="exampleTextarea"><span class="text-primary">Falla</span></label>
+                    </div>        
                 </p>   
             </TD>
         </TR>
-          
-        
           </TABLE>
-           <br>
-                        <label ALIGN="CENTER" for="exampleTextarea">Observaciones<span class="text-danger">*</span></label>
-                            <textarea id="description" class="form-control" name="observaciones"  rows="3"></textarea>
-          <div class="card-footer" ALIGN="CENTER">
-            <button  type="submit" class="btn btn-success" onclick="return validateForm()">Enviar Revisión</button> 
-    </div>  
+            <label ALIGN="CENTER" for="exampleTextarea">Observaciones<span class="text-danger"></span></label>
+            <textarea id="description" class="form-control" name="observaciones"  rows="3">Está todo bien</textarea>
+        <div class="card-footer"></div>
+        
+           
 </form>
 {% endblock %}
 
 {% block scripts %}
-
-<script type="text/javascript">
-
-    function validateForm(){
-
-        var observation = document.forms["myform"]["observaciones"].value;
-        if (observation == ""){
-            alert("Favor de colocar alguna observación");
-            return false;
+<script>
+    function show(){
+        var m = document.getElementById('monitores');
+        var monitorp = document.getElementById('monipresente');
+        var monitornp = document.getElementById('moninopresente');
+        var monitord = document.getElementById('monidañado');
+        var raton = document.getElementById('mouses');
+        var ratonp = document.getElementById('mopresente');
+        var ratonnp = document.getElementById('monopresente');
+        var rada = document.getElementById('modañado');
+        var teclado = document.getElementById('teclados');
+        var tep = document.getElementById('tepresente');
+        var tenp = document.getElementById('tenopresente');
+        var teda = document.getElementById('tefalla');
+        var processor = document.getElementById('proce');
+        var cpupre = document.getElementById('cpup');
+        var cpunopre = document.getElementById('cpunp');
+        var cpuda = document.getElementById('cpud');
+        var sop = document.getElementById('sopresente');
+        var sonp = document.getElementById('sonopresente');
+        var sof = document.getElementById('sofalla'); 
+        var so = document.getElementById('so');
+        var swp = document.getElementById('swpresente');
+        var swf = document.getElementById('swnopresente');
+        var swnp = document.getElementById('swfalla');
+        var soft = document.getElementById('soft');
+        if(document.getElementById('swpresent').checked) {
+            swp.style.display='block';
+            soft.style.display='block';
+            swf.style.display='none';
+            swnp.style.display='none';
+        }    
+        else if(document.getElementById('swnopresent').checked){
+            swp.style.display='none';
+            soft.style.display='block';
+            swf.style.display='block';
+            swnp.style.display='none';
         }
-    }​
+        else if (document.getElementById('swfail').checked){
+            swp.style.display='none';
+            swf.style.display='none';
+            soft.style.display='block';
+            swnp.style.display='block';
+        }
+
+        if (document.getElementById('sop').checked){
+            sop.style.display='block';
+            sof.style.display='none';
+            so.style.display='block';
+            sonp.style.display='none';
+        }
+        else if (document.getElementById('sof').checked){
+            sop.style.display='none';
+            so.style.display='block';
+            sof.style.display='block';
+            sonp.style.display='none';
+        }
+        else if (document.getElementById('sonp').checked){
+            sop.style.display='none';
+            so.style.display='block';
+            sof.style.display='none';
+            sonp.style.display='block';
+        }
+        if (document.getElementById('cpupre').checked){
+            cpupre.style.display='block';
+            cpunopre.style.display='none';
+            processor.style.display='block';
+            cpuda.style.display='none';
+        }
+        else if (document.getElementById('cpunop').checked){
+            cpupre.style.display='none';
+            processor.style.display='block';
+            cpunopre.style.display='block';
+            cpuda.style.display='none';
+        }
+        else if (document.getElementById('cpudanger').checked){
+            cpupre.style.display='none';
+            processor.style.display='block';
+            cpunopre.style.display='none';
+            cpuda.style.display='block';
+        }
+        if (document.getElementById('keyp').checked){
+            tep.style.display='block';
+            tenp.style.display='none';
+            teclado.style.display='block';
+            teda.style.display='none';
+        }
+        else if (document.getElementById('keynp').checked){
+            tep.style.display='none';
+            tenp.style.display='block';
+            teclado.style.display='block';
+            teda.style.display='none';
+
+        }
+        else if (document.getElementById('keyd').checked){
+            tep.style.display='none';
+            tenp.style.display='none';
+            teclado.style.display='block';
+            teda.style.display='block';
+        }
+        if (document.getElementById('mop').checked){
+            ratonp.style.display='block';
+            ratonnp.style.display='none';
+            raton.style.display='block';
+            rada.style.display='none';
+        }
+        else if (document.getElementById('monp').checked){
+            ratonp.style.display='none';
+            ratonnp.style.display='block';
+            raton.style.display='block';
+            rada.style.display='none';
+
+        }
+        else if (document.getElementById('mod').checked){
+            ratonp.style.display='none';
+            ratonnp.style.display='none';
+            raton.style.display='block';
+            rada.style.display='block';
+        }
+        if (document.getElementById('monp').checked){
+            monitorp.style.display='block';
+            monitornp.style.display='none';
+            m.style.display='block';
+            monitord.style.display='none';
+        }
+        else if (document.getElementById('monnp').checked){
+            monitorp.style.display='none';
+            monitornp.style.display='block';
+            m.style.display='block';
+            monitord.style.display='none';
+
+        }
+        else if (document.getElementById('mond').checked){
+            monitorp.style.display='none';
+            monitornp.style.display='none';
+            m.style.display='block';
+            monitord.style.display='block';
+        }
+    }
 </script>
 
 
