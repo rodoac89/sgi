@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" onsubmit="return validateForm()">
+<form method="POST">
     {% csrf_token %}
     <input type="hidden" name="user" value="{{ request.user.username }}">
 <!-- Modal Monitor-->
@@ -38,13 +38,13 @@
                     <div class="radio-inline">
                     {% if edit_review.monitor == "P" %}
                         <label class="radio radio-success">
-                            <input type="radio" checked="checked" name="monitor" value="P"/>
+                        <input id="monp" onclick="show();" type="radio" checked="checked" name="monitor" value="P"/>
                             <span></span>
                             Presente
                         </label>
                         {% else %}
                               <label class="radio radio-success">
-                                <input type="radio" name="monitor" value="P"/>
+                                <input id="monp" onclick="show();" type="radio" name="monitor" value="P"/>
                                 <span></span>
                                 Presente
                               </label>
@@ -58,13 +58,13 @@
                             <div class="radio-inline">
                                 {% if edit_review.monitor == "NP" %}
                                 <label class="radio radio-primary">
-                                <input type="radio" checked="checked" name="monitor" value="NP"/>
+                                    <input id="monnp" onclick="show();" checked="checked" type="radio" name="monitor" value="NP"/>
                                 <span></span>
                                 No Presente
                               </label>
                               {% else %}
                               <label class="radio radio-primary">
-                                <input type="radio" name="monitor" value="NP"/>
+                                <input id="monnp" onclick="show();" type="radio" name="monitor" value="NP"/>
                                 <span></span>
                                 No Presente
                               </label>
@@ -78,13 +78,13 @@
                         <div class="radio-inline">
                             {% if edit_review.monitor == "D" %}
                             <label class="radio radio-danger">
-                                <input type="radio" checked="checked" name="monitor" value="D"/>
+                                <input id="mond" onclick="show();" checked="checked" type="radio" name="monitor" value="D"/>
                                 <span></span>
                                 Dañado
                             </label>
                             {% else %}
                               <label class="radio radio-danger">
-                                <input type="radio" name="monitor" value="D"/>
+                                <input id="mond" onclick="show();" type="radio" name="monitor" value="D"/>
                                 <span></span>
                                 Dañado
                               </label>
@@ -489,8 +489,11 @@
 <div class="card card-custom">
     <br>
     <div class="h1" ALIGN="CENTER">Laboratorio: {{edit_review.pc.room.room_name}} - {{edit_review.pc.name}}</div> 
-    <input type="hidden" name="pc" value="{{edit_review.pc.id}}"
+    <input type="hidden" name="pc" value="{{edit_review.pc.id}}">
     <br>
+    <div style="text-align: center;">
+        <button  type="submit" class="btn btn-success">Editar Revisión</button> 
+    </div> 
     <TABLE class="table">
         <thead height="50">
             <th><p ALIGN="CENTER"></p></th>
@@ -498,9 +501,7 @@
         </thead>
         <TR>
             <TD>
-                <p ALIGN="CENTER">
-                   <br>
-                   <br>
+                <p style="text-align: center;">
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionm">
                     Monitor
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\TV1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -512,12 +513,21 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                     </button>
+                    <br>
+                    {% if edit_review.monitor == "P" %}
+                    <label id="monipresente"  for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    
+                    {% elif edit_review.monitor == "NP" %}
+                    <label id="moninopresente" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                    
+                    {% elif edit_review.monitor == "D" %}
+                    <label id="monidañado" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    {% endif %}
+                    
                 </p>   
             </TD>
             <TD>
-                <p ALIGN="CENTER">
-                   <br>
-                   <br>
+                <p style="text-align: center;">
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionmo">
                     Mouse
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\Mouse.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -529,14 +539,22 @@
                     </g>
                     </svg><!--end::Svg Icon--></span>
                      </button>
+                     <br>
+                     {% if edit_review.mouse == "P" %}
+                    <label id="mopresente"  for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    
+                    {% elif edit_review.mouse == "NP" %}
+                    <label id="monopresente" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                    
+                    {% elif edit_review.mouse == "D" %}
+                    <label id="modañado" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    {% endif %}
                 </p>   
             </TD>
         </TR>
         <TR>
             <TD>
-                <p ALIGN="CENTER">
-                   <br>
-                   <br>
+                <p style="text-align: center;">
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionk">
                     Teclado
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\Keyboard.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -547,12 +565,20 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                     </button>
+                    <br>
+                     {% if edit_review.keyboard == "P" %}
+                    <label id="tepresente"  for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    
+                    {% elif edit_review.keyboard == "NP" %}
+                    <label id="tenopresente" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                    
+                    {% elif edit_review.keyboard == "D" %}
+                    <label id="tefalla" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    {% endif %}
                 </p>   
             </TD>
             <TD>
-                <p ALIGN="CENTER">
-                   <br>
-                   <br>
+                <p style="text-align: center;">
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionc">
                     CPU
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\CPU1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -569,14 +595,23 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                 </button>
+                <br>
+                     {% if edit_review.cpu == "P" %}
+                    <label id="cpup"  for="exampleTextarea"><span class="text-success">Presente</span></label>
+                    
+                    {% elif edit_review.cpu == "NP" %}
+                    <label id="cpunp" for="exampleTextarea"><span class="text-primary">No Presente</span></label>
+                    
+                    {% elif edit_review.cpu == "D" %}
+                    <label id="cpud" for="exampleTextarea"><span class="text-danger">Dañado</span></label>
+                    {% endif %}
                 </p>   
             </TD>
         </TR>
         <TR>
             <TD>
-                <p ALIGN="CENTER">
-                   <br>
-                   <br>
+                <p style="text-align: center;">
+                   
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionso">
                     Sist.<br> 
                     Operativo
@@ -589,14 +624,21 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                 </button> 
-                   <br>
+                <br>
+                {% if edit_review.SO == "O" %}
+               <label id="sopresente"  for="exampleTextarea"><span class="text-success">Operativo</span></label>
+               
+               {% elif edit_review.SO == "F" %}
+               <label id="sofalla" for="exampleTextarea"><span class="text-primary">Falla</span></label>
+               
+               {% elif edit_review.SO == "NP" %}
+               <label id="sonopresente" for="exampleTextarea"><span class="text-danger">No Presente</span></label>
+               {% endif %}
                         
                 </p>   
             </TD>
             <TD>
-                <p ALIGN="CENTER">
-                   <br>
-                   <br>
+                <p style="text-align: center;">
                    <button type="button" class="btn btn-light-primary font-weight-bold mr-2" data-toggle="modal" data-target="#revisionsw">
                     Software
                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Files\Folder-thunder.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -607,6 +649,16 @@
                         </g>
                     </svg><!--end::Svg Icon--></span>
                 </button>
+                <br>
+                {% if edit_review.software == "O" %}
+               <label id="swpresente"  for="exampleTextarea"><span class="text-success">Operativo</span></label>
+               
+               {% elif edit_review.software == "F" %}
+               <label id="swfalla" for="exampleTextarea"><span class="text-primary">Falla</span></label>
+               
+               {% elif edit_review.software == "NP" %}
+               <label id="swnopresente" for="exampleTextarea"><span class="text-danger">No Presente</span></label>
+               {% endif %}
                 </p>   
             </TD>
         </TR>
@@ -614,43 +666,131 @@
         
           </TABLE>
           <br>
-                        <label ALIGN="CENTER" for="exampleTextarea">Observaciones<span class="text-danger">*</span></label>
+        <label ALIGN="CENTER" for="exampleTextarea">Observaciones<span class="text-danger">*</span></label>
                             <textarea id="description" class="form-control" name="observaciones"  rows="3">{{edit_review.observation}}</textarea>
-          <div class="card-footer" ALIGN="CENTER">
-            <button  type="submit" class="btn btn-success">Enviar Revisión</button> 
+          <div class="card-footer">
+            
     </div>  
 </form>
 {% endblock %}
 
 {% block scripts %}
-<!--FILTRAR TABLA MEDIANTE UNA ENTRADA DE UN COMBOBOX-->
-<!--
-<script type="text/javascript">
-    function filterlab()
-    {
-        var input,table,tr,td,filter,i,displaydata;
-        input=document.getElementById("selected");
-        filter=input.value.toUpperCase();
-        table=document.getElementById("table");
-        tr=table.getElementsByTagName("tr");
-        for(i=0;tr.length;i++){
+<script>
+    function show(){
+        var monitorp = document.getElementById('monipresente');
+        var monitornp = document.getElementById('moninopresente');
+        var monitord = document.getElementById('monidañado');
+        var ratonp = document.getElementById('mopresente');
+        var ratonnp = document.getElementById('monopresente');
+        var rada = document.getElementById('modañado');
+        var tep = document.getElementById('tepresente');
+        var tenp = document.getElementById('tenopresente');
+        var teda = document.getElementById('tefalla');
+        var cpupre = document.getElementById('cpup');
+        var cpunopre = document.getElementById('cpunp');
+        var cpuda = document.getElementById('cpud');
+        var sop = document.getElementById('sopresente');
+        var sonp = document.getElementById('sonopresente');
+        var sof = document.getElementById('sofalla'); 
+        var swp = document.getElementById('swpresente');
+        var swf = document.getElementById('swnopresente');
+        var swnp = document.getElementById('swfalla');
+        if(document.getElementById('swpresent').checked) {
+            swp.style.display='block';
+            swf.style.display='none';
+            swnp.style.display='none';
+        }    
+        else if(document.getElementById('swnopresent').checked){
+            swp.style.display='none';
+            swf.style.display='block';
+            swnp.style.display='none';
+        }
+        else if (document.getElementById('swfail').checked){
+            swp.style.display='none';
+            swf.style.display='none';
+            swnp.style.display='block';
+        }
 
-            td=tr[i].getElementsByTagName("td")[1];
-            if(td){
-                displaydata=td.innerText;
-                if(displaydata.toUpperCase().indexOf(filter)>-1){
-                    tr[i].style.display="";
-                }
-                else{
-                    tr[i].style.display="none";
-                }
-            }
+        if (document.getElementById('sop').checked){
+            sop.style.display='block';
+            sof.style.display='none';
+            sonp.style.display='none';
+        }
+        else if (document.getElementById('sof').checked){
+            sop.style.display='none';
+            sof.style.display='block';
+            sonp.style.display='none';
+        }
+        else if (document.getElementById('sonp').checked){
+            sop.style.display='none';
+            sof.style.display='none';
+            sonp.style.display='block';
+        }
+        if (document.getElementById('cpupre').checked){
+            cpupre.style.display='block';
+            cpunopre.style.display='none';
+            cpuda.style.display='none';
+        }
+        else if (document.getElementById('cpunop').checked){
+            cpupre.style.display='none';
+            cpunopre.style.display='block';
+            cpuda.style.display='none';
+        }
+        else if (document.getElementById('cpudanger').checked){
+            cpupre.style.display='none';
+            cpunopre.style.display='none';
+            cpuda.style.display='block';
+        }
+        if (document.getElementById('keyp').checked){
+            tep.style.display='block';
+            tenp.style.display='none';
+            teda.style.display='none';
+        }
+        else if (document.getElementById('keynp').checked){
+            tep.style.display='none';
+            tenp.style.display='block';
+            teda.style.display='none';
+
+        }
+        else if (document.getElementById('keyd').checked){
+            tep.style.display='none';
+            tenp.style.display='none';
+            teda.style.display='block';
+        }
+        if (document.getElementById('mousep').checked){
+            ratonp.style.display='block';
+            ratonnp.style.display='none';
+            rada.style.display='none';
+        }
+        else if (document.getElementById('mousenp').checked){
+            ratonp.style.display='none';
+            ratonnp.style.display='block';
+            rada.style.display='none';
+
+        }
+        else if (document.getElementById('moused').checked){
+            ratonp.style.display='none';
+            ratonnp.style.display='none';
+            rada.style.display='block';
+
+        }
+        if (document.getElementById('monp').checked){
+            monitorp.style.display='block';
+            monitornp.style.display='none';
+            monitord.style.display='none';
+        }
+        else if (document.getElementById('monnp').checked){
+            monitorp.style.display='none';
+            monitornp.style.display='block';
+            monitord.style.display='none';
+
+        }
+        else if (document.getElementById('mond').checked){
+            monitorp.style.display='none';
+            monitornp.style.display='none';
+            monitord.style.display='block';
         }
     }
-
-
-</script>-->
-<script>
-$("input[name='monitor']:checked").val();
 </script>
+
 {% endblock %}

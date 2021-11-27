@@ -93,8 +93,7 @@ def computer_management(request):
     Schedule = ScheduledReview.objects.all().filter(date_scheduled__date=date_now)
     l = []
     for i in Schedule:
-         if i.date_scheduled.date() == date_now:
-            l.append(i.room.id)  
+        l.append(i.room.id)  
     lab = Room.objects.all().filter(pk__in=l).order_by('room_name')
     context={
         'lab':lab
