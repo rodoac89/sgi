@@ -52,7 +52,7 @@
 						<th>Cantidad</th>
 						<th>Activas</th>
 						<th>Fecha de caducidad</th>
-						<th>Editar</th>
+						<th class="text-center" style="width: 10%;">Editar</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -65,10 +65,9 @@
 						<td>{{ p.license_in_use }}</td>
 						<td>{{ p.license_due_date }}</td>
 						<td>
-							<form method="get" action="{% url 'licenses:info_license' %}">
-								{% csrf_token %}
-								<button href="{%url 'licenses:info_license' %}" value="{{ p.id_license }}" name="id_serch" class="btn btn-success">Edit</a>
-							</form>
+							<div class="col-3 offset-1">
+								<a href="{%url 'licenses:edit_license' p.id_license %}" class="btn btn-success"> Edit </a> 
+							</div>
 					</tr>
 					{% endfor %}
 					

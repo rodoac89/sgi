@@ -73,6 +73,7 @@ def adm_licencias(request):
     data = {
         'listado_de_licencias': licenses_lista
     }
+    
     return render(request,'listado_licencias.html', data)
 
 def enter_licenses(request):
@@ -94,15 +95,15 @@ class EnterLicensesView(HttpRequest):
 
 
 
-def info_license(request):
-    context={}
-    if request.GET:
-        if 'id_serch' in request.GET:
-            data_forms = LicensesList.objects.get(id_license=int(request.GET['id_serch']))
-            context['licencia'] = data_forms
+# def info_license(request):
+#     context={}
+#     if request.GET:
+#         if 'id_serch' in request.GET:
+#             data_forms = LicensesList.objects.get(id_license=int(request.GET['id_serch']))
+#             context['licencia'] = data_forms
     
 
-    return render(request, "info_licencia.html", context)
+#     return render(request, "info_licencia.html", context)
 
 
 def edit_license(request, id):
