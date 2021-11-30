@@ -38,12 +38,14 @@
                     <label for="example-datetime-local-input" class="col-2 col-form-label">Fecha</label>
                     <div class="col-10">
                         <input id="date" class="form-control" name="date" type="datetime-local" id="example-datetime-local-input" />
+                        <label id="dateerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione una fecha</span></label> 
                     </div>
                 </div>
                 <div class="form-group row">
                     <label  class="col-2 col-form-label">Titulo</label>
                     <div class="col-10">
                      <input class="form-control" name="title" type="text"  id="title"/>
+                     <label id="titleerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Ingrese un título</span></label> 
                     </div>
                    </div>
                    <div class="form-group">
@@ -55,6 +57,7 @@
                             {% endfor %}
 
                     </select>
+                    <label id="roomerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione un laboratorio de la lista</span></label> 
                    </div>   
         <br>
             
@@ -129,15 +132,15 @@
         var date = document.getElementById("date").value;
         var title = document.getElementById("title").value;
         if (date == ""){
-            alert("Debe seleccionar una fecha");
+            dateerror.style.display = "block";
             return false;
         }
         else if (title == ""){
-            alert("Debe ingresar un título");
+            titleerror.style.display = "block";
             return false;
         }
         else if (room == ""){
-            alert("Debe seleccionar un laboratorio");
+            roomerror.style.display = "block";
             return false;
         }
     }

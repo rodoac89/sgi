@@ -45,17 +45,18 @@
         <br>
         <div class="form-group">
             
-            <form action="{% url 'computer_management' %}" method="POST">
+            <form action="{% url 'computer_management' %}" method="POST" onsubmit="return validate_form();">
                {% csrf_token %}
-                <select name="Room" class="form-control" id="exampleSelect1">
+                <select name="Room" class="form-control" id="room_select">
                     {% for l in lab %}
                     <option value="{{ l.room_name }}">{{l.room_name}}</option>
                     {{request.session.Room}}
                     {% endfor %}
                 </select>
                </div>
+               <label id="roomerror" style="display: none; text-align:center;" for="exampleTextarea"><span class="text-danger">No hay revisiones programadas para el día de hoy</span></label>
                <br>
-               <div ALIGN="CENTER"> 
+               <div style="text-align: center;">
                 
                 <input  type="submit" class="btn btn-primary mr-2" value="Iniciar revisión">
                </div>
@@ -84,4 +85,15 @@
 
 {% block scripts %}
 
+<script type="text/javascript">
+    function validate_form(){
+        var room = document.getElementById("room_select").value;
+        if (room == ""){
+            roomerror.style.display = "block";
+            return false;
+        }
+        
+    }
+        
+</script>
 {% endblock %}

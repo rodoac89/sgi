@@ -46,12 +46,14 @@
                 <label for="example-date-input" class="col-2 col-form-label">Fecha de Inicio</label>
                 <div class="col-10">
                     <input class="form-control" {{request.session.start}} name="datestart" type="date" id="datestart" />
+                    <label id="dateestartrror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione una fecha de inicio</span></label> 
                 </div>
             </div>
             <div class="form-group row">
                 <label for="example-date-input" class="col-2 col-form-label">Fecha Fin</label>
                 <div class="col-10">
                     <input class="form-control" {{request.session.dateending}} name="dateending" type="date" id="dateending" />
+                    <label id="dateendingerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione una fecha final</span></label> 
                 </div>
             </div>
                <div ALIGN="CENTER"> 
@@ -65,8 +67,6 @@
 
 </div>
  
- 
-
 {% endblock %}
 
 {% block scripts %}
@@ -77,11 +77,11 @@
         var datestart = document.getElementById("datestart").value;
         var dateending = document.getElementById("dateending").value;
         if (datestart == ""){
-            alert("Debe seleccionar una fecha de inicio");
+            dateestartrror.style.display = "block";
             return false;
         }
         else if (dateending == ""){
-            alert("Debe seleccionar una fecha final");
+            dateendingerror.style.display = "block";
             return false;
         }
     }
