@@ -12,9 +12,6 @@ from django.http import HttpResponse
 from collections import Counter
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
-from django.utils.timezone import make_aware
-from django.conf import settings
-
 
 def form_reports(request):
     room = Room.objects.all().order_by('room_name')
