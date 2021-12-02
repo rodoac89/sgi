@@ -1,7 +1,6 @@
 from django.http.response import JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Report, Revision, ScheduledReview, Externuser
-from .forms import ScheduledReviewForm
 from django.http import HttpResponse
 from apps.core.models import Workstation, Room
 from apps.notification.models import Notif
@@ -91,8 +90,7 @@ def computer_management(request):
     Schedule = ScheduledReview.objects.all().filter(date_scheduled__date=date_now)
     l = []
     for i in Schedule:
-         if i.date_scheduled.date() == date_now:
-            l.append(i.room.id)  
+        l.append(i.room.id)  
     lab = Room.objects.all().filter(pk__in=l).order_by('room_name')
     context={
         'lab':lab
@@ -122,19 +120,16 @@ def gratitude(request):
 @login_required
 def ShowScheduledReview(request):
     schedule = ScheduledReview.objects.all()
-    if request.method=='POST':
-        form = ScheduledReviewForm(request.POST)
-        if form.is_valid:
-            form.save()
-            #noti = Notif()
-            #noti.user = dj_user.objects.get(username = request.POST['user'])
-            #noti.message = "se agendó una nueva revisón"
-            #noti.save()
-            return redirect ('ScheduledReview')
-    else:
-        form = ScheduledReviewForm()        
-        context = {'form':form,
-        'schedule':schedule }
+    room = Room.objects.all()
+    if request.method=='POST': 
+        schedulere = ScheduledReview()
+        schedulere.date_scheduled = request.POST['date']
+        schedulere.title = request.POST['title']
+        schedulere.room = Room.objects.get( pk = request.POST['room'])
+        schedulere.save()
+        return redirect ('ScheduledReview')   
+    context = {'room':room,
+    'schedule':schedule }
     template_name="ScheduledReview.html"
     return render(request,template_name,context)
 
@@ -224,71 +219,77 @@ def updatepcreview(request, id):
     }
     template_name="updatepcreview.html"
     return render(request,template_name,context)
-
-@login_required
-def generalreports(request): 
-    count_room_hardware = {}
-    count_room_software = {}
-    count_room_so = {}
-    count_room_m_h = {}
-    count_room_m_s = {}
-    count_room_m_so = {}
-    total_r = []
-    total_m = []
-    i= 1
-    j=1
-    date = datetime.today()
-    year = date.strftime("%Y")
-    begin = year+'-01-01'
-    end = year+'-12-31'
-    review = Revision.objects.filter(date_created__range=(begin,end)) 
-    for r in review:
-        if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
-            if r.pc.room.room_name not in count_room_m_h:
-               count_room_m_h[r.pc.room.room_name] = 0
-            count_room_m_h[r.pc.room.room_name] +=1
-            total_m.append(j)
-        elif r.monitor == "D" or r.mouse=="D" or r.keyboard=="D" or r.cpu=="D":
-            if r.pc.room.room_name not in count_room_m_h:
-               count_room_m_h[r.pc.room.room_name] = 0
-            count_room_m_h[r.pc.room.room_name] +=1
-            total_m.append(j)
-        if r.software == "F" or r.software == "N":
-            if r.pc.room.room_name not in count_room_m_s:
-               count_room_m_s[r.pc.room.room_name] = 0
-            count_room_m_s[r.pc.room.room_name] +=1 
-            total_m.append(j)
-        if r.SO == "F" or r.SO == "N":
-            if r.pc.room.room_name not in count_room_m_so:
-               count_room_m_so[r.pc.room.room_name] = 0
-            count_room_m_so[r.pc.room.room_name] +=1
-            total_m.append(j)                      
-    reports = Report.objects.filter(date_created__range=(begin,end))     
-    for r in reports:
-        if r.category=="Hardware":
-            if r.pc.room.room_name not in count_room_hardware:
-                count_room_hardware[r.pc.room.room_name] = 0
-            count_room_hardware[r.pc.room.room_name] +=1
-            total_r.append(i)
-        elif r.category=="Software":
-            if r.pc.room.room_name not in count_room_software:
-                count_room_software[r.pc.room.room_name] = 0
-            count_room_software[r.pc.room.room_name] +=1
-            total_r.append(i)
-        elif r.category=="Sistema Operativo":
-            if r.pc.room.room_name not in count_room_so:
-                count_room_so[r.pc.room.room_name] = 0
-            count_room_so[r.pc.room.room_name] +=1
-            total_r.append(i)
-          
-    reports_total = sum(total_r)
-    maintenance_total= (sum(total_m))             
-    context= {'count_room_hardware':count_room_hardware,
-    'count_room_software':count_room_software,'count_room_so':count_room_so, 'count_room_m_h': count_room_m_h,
-    'count_room_m_s':count_room_m_s, 'count_room_m_so':count_room_m_so, 'reports_total':reports_total,
-    'maintenance_total':maintenance_total}
-    template_name = "generalreports.html"
+def selectdate(request):
+    if request.POST:
+        request.session['datestart'] = request.POST['datestart']
+        request.session['dateending'] = request.POST['dateending']
+        return redirect('generalreports')
+    request.session['datestart'] = None
+    request.session['dateending'] = None
+    context={}
+    template_name = "selectdate.html"
     return render(request,template_name,context)
+
+def generalreports(request): 
+    if request.session['datestart'] is not None or 'datestart' not in request.session:
+        if request.session['dateending'] is not None or 'dateending' not in request.session:
+            count_room_hardware = {}
+            count_room_software = {}
+            count_room_so = {}
+            count_room_m_h = {}
+            count_room_m_s = {}
+            count_room_m_so = {}
+            total_r = []
+            total_m = []
+            i= 1
+            j=1
+            review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])) 
+            for r in review:
+                if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
+                    if r.pc.room.room_name not in count_room_m_h:
+                        count_room_m_h[r.pc.room.room_name] = 0
+                    count_room_m_h[r.pc.room.room_name] +=1
+                    total_m.append(j)
+                elif r.monitor == "D" or r.mouse=="D" or r.keyboard=="D" or r.cpu=="D":
+                    if r.pc.room.room_name not in count_room_m_h:
+                        count_room_m_h[r.pc.room.room_name] = 0
+                    count_room_m_h[r.pc.room.room_name] +=1
+                    total_m.append(j)
+                if r.software == "F" or r.software == "N":
+                    if r.pc.room.room_name not in count_room_m_s:
+                        count_room_m_s[r.pc.room.room_name] = 0
+                    count_room_m_s[r.pc.room.room_name] +=1 
+                    total_m.append(j)
+                if r.SO == "F" or r.SO == "N":
+                    if r.pc.room.room_name not in count_room_m_so:
+                        count_room_m_so[r.pc.room.room_name] = 0
+                    count_room_m_so[r.pc.room.room_name] +=1
+                    total_m.append(j)                      
+            reports = Report.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))     
+            for r in reports:
+                if r.category=="Hardware":
+                    if r.pc.room.room_name not in count_room_hardware:
+                        count_room_hardware[r.pc.room.room_name] = 0
+                    count_room_hardware[r.pc.room.room_name] +=1
+                    total_r.append(i)
+                elif r.category=="Software":
+                    if r.pc.room.room_name not in count_room_software:
+                        count_room_software[r.pc.room.room_name] = 0
+                    count_room_software[r.pc.room.room_name] +=1
+                    total_r.append(i)
+                elif r.category=="Sistema Operativo":
+                    if r.pc.room.room_name not in count_room_so:
+                        count_room_so[r.pc.room.room_name] = 0
+                    count_room_so[r.pc.room.room_name] +=1
+                    total_r.append(i)
+            reports_total = sum(total_r)
+            maintenance_total= (sum(total_m))             
+            context= {'count_room_hardware':count_room_hardware,
+            'count_room_software':count_room_software,'count_room_so':count_room_so, 'count_room_m_h': count_room_m_h,
+            'count_room_m_s':count_room_m_s, 'count_room_m_so':count_room_m_so, 'reports_total':reports_total,
+            'maintenance_total':maintenance_total}
+            template_name = "generalreports.html"
+            return render(request,template_name,context)
 
 def chart_report_lab(request):
     count_room = {}
@@ -296,7 +297,7 @@ def chart_report_lab(request):
     year = date.strftime("%Y")
     begin = year+'-01-01'
     end = year+'-12-31'
-    reports = Report.objects.filter(date_created__range=(begin,end))
+    reports = Report.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in reports:
         if r.pc.room.room_name not in count_room:
             count_room[r.pc.room.room_name] = 0
@@ -315,7 +316,7 @@ def chart_maintenance_lab(request):
     year = date.strftime("%Y")
     begin = year+'-01-01'
     end = year+'-12-31'
-    review = Revision.objects.filter(date_created__range=(begin,end))
+    review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in review:
         if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
             if r.pc.room.room_name not in count_room:

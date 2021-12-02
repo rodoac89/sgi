@@ -1,0 +1,278 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Campus{% endblock %}
+
+{% block title %}Administrar Campus{% endblock %}
+
+<!-- TODO: Wat? -->
+
+{% block notificaciones %}
+
+{% endblock %}
+
+{% block actions %}
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAddCampus">
+	Agregar campus
+</button>
+{% endblock %}
+
+{% block content %}
+{% include "admin/modal_campus.html" %}
+<div class="accordion accordion-solid accordion-panel accordion-svg-toggle" id="accordionCenter">
+	{% for c in camupuses %}
+	<!-- Modal create room-->
+	<div class="modal fade" id="modalAddRoom{{c.id}}" data-backdrop="static" tabindex="-1" role="dialog"
+		aria-labelledby="staticBackdrop" aria-hidden="true">
+
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<form action="{% url 'add_room' c.id %}" method="post" class="modal-content">
+				{% csrf_token %}
+				<div class="modal-header">
+					<h5 class="modal-title">Agregar laboratorio para {{ c.name }}</h5>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Ingrese el nombre del laboratorio</label>
+						<div class="input-group">
+							<div class="input-group-append"><span class="input-group-text"><i
+										class="la la-group icon-lg"></i></span></div>
+							<input type="text" name="roomname" class="form-control" placeholder="Nombre laboratorio"
+								aria-describedby="basic-addon2" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Ingrese la dirección física del laboraotrio</label>
+						<div class="input-group">
+							<div class="input-group-append"><span class="input-group-text"><i
+										class="la la-group icon-lg"></i></span></div>
+							<input type="text" name="roomaddress" class="form-control" placeholder="Dirección"
+								aria-describedby="basic-addon2" />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="card">
+		<div class="card-header" id="heading{{ c.id }}">
+			<div class="card-title" data-toggle="collapse" data-target="#collapse{{ c.id }}">
+				<div class="card-label">Campus {{ c.name }}</div>
+				<span class="svg-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+						height="24px" viewBox="0 0 24 24" version="1.1">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+							<polygon points="0 0 24 0 24 24 0 24"></polygon>
+							<path
+								d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z"
+								fill="#000000" fill-rule="nonzero"></path>
+							<path
+								d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z"
+								fill="#000000" fill-rule="nonzero" opacity="0.3"
+								transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999) ">
+							</path>
+						</g>
+					</svg>
+				</span>
+			</div>
+		</div>
+		<div id="collapse{{ c.id }}" class="collapse {% if c.id == 1 %}show{% endif %}" data-parent="#accordionCenter">
+			<div class="card-body">
+				<div class="row">
+					<div class="card primary card-custom col-md-4 text-dark text-hover-primary ">
+						<div class="card-body">
+							<div class="text-center">
+								<p class="font-weight-bold font-size-h4 mb-3" style="margin-top: 2%;">
+									Agregar laboratorio
+								</p>
+								<span class="svg-icon svg-icon-success svg-icon-10x" data-toggle="modal"
+									data-target="#modalAddRoom{{c.id}}">
+									<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+										width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+										<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+											<rect x="0" y="0" width="24" height="24" />
+											<circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+											<path
+												d="M11,11 L11,7 C11,6.44771525 11.4477153,6 12,6 C12.5522847,6 13,6.44771525 13,7 L13,11 L17,11 C17.5522847,11 18,11.4477153 18,12 C18,12.5522847 17.5522847,13 17,13 L13,13 L13,17 C13,17.5522847 12.5522847,18 12,18 C11.4477153,18 11,17.5522847 11,17 L11,13 L7,13 C6.44771525,13 6,12.5522847 6,12 C6,11.4477153 6.44771525,11 7,11 L11,11 Z"
+												fill="#000000" />
+										</g>
+									</svg>
+								</span>
+							</div>
+						</div>
+					</div>
+					{% for r in c.room_set.all %}
+					<!-- Modal create workstation-->
+					<div class="modal fade" id="modalAddWorkstation{{r.id}}" data-backdrop="static" tabindex="-1"
+						role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+
+						<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+							<form action="{% url 'add_masive_workstations' r.id %}" method="post" class="modal-content">
+								{% csrf_token %}
+								<div class="modal-header">
+									<h5 class="modal-title">Agregar estaciones de trabajo para {{ r.room_name }}</h5>
+								</div>
+								<div class="modal-body">
+									<p>Los equipos que se generen tendrán el siguiente prefijo {{ r.room_name }}PCXX</p>
+									<p>Este formulario permite agregar de manera masiva las estaciones de trabajo con
+										datos comunes. Para agregar mas detalles deberá ingresar al panel de
+										administración de los equipos en el laboratorio específico</p>
+									<div class="card-body">
+										<div class="form-group row">
+											<div class="col-lg-4">
+												<label>Cantidad de equipos:</label>
+												<input type="number" class="form-control" name="cant_pc"
+													placeholder="Ej: 40" />
+											</div>
+											<div class="col-lg-4">
+												<label>Modelo (opcional):</label>
+												<input type="text" name="pc_model" class="form-control" placeholder="Ej: Compaq Presario CQ40" />
+											</div>
+											<div class="col-lg-4">
+												<label>Procesador (opcional):</label>
+												<div class="input-group">
+													<input type="text" name="processor_model" class="form-control" placeholder="Ej: AMD Ryzen 5 3600" />
+												</div>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-lg-4">
+												<label>Capacidad de memoria RAM (opcional):</label>
+												<div class="input-group">
+													<input type="number" name="ram_capacity" value="0" class="form-control" placeholder="Ej: 16" />
+													<div class="input-group-prepend"><span class="input-group-text">GB</span></div>
+												</div>
+											</div>
+											<div class="col-lg-4">
+												<label>Capacidad de almacenamiento (opcional):</label>
+												<div class="input-group">
+													<input type="number" name="disk_capacity" value="0" class="form-control" placeholder="Ej: 1000" />
+													<div class="input-group-prepend"><span class="input-group-text">GB</span></div>
+												</div>
+											</div>
+											<div class="col-lg-4">
+												<label>Modelo monitor (opcional):</label>
+												<input type="text" name="monitor_model" class="form-control" placeholder="Ej: ASUS TUF Gaming" />
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-lg-4">
+												<label>Pulgadas de los monitores (opcional):</label>
+												<div class="input-group">
+													<input type="number" name="monitor_inches" value="0" class="form-control" placeholder="Ej: 16" />
+													<div class="input-group-prepend"><span class="input-group-text">inch</span></div>
+												</div>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+									<button type="submit" class="btn btn-primary">Guardar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<div class="card primary card-custom col-md-4 text-dark text-hover-primary ">
+						<div class="card-body">
+							<div class="d-flex align-items-center p-5">
+								<div class="mr-6">
+									<span class="svg-icon svg-icon-4x">
+										<svg xmlns="http://www.w3.org/2000/svg"
+											xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+											viewBox="0 0 24 24" version="1.1">
+											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+												<rect x="0" y="0" width="24" height="24" />
+												<path
+													d="M11,20 L11,17 C11,16.4477153 11.4477153,16 12,16 C12.5522847,16 13,16.4477153 13,17 L13,20 L15.5,20 C15.7761424,20 16,20.2238576 16,20.5 C16,20.7761424 15.7761424,21 15.5,21 L8.5,21 C8.22385763,21 8,20.7761424 8,20.5 C8,20.2238576 8.22385763,20 8.5,20 L11,20 Z"
+													fill="#000000" opacity="0.3" />
+												<path
+													d="M3,5 L21,5 C21.5522847,5 22,5.44771525 22,6 L22,16 C22,16.5522847 21.5522847,17 21,17 L3,17 C2.44771525,17 2,16.5522847 2,16 L2,6 C2,5.44771525 2.44771525,5 3,5 Z M4.5,8 C4.22385763,8 4,8.22385763 4,8.5 C4,8.77614237 4.22385763,9 4.5,9 L13.5,9 C13.7761424,9 14,8.77614237 14,8.5 C14,8.22385763 13.7761424,8 13.5,8 L4.5,8 Z M4.5,10 C4.22385763,10 4,10.2238576 4,10.5 C4,10.7761424 4.22385763,11 4.5,11 L7.5,11 C7.77614237,11 8,10.7761424 8,10.5 C8,10.2238576 7.77614237,10 7.5,10 L4.5,10 Z"
+													fill="#000000" />
+											</g>
+										</svg>
+									</span>
+								</div>
+								<div class="d-flex flex-column">
+									<p class="font-weight-bold font-size-h4 mb-3">
+										{{ r.room_name }}
+									</p>
+									<div class="text-dark-75">
+										<p> <span class="svg-icon svg-icon-sm">
+												<svg xmlns="http://www.w3.org/2000/svg"
+													xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+													height="24px" viewBox="0 0 24 24" version="1.1">
+													<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+														<polygon points="0 0 24 0 24 24 0 24" />
+														<path
+															d="M18,14 C16.3431458,14 15,12.6568542 15,11 C15,9.34314575 16.3431458,8 18,8 C19.6568542,8 21,9.34314575 21,11 C21,12.6568542 19.6568542,14 18,14 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z"
+															fill="#000000" fill-rule="nonzero" opacity="0.3" />
+														<path
+															d="M17.6011961,15.0006174 C21.0077043,15.0378534 23.7891749,16.7601418 23.9984937,20.4 C24.0069246,20.5466056 23.9984937,21 23.4559499,21 L19.6,21 C19.6,18.7490654 18.8562935,16.6718327 17.6011961,15.0006174 Z M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z"
+															fill="#000000" fill-rule="nonzero" />
+													</g>
+												</svg>
+											</span>Capacidad: {{ r.workstation_set.all.count }}</p>
+
+										<p> <span class="svg-icon svg-icon-sm">
+												<svg xmlns="http://www.w3.org/2000/svg"
+													xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+													height="24px" viewBox="0 0 24 24" version="1.1">
+													<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+														<rect x="0" y="0" width="24" height="24" />
+														<path
+															d="M15.9497475,3.80761184 L13.0246125,6.73274681 C12.2435639,7.51379539 12.2435639,8.78012535 13.0246125,9.56117394 L14.4388261,10.9753875 C15.2198746,11.7564361 16.4862046,11.7564361 17.2672532,10.9753875 L20.1923882,8.05025253 C20.7341101,10.0447871 20.2295941,12.2556873 18.674559,13.8107223 C16.8453326,15.6399488 14.1085592,16.0155296 11.8839934,14.9444337 L6.75735931,20.0710678 C5.97631073,20.8521164 4.70998077,20.8521164 3.92893219,20.0710678 C3.1478836,19.2900192 3.1478836,18.0236893 3.92893219,17.2426407 L9.05556629,12.1160066 C7.98447038,9.89144078 8.36005124,7.15466739 10.1892777,5.32544095 C11.7443127,3.77040588 13.9552129,3.26588995 15.9497475,3.80761184 Z"
+															fill="#000000" />
+														<path
+															d="M16.6568542,5.92893219 L18.0710678,7.34314575 C18.4615921,7.73367004 18.4615921,8.36683502 18.0710678,8.75735931 L16.6913928,10.1370344 C16.3008685,10.5275587 15.6677035,10.5275587 15.2771792,10.1370344 L13.8629656,8.7228208 C13.4724413,8.33229651 13.4724413,7.69913153 13.8629656,7.30860724 L15.2426407,5.92893219 C15.633165,5.5384079 16.26633,5.5384079 16.6568542,5.92893219 Z"
+															fill="#000000" opacity="0.3" />
+													</g>
+												</svg>
+											</span>Revisar: {{ r.workstation_set.all.count }}
+										</p>
+										<p> <span class="svg-icon svg-icon-sm">
+												<svg xmlns="http://www.w3.org/2000/svg"
+													xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+													height="24px" viewBox="0 0 24 24" version="1.1">
+													<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+														<rect x="0" y="0" width="24" height="24" />
+														<path
+															d="M15.9497475,3.80761184 L13.0246125,6.73274681 C12.2435639,7.51379539 12.2435639,8.78012535 13.0246125,9.56117394 L14.4388261,10.9753875 C15.2198746,11.7564361 16.4862046,11.7564361 17.2672532,10.9753875 L20.1923882,8.05025253 C20.7341101,10.0447871 20.2295941,12.2556873 18.674559,13.8107223 C16.8453326,15.6399488 14.1085592,16.0155296 11.8839934,14.9444337 L6.75735931,20.0710678 C5.97631073,20.8521164 4.70998077,20.8521164 3.92893219,20.0710678 C3.1478836,19.2900192 3.1478836,18.0236893 3.92893219,17.2426407 L9.05556629,12.1160066 C7.98447038,9.89144078 8.36005124,7.15466739 10.1892777,5.32544095 C11.7443127,3.77040588 13.9552129,3.26588995 15.9497475,3.80761184 Z"
+															fill="#000000" />
+														<path
+															d="M16.6568542,5.92893219 L18.0710678,7.34314575 C18.4615921,7.73367004 18.4615921,8.36683502 18.0710678,8.75735931 L16.6913928,10.1370344 C16.3008685,10.5275587 15.6677035,10.5275587 15.2771792,10.1370344 L13.8629656,8.7228208 C13.4724413,8.33229651 13.4724413,7.69913153 13.8629656,7.30860724 L15.2426407,5.92893219 C15.633165,5.5384079 16.26633,5.5384079 16.6568542,5.92893219 Z"
+															fill="#000000" opacity="0.3" />
+													</g>
+												</svg>
+											</span>Licencias: {{ r.workstation_set.all.count }}
+										</p>
+										<a href="{% url 'viewroom' r.id %}" class="btn btn-primary">Ver laboratorio</a>
+										<a href="#" class="btn btn-primary" data-toggle="modal"
+											data-target="#modalAddWorkstation{{r.id}}">
+											Agregar PCs
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
