@@ -34,6 +34,7 @@ class LabPetition(models.Model):
         return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.laboratory_petition)
 
 class module(models.Model):
+    resume_module = models.CharField(max_length=50, default="")
     name_module = models.CharField(max_length=50, default="")
     start_module = models.TimeField(null=True)
     finish_module = models.TimeField(null=True)
@@ -44,29 +45,6 @@ class module(models.Model):
         return "{} : {} - {}".format(self.name_module, self.start_module, self.finish_module)
 
 class modulepetition(models.Model):
-    MODULES = (
-        ('1D','08:30-09:15'),
-        ('2D','09:25-10:10'),
-        ('3D','10:20-11:05'),
-        ('4D','11:15-12:00'),
-        ('5D','12:10-12:55'),
-        ('6D','13:05-13:50'),
-        ('7D','14:00-14:45'),
-        ('8D','14:55-15:40'),
-        ('9D','15:50-16:35'),
-        ('10D','16:45-17:30'),
-        ('11D','17:40-18:25'),
-        ('12D','18:35-19:20'),
-        ('13D','19:30-20:15'),
-        ('14D','20:25-18:50'),
-        ('1V','19:00-19:45'),
-        ('2V','19:46-20:30'),
-        ('3V','20:40-21:25'),
-        ('4V','21:26-22:10'),
-        ('5V','22:20-23:05'),
-        ('6V','23:06-23:50'),
-        ('7V','08:30-17:30'),
-    )
     DAY = (
         ('Lunes','Lunes'),
         ('Martes','Martes'),
@@ -78,15 +56,14 @@ class modulepetition(models.Model):
     )
 
     day_mp = models.CharField(max_length=50, choices=DAY)
-    module_start_mp = models.CharField(max_length=50, choices=MODULES)
-    module_finish_mp = models.CharField(max_length=50, choices=MODULES)
+    module_mp = models.ManyToManyField(module, blank=True)
     labpetition_mp = models.ForeignKey(LabPetition, on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
-        return "{} desde el {} hasta {}".format(self.day_mp, self.module_start_mp, self.module_finish_mp)
+        return "{} desde el {} hasta {}".format(self.day_mp, self.module_mp)
 
     def __unicode__(self):
-        return "{} desde el {} hasta {}".format(self.day_mp, self.module_start_mp, self.module_finish_mp)
+        return "{} desde el {} hasta {}".format(self.day_mp, self.module_mp)
 
 
 #class Event(models.Model):

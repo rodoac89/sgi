@@ -9,7 +9,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth import get_user_model
 from apps.core.models import Room, Campus, Workstation
 from apps.schedules.models import LabPetition, modulepetition, module
-from apps.schedules.forms import LabPetitionForm, ModulePetitionForm
+from apps.schedules.forms import LabPetitionForm, ModulePetitionForm, ModuleForm
 
 # Create your views here.
 
@@ -35,7 +35,17 @@ def calendario(request):
 def reserva(request):
     template_name="reserva.html"
     context={}
-    #context['name'] = request.GET['name']
+    moduledata=module.objects.all().order_by('resume_module')
+    moduleform=ModuleForm(request.POST)
+    context['moduledata']=moduledata
+    if request.method == 'POST':
+        print(moduleform)
+        if moduleform.is_valid():
+            moduleform.save()
+            return HttpResponseRedirect(reverse('reserva'))
+        else:
+            context['formmodule']=moduleform
+    context['formmodule']=moduleform
     return render(request, template_name, context)
 
 def administrar(request):
@@ -72,6 +82,21 @@ def administrarid(request, id):
         print(form_mod.errors)
     context['formlab']=form_lab
     context['formmod']=form_mod
+    return render(request, template_name, context)
+
+def moduleid(request, id):
+    template_name="moduleid.html"
+    modid=module.objects.get(id = id)
+    context={}
+    if request.method == 'GET':
+        form_module=ModuleForm(instance = modid)
+        context['formmodule']=form_module
+    else:
+        form_module=ModuleForm(request.POST, instance = modid)
+        if form_module.is_valid():
+            form_module.save()
+            return HttpResponseRedirect(reverse('reserva'))
+    context['formmodule']=form_module
     return render(request, template_name, context)
 
 def reservar(request):

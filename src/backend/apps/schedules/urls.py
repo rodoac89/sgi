@@ -8,4 +8,5 @@ urlpatterns = [
     path('reserva/', views.reserva, name="reserva"),
     path('administrar/', views.administrar, name="administrar"),
     path('administrarid/<int:id>/', views.administrarid, name="administrarid"),
+    path('moduleid/<int:id>/', views.moduleid, name="moduleid"),
 ]

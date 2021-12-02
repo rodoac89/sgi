@@ -88,14 +88,14 @@ class ModulePetitionForm(forms.ModelForm):
         model = modulepetition
         fields = [ 
             'day_mp',
-            'module_start_mp',
-            'module_finish_mp',
+            'module_mp',
+            'module_mp',
             'labpetition_mp',
         ]
         labels = {
             'day_mp':'Dia:',
-            'module_start_mp': 'Modulo inicio:',
-            'module_finish_mp': 'Modulo final:',
+            'module_mp': 'Modulo inicio:',
+            'module_mp': 'Modulo final:',
         }
         widgets={
 
@@ -103,5 +103,5 @@ class ModulePetitionForm(forms.ModelForm):
     def __init__(self,*args, **kwargs):
         super(ModulePetitionForm, self).__init__(*args,**kwargs)
         self.fields['day_mp'].widget.attrs.update({'class':'form-control'})
-        self.fields['module_start_mp'].widget.attrs.update({'class':'form-control'})
-        self.fields['module_finish_mp'].widget.attrs.update({'class':'form-control'})
+        self.fields['module_mp'].widget.attrs.update({'class':'form-control'})
+        self.fields['module_mp'].widget.attrs.update({'class':'form-control'})
