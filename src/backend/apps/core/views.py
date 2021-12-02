@@ -26,16 +26,6 @@ def dashboard(request):
         context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
     return render(request, template_name, context)
 
-@login_required
-def administration(request):
-    if request.user.is_superuser:        
-        template_name = "dashboard.html"
-        context={}
-        rooms= Room.objects.all()
-        context['rooms'] = rooms
-        if rooms.count() == 0:
-            context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
-    return render(request, template_name, context)
 
 @login_required
 def viewroom(request, room):

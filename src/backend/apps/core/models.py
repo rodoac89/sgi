@@ -36,14 +36,14 @@ class Room(models.Model):
 
 class Workstation(models.Model):
     name = models.CharField(max_length=25)
-    ip = models.CharField(max_length=15, blank=True, null=True)
-    pc_model = models.CharField(max_length=15, blank=True, null=True)
-    pc_serialnumber = models.CharField(max_length=15, blank=True, null=True)
-    processor_model = models.CharField(max_length=15, blank=True, null=True)
-    ram_capacity = models.CharField(max_length=15, blank=True, null=True)
-    disk_type = models.CharField(max_length=15, blank=True, null=True)
-    disk_capacity = models.CharField(max_length=15, blank=True, null=True)
-    monitor_model = models.CharField(max_length=15, blank=True, null=True)
+    ip = models.CharField(max_length=50, blank=True, null=True)
+    pc_model = models.CharField(max_length=50, blank=True, null=True)
+    pc_serialnumber = models.CharField(max_length=50, blank=True, null=True)
+    processor_model = models.CharField(max_length=50, blank=True, null=True)
+    ram_capacity = models.CharField(max_length=50, blank=True, null=True)
+    disk_type = models.CharField(max_length=50, blank=True, null=True)
+    disk_capacity = models.CharField(max_length=50, blank=True, null=True)
+    monitor_model = models.CharField(max_length=50, blank=True, null=True)
     monitor_serialnumber = models.CharField(
         max_length=15, blank=True, null=True)
     monitor_inches = models.PositiveIntegerField(default=0)

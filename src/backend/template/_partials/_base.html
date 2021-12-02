@@ -43,11 +43,11 @@
 					<span></span>
 				</button>
 				<!--end::Aside Mobile Toggle-->
-				<!--begin::Header Menu Mobile Toggle-->
+				{% comment %} <!--begin::Header Menu Mobile Toggle-->
 				<button class="btn p-0 burger-icon ml-4" id="kt_header_mobile_toggle">
 					<span></span>
 				</button>
-				<!--end::Header Menu Mobile Toggle-->
+				<!--end::Header Menu Mobile Toggle--> {% endcomment %}
 				<!--begin::Topbar Mobile Toggle-->
 				<button class="btn btn-hover-text-primary p-0 ml-2" id="kt_header_mobile_topbar_toggle">
 					<span class="svg-icon svg-icon-xl">
@@ -113,18 +113,10 @@
 					<!--begin::Header-->
 					<div id="kt_header" class="header header-fixed">
 						<!--begin::Container-->
-						<div class="container-fluid d-flex align-items-stretch justify-content-between">
-							<!--begin::Header Menu Wrapper-->
-							<div class="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">
-								<!--begin::Header Menu-->
-								<div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
-                  <!--begin::Header Nav-->
-									{% include '_partials/_headernav.html' %}
-                  <!--end::Header Nav-->
-								</div>
-								<!--end::Header Menu-->
-							</div>
-							<!--end::Header Menu Wrapper-->
+						<div class="container-fluid d-flex align-items-stretch justify-content-between" >							
+								
+							{% include '_partials/_headernav.html' %}                 
+								
 							<!--begin::Topbar-->
 							{% include '_partials/_topbar.html' %}
 							<!--end::Topbar-->
@@ -153,6 +145,13 @@
 									<!--end::Page Heading-->
 								</div>
 								<!--end::Info-->
+								<!--begin::Toolbar-->
+								<div class="d-flex align-items-center">
+									<!--begin::Actions-->
+									{% block actions %} {% endblock %}
+									<!--end::Actions-->
+								</div>
+								<!--end::Toolbar-->
 							</div>
 						</div>
 						<!--end::Subheader-->
@@ -1297,7 +1296,7 @@
 					<h5 class="font-weight-bold mb-4 text-center">Demo 15</h5>
 					<div class="overlay rounded-lg mb-8 offcanvas-demo">
 						<div class="overlay-wrapper rounded-lg">
-							<img src="a{% static 'media/demos/demo15.png' %}" alt="" class="w-100" />
+							<img src="{% static 'media/demos/demo15.png' %}" alt="" class="w-100" />
 						</div>
 						<div class="overlay-layer">
 							<a href="#" class="btn btn-white btn-text-primary btn-hover-primary font-weight-boldest text-center min-w-75px shadow disabled opacity-90">Coming soon</a>
