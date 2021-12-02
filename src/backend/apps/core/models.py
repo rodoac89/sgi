@@ -9,7 +9,7 @@ class Campus(models.Model):
     location_latitude = models.CharField(max_length=50, blank=True, null=True)
     location_longitude = models.CharField(max_length=50, blank=True, null=True)
     active = models.BooleanField(default=True)
-    inactive_by = models.TextField(default="")
+    inactive_by = models.TextField(default="", blank=True, null=True)
 
     def __str__(self):
         return self.name
