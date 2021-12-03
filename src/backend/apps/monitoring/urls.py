@@ -17,7 +17,7 @@ urlpatterns = [
     path('generalreports/',views.generalreports,name="generalreports"),
     path ('chart_report_lab/',views.chart_report_lab,name="chart_report_lab"),
     path('selectreviewpc/',views.selectreviewpc,name="selectreviewpc"),
-    path('chart_maintenance_lab/',views.chart_maintenance_lab,name="chart_maintenance_lab")
-    
+    path('chart_maintenance_lab/',views.chart_maintenance_lab,name="chart_maintenance_lab"),
+    path('selectdate/',views.selectdate,name="selectdate"),
 
 ]

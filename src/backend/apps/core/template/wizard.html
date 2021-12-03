@@ -1,0 +1,181 @@
+{% load static %}
+<title>Instalación</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+<link href="{% static 'css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="shortcut icon" href="{% static 'media/logos/favicon.ico' %}" />
+{% block content %}
+<style type="text/css">
+    #container {
+        display: block;
+        position: relative
+    }
+
+    .ui-autocomplete {
+        position: absolute;
+        background-color: white !important;
+    }
+</style>
+
+<div style="margin-left: auto; margin-right: auto;" class="card col-9  card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <blockquote class="blockquote text-center">
+            <br>
+            <div class="h1">Instalación del sistema</div>
+        </blockquote>
+        <img src="{% static 'media/monitoring/error.png' %}" ALIGN="RIGHT" width="120" height="100">
+    </div>
+    <form method="POST" name="installation" onsubmit="return validate_form();" enctype="multipart/form-data">
+        <div class="form-group mb-8">
+            <div class="alert alert-custom alert-default" role="alert">
+
+                <div class="alert-text">
+                    <p ALIGN="justify">Bienvenido y gracias por preferir este proyecto!</p>
+                    <p ALIGN="justify">Complete los siguientes campos para configurar la base de datos o restaurarla</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="h4" ALIGN="LEFT">Correo</div>
+                <br>
+                <div class="ui-widget">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Ej:me@example.com"
+                        autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="h4" ALIGN="LEFT">Nombre de usuario administrador</div>
+                <br>
+                <div class="ui-widget">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Ingrese usuario"
+                        autocomplete="off">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="h4" ALIGN="LEFT">Contraseña</div>
+                <br>
+                <div class="ui-widget">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Ingrese contraseña"
+                        autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="h4" ALIGN="LEFT">Repita la contraseña</div>
+                <br>
+                <div class="ui-widget">
+                    <input type="password" id="password2" name="password2" class="form-control" placeholder="Reingrese la contraseña"
+                        autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="h4" ALIGN="LEFT">Restaurar base de datos (opcional)</div>
+                <div></div>
+                <div class="custom-file">
+                 <input type="file" class="custom-file-input" id="backupdata" name="backupdata"/>
+                 <label class="custom-file-label" for="customFile">Seleccione un archivo</label>
+                </div>
+               </div>
+
+            
+           
+            <div class="card-footer" ALIGN="CENTER">
+                <button type="submit" class="btn btn-primary mr-2">Enviar</button>
+            </div>
+
+    </form>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script type="text/javascript">
+    function validate_form() {
+        var email = document.getElementById("email").value;
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var password2 = document.getElementById("password2").value;
+        var msg = "";
+        var errors = 0;
+
+        
+        if (email.trim() == "") {
+            msg+="Favor ingrese un email valido\n";
+            errors+=1;
+        }
+        if (username.trim() == "") {
+            msg+="Favor ingrese un nombre de usuario valido\n";
+            errors+=1;
+        }
+
+        if (password.trim() == "") {
+            msg+="Favor ingrese una contraseña valida\n";
+            errors+=1;
+        }
+        if (password != password2) {
+            msg+="Las contraseñas no coinciden\n";
+            errors+=1;
+        }
+        msg+="\n\nErrores: "+errors;
+
+        if (errors>0){
+            alert(msg);
+            return false;
+        }
+
+    }
+
+</script>
+<!--AUTOCOMPLETE-->
+<!-- <script>
+
+    $(function () {
+        $("#email").autocomplete({
+            source: "{% url 'email_autocomplete' %}",
+            appendTo: "#container",
+            select: function (event, ui) {
+                AutoCompleteSelectHandler(event, ui)
+            },
+            minLength: 2,
+        });
+    });
+
+    function AutoCompleteSelectHandler(event, ui) {
+        var selectedObj = ui.item;
+    }
+
+</script> -->
+
+<!--getpc-->
+<script>
+
+    $("#room_select").change(function () {
+        const roomId = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "getpc" %}',
+            data: {
+                'room_id': roomId,
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (data) {
+                let html_data = '<option value="">---------</option>';
+                data.forEach(function (data) {
+                    html_data += `<option value="${data.id}">${data.name}</option>`
+                });
+                $("#pc_select").html(html_data);
+            }
+        });
+    });
+</script>
+
+
+{% endblock %}
