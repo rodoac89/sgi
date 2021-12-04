@@ -1,10 +1,10 @@
 from django.http.response import JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Report, Revision, ScheduledReview, Externuser
+from .models import TicketReport, Revision, ScheduledReview, Externuser
 from django.http import HttpResponse
 from apps.core.models import Workstation, Room
 from apps.notification.models import Notif
-from datetime import datetime, date
+from datetime import datetime, date , timedelta
 from django.contrib.auth.models import User as dj_user
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
@@ -25,7 +25,7 @@ def form_reports(request):
             user = Externuser()
             user.email = request.POST['email']
             user.save()
-        reportes = Report()
+        reportes = TicketReport()
         reportes.email = Externuser.objects.get(email = request.POST['email'])
         reportes.pc = Workstation.objects.get(pk = request.POST['Pc'])
         reportes.category = request.POST['category']
@@ -66,7 +66,7 @@ def email_autocomplete(request):
 @login_required
 def reports(request):
     lab = Room.objects.all()
-    reportes = Report.objects.all()
+    reportes = TicketReport.objects.all()
     page = request.GET.get('page', 1)
     paginator = Paginator (reportes, 10)
     try:
@@ -77,6 +77,21 @@ def reports(request):
         reports = paginator.page(paginator.num_pages)
     template_name="reports.html"
     context = {'reports': reports, 'lab':lab}
+    return render(request,template_name,context)
+
+def updateticketstate(request,id):
+    report = get_object_or_404(TicketReport, id=id)
+    ticket_id = request.GET['id']
+    if request.method=='POST':
+        ticket = TicketReport.objects.get(pk = ticket_id)
+        ticket.state = request.POST['state']
+        ticket.comment = request.POST['comment']
+        ticket.date_comment = datetime.now()
+        ticket.user = dj_user.objects.get(username = request.POST['user'])
+        ticket.save()
+        return redirect ('reports')
+    template_name="updateticketstate.html"
+    context = {'report':report}
     return render(request,template_name,context)
 
 @login_required
@@ -121,9 +136,12 @@ def gratitude(request):
 def ShowScheduledReview(request):
     schedule = ScheduledReview.objects.all()
     room = Room.objects.all()
-    if request.method=='POST': 
+    i = 0
+    if request.method=='POST':    
         schedulere = ScheduledReview()
         schedulere.date_scheduled = request.POST['date']
+        print (request.POST['date'])
+        #datetime_object = datetime.strptime(request.POST['date'], '%Y-%m-%d %H:%M:%S')
         schedulere.title = request.POST['title']
         schedulere.room = Room.objects.get( pk = request.POST['room'])
         schedulere.save()
@@ -265,7 +283,7 @@ def generalreports(request):
                         count_room_m_so[r.pc.room.room_name] = 0
                     count_room_m_so[r.pc.room.room_name] +=1
                     total_m.append(j)                      
-            reports = Report.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))     
+            reports = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))     
             for r in reports:
                 if r.category=="Hardware":
                     if r.pc.room.room_name not in count_room_hardware:
@@ -297,7 +315,7 @@ def chart_report_lab(request):
     year = date.strftime("%Y")
     begin = year+'-01-01'
     end = year+'-12-31'
-    reports = Report.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
+    reports = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in reports:
         if r.pc.room.room_name not in count_room:
             count_room[r.pc.room.room_name] = 0

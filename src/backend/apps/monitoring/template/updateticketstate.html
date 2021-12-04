@@ -1,0 +1,133 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+{% block pagetitle %}Info Reporte{% endblock %}
+{% block css %}
+
+{% endblock css %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column-fluid">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8">	
+                
+                <div class="card card-custom gutter-b example example-compact">
+                    <div class="card-header">
+                        <h3 class="card-title" style="text-align: center;">Detalle de Reporte</h3>
+                    </div>
+                    <div class="col-12" style="margin-top: 2%;">
+
+                        <div class="card-body row justify-content-center">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="user" value="{{ request.user.username }}">
+                            <div class="form-group row col-12">
+                                <label class="col-2 col-form-label">ID</label>
+                                <div class="col-4">
+                                    <input class="form-control" type="text" name="id" disabled value="{{ report.id }}" />
+                                </div>
+                                <label class="col-2 col-form-label">Correo</label>
+                                <div class="col-4">
+                        
+                                    <label name="email"  class="col-form-label">{{report.email}}</label>
+                                </div>
+                                <label class="col-2 col-form-label">PC</label>
+                                <div class="col-4">
+                                    <input class="form-control" type="text" name="pc" disabled value="{{ report.pc.name }}" />
+                                </div>
+                                <label class="col-2 col-form-label">Lab</label>
+                                <div class="col-4">
+                                    <input class="form-control" type="text" disabled value="{{ report.pc.room.room_name }}" />
+                                </div>
+                                <label class="col-2 col-form-label">Tipo</label>
+                                <div class="col-4">
+                                    <input class="form-control" type="text" disabled name="category" value="{{ report.category }}" />
+                                </div>
+                                <label class="col-2 col-form-label">Fecha</label>
+                                <div class="col-4">
+                                    <label name="email"  class="col-form-label">{{report.date_created}}</label>
+                                </div>
+                            </div>
+                            <label class="col-form-label">Descripción</label>
+                            <div class="col-12">
+                                <textarea id="description" disabled name="description" class="form-control" rows="3">{{report.description}}</textarea>
+                            </div>
+                            <br>
+                            <label class="col-2 col-form-label">Estado</label>
+                            <div class="col-4">
+                                <div class="col-9 col-form-label">
+                                    <div class="radio-inline">
+                                    {% if report.state == "A" %}
+                                        <label class="radio radio-danger">
+                                        <input type="radio" checked="checked" name="state" value="A"/>
+                                            <span></span>
+                                            Abierto
+                                        </label>
+                                        
+                                        {% endif %}        
+                                    </div>
+                                    <div class="radio-inline">
+                                        {% if report.state == "C" %}
+                                        <label class="radio radio-danger">
+                                            <input type="radio" disabled name="state" value="A"/>
+                                            <span></span>
+                                            Abierto
+                                          </label>
+                                            <label class="radio radio-success">
+                                            <input type="radio" checked="checked" name="state" value="C"/>
+                                                <span></span>
+                                                Cerrado
+                                            </label>
+                                            {% else %}
+                                                  <label class="radio radio-success">
+                                                    <input type="radio" name="state" value="C"/>
+                                                    <span></span>
+                                                    Cerrado
+                                                  </label>
+                                            {% endif %}        
+                                        </div>
+                                     
+                                </div>
+                                </div>  
+                            </div>
+                    </div>
+                            <label style="text-align: center;" class="col-form-label">Comentario Estado</label>
+                            {% if report.comment == None %}
+                            <div style="text-align: center;" class="col-12">
+                                <textarea name="comment" class="form-control" rows="3"></textarea>
+                            </div>
+                            {% elif report.comment != None %}
+                            <div style="text-align: center;" class="col-12">
+                                <textarea name="comment" disabled class="form-control" rows="3">{{report.comment}}</textarea>
+                            </div>
+                            {% endif %}
+                            <div class="card-footer" style="text-align: center;">
+                                <button type="submit" class="btn btn-primary mr-2" >Actualizar Estado</button> 
+                        </div>
+                    </form> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>                                                                                    
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
