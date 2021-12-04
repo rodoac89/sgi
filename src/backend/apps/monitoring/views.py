@@ -107,8 +107,9 @@ def computer_management(request):
     for i in Schedule:
         l.append(i.room.id)  
     lab = Room.objects.all().filter(pk__in=l).order_by('room_name')
+    count_lab = lab.count()
     context={
-        'lab':lab
+        'lab':lab, 'count_lab': count_lab
     }
     template_name="computer_management.html"
     return render(request,template_name,context)
