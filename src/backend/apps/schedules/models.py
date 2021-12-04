@@ -56,14 +56,14 @@ class modulepetition(models.Model):
     )
 
     day_mp = models.CharField(max_length=50, choices=DAY)
-    module_mp = models.ManyToManyField(module, blank=True)
+    module_mp = models.ForeignKey(module, on_delete=models.SET_NULL, null=True, blank=True)
     labpetition_mp = models.ForeignKey(LabPetition, on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
-        return "{} desde el {} hasta {}".format(self.day_mp, self.module_mp)
+        return "{} desde el {}".format(self.day_mp, self.module_mp)
 
     def __unicode__(self):
-        return "{} desde el {} hasta {}".format(self.day_mp, self.module_mp)
+        return "{} desde el {}".format(self.day_mp, self.module_mp)
 
 
 #class Event(models.Model):

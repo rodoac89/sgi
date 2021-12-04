@@ -18,7 +18,7 @@ def salas(request):
     context={}
     laboratories=Room.objects.all()
     campus=Campus.objects.all()
-    labpetition=LabPetition.objects.filter(status_petition='P')
+    labpetition=LabPetition.objects.filter(status_petition='A')
     module=modulepetition.objects.all()
     context['laboratories']=laboratories
     context['campus']=campus
@@ -26,23 +26,24 @@ def salas(request):
     context['module']=module
     return render(request, template_name, context)
 
-def calendario(request):
+def calendario(request, id):
     template_name="calendario.html"
     context={}
-    #context['name'] = request.GET['name']
+    room=Room.objects.get(id = id)
+    context['room']=room
     return render(request, template_name, context)
 
-def reserva(request):
-    template_name="reserva.html"
+def moduleconfig(request):
+    template_name="moduleconfig.html"
     context={}
     moduledata=module.objects.all().order_by('resume_module')
-    moduleform=ModuleForm(request.POST)
+    moduleform=ModuleForm()
     context['moduledata']=moduledata
     if request.method == 'POST':
-        print(moduleform)
+        moduleform=ModuleForm(request.POST)
         if moduleform.is_valid():
             moduleform.save()
-            return HttpResponseRedirect(reverse('reserva'))
+            return HttpResponseRedirect(reverse('moduleconfig'))
         else:
             context['formmodule']=moduleform
     context['formmodule']=moduleform
@@ -60,7 +61,7 @@ def administrar(request):
 def administrarid(request, id):
     template_name="administrarid.html"
     labid=LabPetition.objects.get(id = id)
-    modpetition=modulepetition.objects.filter(labpetition_mp=labid)
+    modpetition=modulepetition.objects.get(labpetition_mp = id)
     print(labid)
     print(modpetition)
     context={}
@@ -95,7 +96,7 @@ def moduleid(request, id):
         form_module=ModuleForm(request.POST, instance = modid)
         if form_module.is_valid():
             form_module.save()
-            return HttpResponseRedirect(reverse('reserva'))
+            return HttpResponseRedirect(reverse('moduleconfig'))
     context['formmodule']=form_module
     return render(request, template_name, context)
 

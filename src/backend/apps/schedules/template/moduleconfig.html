@@ -115,6 +115,7 @@
     </div>
 </form>
 {% endblock %}
+{% block scripts %}
 <script>
     function Name() {
         var input, filter, table, tr, td, i, txtValue;
@@ -140,5 +141,4 @@
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-timepicker.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-sweetalert2.js'%}"></script>
-{% block scripts %}
 {% endblock %}

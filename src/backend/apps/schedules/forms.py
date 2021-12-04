@@ -64,12 +64,14 @@ class ModuleForm(forms.ModelForm):
     class Meta:
         model = module
         fields = [ 
+            'resume_module',
             'name_module',
             'start_module',
             'finish_module',
         ]
         labels = {
-            'name_module':'Nombre del Modulo',
+            'resume_module':'Nombre del Modulo',
+            'name_module':'Identificar del Modulo',
             'start_module':'Hora de inicio',
             'finish_module':'Hora de termino',
         }
@@ -79,6 +81,7 @@ class ModuleForm(forms.ModelForm):
         }
     def __init__(self,*args, **kwargs):
         super(ModuleForm, self).__init__(*args,**kwargs)
+        self.fields['resume_module'].widget.attrs.update({'class':'form-control'})
         self.fields['name_module'].widget.attrs.update({'class':'form-control'})
         self.fields['start_module'].widget.attrs.update({'class':'form-control'})
         self.fields['finish_module'].widget.attrs.update({'class':'form-control'})
@@ -89,13 +92,11 @@ class ModulePetitionForm(forms.ModelForm):
         fields = [ 
             'day_mp',
             'module_mp',
-            'module_mp',
             'labpetition_mp',
         ]
         labels = {
             'day_mp':'Dia:',
             'module_mp': 'Modulo inicio:',
-            'module_mp': 'Modulo final:',
         }
         widgets={
 
