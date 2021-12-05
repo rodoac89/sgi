@@ -194,8 +194,14 @@ def selectreviewpc(request):
     if request.POST:
         request.session['id']= request.POST['id']
         return redirect('showreviewpc')
-    request.session['id'] = None    
-    schedule = ScheduledReview.objects.all()
+    request.session['id'] = None
+    rev = Revision.objects.all()
+    lista_schedule = []
+    for i in rev:
+        if i.scheduled_review is not None:
+            if i.scheduled_review.id not in lista_schedule:
+                lista_schedule.append(i.scheduled_review.id)          
+    schedule = ScheduledReview.objects.all().filter(pk__in=lista_schedule)
     page = request.GET.get('page', 1)
     paginator = Paginator (schedule, 10)
     try:

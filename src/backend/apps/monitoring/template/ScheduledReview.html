@@ -100,6 +100,9 @@
                 left: 'prev,next,today',
                 center: 'title',
             },
+            eventClick: function() {
+                window.location.href = "{% url 'computer_management' %}";
+            },    
             eventColor: '#CA0909',
             
             events: [
