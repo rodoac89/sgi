@@ -27,7 +27,7 @@
     
     <div class="card-header flex-wrap border-0 pt-6 pb-0">
         <div class="card-title">
-            <h3 class="card-label">Reportes Recibidos.
+            <h3 class="card-label">Reportes Recibidos
             <span class="text-muted pt-2 font-size-sm d-block">Se mostrarán todos los reportes emitidos por los usuarios.</span></h3>
         </div>
         <div class="col-lg-9 col-xl-8">
@@ -46,24 +46,30 @@
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Email Usuario</th>
                     <th scope="col">PC</th>
                     <th scope="col">Lab</th>
-                    <th scope="col">Mal Funcionamiento en</th>
-                    <th scope="col">Descripción</th>
+                    <th scope="col">Categoria</th>
                     <th scope="col">Fecha de Reporte</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Detalles</th>
                 </tr>
             </thead>
             <tbody>
                 {% for reporte in reports %}
                 <tr>
                     <td>{{reporte.id}}</td>
-                    <td>{{reporte.email}}</td>
                     <td>{{reporte.pc.name}}</td>
                     <td>{{reporte.pc.room.room_name}}</td>
                     <td>{{reporte.category}}</td>
-                    <td>{{reporte.description}}</td>
                     <td>{{reporte.date_created}}</td>
+                    {% if reporte.state == "A" %}
+                    <td><span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
+                    {% elif reporte.state == "C" %}
+                    <td><span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
+                    {% endif %}
+                    <td><form action="{% url 'updateticketstate' reporte.id %}">
+                        <button class="btn btn-light-primary font-weight-bold mr-2">Ver</button>
+                        </form></td>
                 </tr>
                 {% endfor %}
                 
