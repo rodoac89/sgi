@@ -81,9 +81,8 @@ def reports(request):
 
 def updateticketstate(request,id):
     report = get_object_or_404(TicketReport, id=id)
-    ticket_id = request.GET['id']
     if request.method=='POST':
-        ticket = TicketReport.objects.get(pk = ticket_id)
+        ticket = TicketReport.objects.get(pk = report.id)
         ticket.state = request.POST['state']
         ticket.comment = request.POST['comment']
         ticket.date_comment = datetime.now()

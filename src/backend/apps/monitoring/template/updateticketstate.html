@@ -32,7 +32,7 @@
                     <div class="col-12" style="margin-top: 2%;">
 
                         <div class="card-body row justify-content-center">
-                            <form method="POST">
+                            <form method="POST" onsubmit="return validate_Form();">
                                 {% csrf_token %}
                                 <input type="hidden" name="user" value="{{ request.user.username }}">
                             <div class="form-group row col-12">
@@ -108,16 +108,20 @@
                             <label style="text-align: center;" class="col-form-label">Comentario Estado</label>
                             {% if report.comment == None %}
                             <div style="text-align: center;" class="col-12">
-                                <textarea name="comment" class="form-control" rows="3"></textarea>
+                                <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
+                                <label id="commenterror" style="display: none;" for="exampleTextarea"><span class="text-danger">Debe escribir un Comentario</span></label> 
+
+                            </div>
+                            <div class="card-footer" style="text-align: center;">
+                                <button type="submit" class="btn btn-primary mr-2" >Actualizar Estado</button> 
                             </div>
                             {% elif report.comment != None %}
                             <div style="text-align: center;" class="col-12">
                                 <textarea name="comment" disabled class="form-control" rows="3">{{report.comment}}</textarea>
                             </div>
+                            <div class="card-footer"></div>
                             {% endif %}
-                            <div class="card-footer" style="text-align: center;">
-                                <button type="submit" class="btn btn-primary mr-2" >Actualizar Estado</button> 
-                        </div>
+                            
                     </form> 
                         </div>
                     </div>
@@ -130,4 +134,18 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript">
+    function validate_Form(){
+        var comment = document.getElementById('comment').value;
+
+         if (comment == ""){
+            commenterror.style.display = "block";
+            return false;
+            }
+
+    }
+    
+
+
+</script>
 {% endblock %}

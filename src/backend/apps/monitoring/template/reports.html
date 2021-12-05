@@ -68,7 +68,7 @@
                     <td><span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
                     {% endif %}
                     <td><form action="{% url 'updateticketstate' reporte.id %}">
-                        <button name="id" value="{{reporte.id}}" class="btn btn-light-primary font-weight-bold mr-2">Ver</button>
+                        <button class="btn btn-light-primary font-weight-bold mr-2">Ver</button>
                         </form></td>
                 </tr>
                 {% endfor %}
