@@ -23,12 +23,20 @@
                 <h1>Modificar Modulo</h1>
             </div>
         </div>
-        <div class="card-body">
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ formmodule }}
-            </form>
-        </div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <div class="card-body">
+                
+                    {% csrf_token %}
+                    {{ formmodule }}
+                
+            </div>
+            <div class="card-footer">
+                <div class="login-actions">
+                    <button type="submit" class="btn btn-light-success font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
+                    <a type="button" href="/schedules/moduleconfig" class="btn btn-light-danger font-weight-bold">Cancelar</a>
+                </div>
+            </div>
+        </form>
     </div>
 </body>
 {% endblock %}

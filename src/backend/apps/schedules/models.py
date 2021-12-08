@@ -14,18 +14,28 @@ class LabPetition(models.Model):
         ('A','Aceptado'),
         ('R','Rechazado'),
     )
+    DAY = (
+        ('LU','Lunes'),
+        ('MA','Martes'),
+        ('MI','Miercoles'),
+        ('JU','Jueves'),
+        ('VI','Viernes'),  
+        ('SA','Sabado'),
+        ('DO','Domingo'),
+    )
+
     name_petition = models.CharField(max_length=50, default="")
     email_petition = models.CharField(max_length=150, default="")
     nrc_petition = models.CharField(max_length=10, default="", blank=True)
     campus_petition = models.ForeignKey(Campus, on_delete=models.SET_NULL, null=True)
     laboratory_petition = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
     cant_pc_petition = models.IntegerField(default="")
-    day_start_petition = models.DateField(null=True)
-    day_finish_petition = models.DateField(null=True)
-    #time_start_petition = models.TimeField(null=True)
-    #time_finish_petition = models.TimeField(null=True)
+    date_start_petition = models.DateField(null=True)
+    date_finish_petition = models.DateField(null=True)
+    day_petition = models.CharField(max_length=2, choices=DAY, default="LU")
+    time_start_petition = models.TimeField(null=True)
+    time_finish_petition = models.TimeField(null=True)
     memo_petition = models.CharField(max_length=250, default="", null=True)
-    #license_petition = models.CharField(max_length=50, choices=licenses)
     status_petition = models.CharField(max_length=1, default="P", choices=STATUS_PETITION, blank=True)
     def __str__(self):
         return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.laboratory_petition)
@@ -33,7 +43,7 @@ class LabPetition(models.Model):
     def __unicode__(self):
         return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.laboratory_petition)
 
-class module(models.Model):
+class Module(models.Model):
     resume_module = models.CharField(max_length=50, default="")
     name_module = models.CharField(max_length=50, default="")
     start_module = models.TimeField(null=True)
@@ -44,6 +54,18 @@ class module(models.Model):
     def __unicode__(self):
         return "{} : {} - {}".format(self.name_module, self.start_module, self.finish_module)
 
+class Event(models.Model):
+    name = models.CharField(max_length=50)
+    labpetition = models.ForeignKey(LabPetition, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    def __str__(self):
+        return "{}".format(self.name)
+
+class ModuleEvent(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    day = models.DateField(auto_now=False)
+    
 class modulepetition(models.Model):
     DAY = (
         ('Lunes','Lunes'),
@@ -56,7 +78,7 @@ class modulepetition(models.Model):
     )
 
     day_mp = models.CharField(max_length=50, choices=DAY)
-    module_mp = models.ForeignKey(module, on_delete=models.SET_NULL, null=True, blank=True)
+    module_mp = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True, blank=True)
     labpetition_mp = models.ForeignKey(LabPetition, on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):

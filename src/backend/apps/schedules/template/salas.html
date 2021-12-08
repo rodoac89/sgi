@@ -14,92 +14,80 @@
 
 {% block content %}
 
-<body>
-    <div class="card card-custom gutter-b">
-        <div class="card-header">
-            <div class="card-title">
-                <h3>CALENDARIO</h3>
-            </div>
+
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3>CALENDARIO</h3>
         </div>
-        <div class="card-body">
-            <!--begin: Search Form-->
-            <div class="form-group row">
-                <div class="col-lg-2">
-                    <label>Campus</label>
-                    <select class="form-control datatable-input">
-                        <option type="text" id="Campus"></option>
-                        {% for campus in campus %}
-                        <option type="text" id="Campus">{{ campus.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-lg-2">
-                    <label>N° Laboratorio</label>
-                    <input type="text" class="form-control datatable-input" id="name_lab" onkeyup="Name()"
-                        placeholder="Ej: COM123">
-                </div>
-                <div class="col-lg-2">
-                    <label>Computadores</label>
-                    <input type="number" class="form-control datatable-input" id="n_pc" onkeyup="PC()"
-                        placeholder="Ej: 46">
-                </div>
-                <div class="col-lg-2">
-                    <label>Fecha</label>
-                    <div class="input-group date">
-                        <input type="text" class="form-control" id="kt_datepicker_8" data-date-format="dd/mm/yyyy"
-                            readonly="readonly">
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <i class="la la-calendar"></i>
-                            </span>
-                        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-lg-2">
+                <label>Campus</label>
+                <select class="form-control datatable-input">
+                    <option type="text" id="Campus"></option>
+                    {% for campus in campus %}
+                    <option type="text" id="Campus">{{ campus.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <label>N° Laboratorio</label>
+                <input type="text" class="form-control datatable-input" id="name_lab" onkeyup="Name()"
+                    placeholder="Ej: COM123">
+            </div>
+            <div class="col-lg-2">
+                <label>Computadores</label>
+                <input type="number" class="form-control datatable-input" id="n_pc" onkeyup="PC()"
+                    placeholder="Ej: 46">
+            </div>
+            <div class="col-lg-2">
+                <label>Fecha</label>
+                <div class="input-group date">
+                    <input type="text" class="form-control" id="kt_datepicker_8" data-date-format="dd/mm/yyyy"
+                        readonly="readonly">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar"></i>
+                        </span>
                     </div>
                 </div>
             </div>
-            <!--begin: Datatable-->
-            <!--begin: Datatable-->
-            <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-loaded"
-                id="kt_datatable" style="">
-                <table class="datatable-table" style="display: block;">
-                    <thead class="datatable-head">
-                        <tr class="datatable-row" style="left: 0px;">
-                            <th data-field="LabName" class="datatable-cell datatable-cell-sort" style="width: 130px;">
-                                <span>Laboratorio</span>
-                            </th>
-                            <th data-field="PC" class="datatable-cell datatable-cell-sort" style="width: 50px;">
-                                <span>PC</span>
-                            </th>
-                            <th data-field="Schedule" class="datatable-cell-center datatable-cell datatable-cell-sort"
-                                style="width: 1200px;">
-                                <span>Horario</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="datatable-body">
-                        {% for lab in laboratories %}
-                        <tr data-row="{{ lab.id }}" class="datatable-row" style="left: 0px;">
-                            <td data-field="LabName" class="datatable-cell" style="width: 130px;">
-                                <button type="button"
-                                    class="btn btn-transparent-success font-weight-bold font-size-h3 px-4 py-2">
-                                    <span>{{lab.room_name}}</span>
-                                </button>
-                            </td>
-                            <td data-field="PC" class="datatable-cell" style="width: 50px;">
-                                <span>{{lab.workstation_set.all|length}}</span>
-                            </td>
-                            <td data-field="Schedule" class="datatable-cell-center datatable-cell"
-                                id="schedule-{{lab.id}}" style="width: 1000px;"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <!--end: Datatable-->
         </div>
+        <table class="table dataTable dtr-inline text-center" id="kt_datatable" style="width: 1235px;">
+            <thead>
+                <tr role="row">
+                    <th data-field="LabName" class="datatable-cell datatable-cell-sort">
+                        <span>Laboratorio</span>
+                    </th>
+                    <th data-field="PC" class="datatable-cell datatable-cell-sort">
+                        <span>PC</span>
+                    </th>
+                    <th data-field="Schedule" class="datatable-cell-center datatable-cell datatable-cell-sort" style="width: 1000px;">
+                        <span>Horario</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lab in laboratories %}
+                <tr data-row="{{ lab.id }}" class="datatable-row">
+                    <td data-field="LabName" class="datatable-cell">
+                        <a type="button" href="{% url 'calendario' lab.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ lab }}</a>
+                    </td>
+                    <td data-field="PC" class="datatable-cell">
+                        <span>{{lab.workstation_set.all|length}}</span>
+                    </td>
+                    <td data-field="Schedule" class="datatable-cell-center datatable-cell"
+                        id="schedule-{{lab.id}}"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-</body>
-{% endblock %}
+</div>
 
+{% endblock %}
 {% block scripts %}
 <script>
     $(document).ready(function () {
