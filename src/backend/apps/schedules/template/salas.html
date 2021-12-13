@@ -71,7 +71,7 @@
             </thead>
             <tbody>
                 {% for lab in laboratories %}
-                <tr data-row="{{ lab.id }}" class="datatable-row">
+                <tr data-row="lab{{ lab.id }}" class="datatable-row">
                     <td data-field="LabName" class="datatable-cell">
                         <a type="button" href="{% url 'calendario' lab.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ lab }}</a>
                     </td>
@@ -91,10 +91,12 @@
 {% block scripts %}
 <script>
     $(document).ready(function () {
-        {% for lab in laboratories %}
+        
         var options = {
-            series: [{
-                name: 'Modulo 1',
+            series: [
+            {% for me in modulevent %}
+            {
+                name: '{{day.year}}',
                 data: [
                     {
                         x: 'com001',
@@ -104,19 +106,10 @@
                         ]
                     },
                 ]
-            },{
-                name: 'Modulo 2',
-                data: [
-                    {
-                        x: 'com001',
-                        y: [
-                            new Date(1000, 3, 20, 15, 0).getTime(),
-                            new Date(1000, 3, 20, 18, 0).getTime()
-                        ]
-                    },
-                ]
             },
+            {% endfor %}
             ],
+            
             chart: {
                 type: 'rangeBar',
                 height: 100,
@@ -202,7 +195,6 @@
 
     var chart = new ApexCharts(document.querySelector("#schedule-{{lab.id}}"), options);
     chart.render();
-    {% endfor %}
     });
 </script>
 <script>

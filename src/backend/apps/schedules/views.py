@@ -4,12 +4,11 @@ from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.urls.base import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.auth import get_user_model
 from apps.core.models import Room, Campus, Workstation
-from apps.schedules.models import LabPetition, modulepetition, Module
-from apps.schedules.forms import LabPetitionForm, ModulePetitionForm, ModuleForm
+from apps.schedules.models import LabPetition, Module, Event, ModuleEvent
+from apps.schedules.forms import LabPetitionForm, ModuleForm
+from datetime import date, timedelta, datetime
+import time 
 
 # Create your views here.
 
@@ -17,21 +16,17 @@ def salas(request):
     template_name="salas.html"
     context={}
     laboratories=Room.objects.all()
-    campus=Campus.objects.all()
-    labpetition=LabPetition.objects.filter(status_petition='A')
-    module=modulepetition.objects.all()
+    modulevent=ModuleEvent.objects.all()
     context['laboratories']=laboratories
-    context['campus']=campus
-    context['labpetition']=labpetition
-    context['module']=module
+    context['modulevent']=modulevent
     return render(request, template_name, context)
 
 def calendario(request, id):
     template_name="calendario.html"
     context={}
     room = Room.objects.get(id = id)
-    labpetition = LabPetition.objects.filter(laboratory_petition = room)
-    context['labpetition']=labpetition
+    modulevent=ModuleEvent.objects.filter()
+    context['modulevent']=modulevent
     context['room']=room
     return render(request, template_name, context)
 
@@ -60,6 +55,24 @@ def administrar(request):
     context['modules'] = Module.objects.all()
     return render(request, template_name, context)
 
+def reserve_event(petition):
+    
+    event_obj = Event.objects.create(name=petition.name_petition, labpetition=petition)
+    date_start = petition.date_start_petition
+    date_finish = petition.date_finish_petition
+    weekDay = petition.day_petition
+    modules = Module.objects.filter(start_module__range=(petition.time_start_petition,petition.time_finish_petition)).order_by('start_module')
+    event_dates = [date_start + timedelta(days=x) for x in range((date_finish-date_start).days + 1) if (date_start + timedelta(days=x)).weekday() == time.strptime(weekDay, '%w').tm_wday]
+    module_events = []
+    for ed in event_dates:
+        for m in modules:
+           module_events.append(ModuleEvent(event=event_obj, module=m, day=ed))
+    print(module_events)
+    ModuleEvent.objects.bulk_create(module_events)
+    
+    return False
+    
+
 def administrarid(request, id):
     template_name="administrarid.html"
     context={}
@@ -70,8 +83,10 @@ def administrarid(request, id):
     else:
         form_lab=LabPetitionForm(request.POST, instance = labid)
         if form_lab.is_valid():
-            lab=form_lab.save()
-            return HttpResponseRedirect(reverse('administrar'))
+                       
+            reserve_event(labid)
+            form_lab.save()
+            #return HttpResponseRedirect(reverse('administrar'))
         print(form_lab.errors)
     context['formlab']=form_lab
     return render(request, template_name, context)
@@ -102,3 +117,4 @@ def reservar(request):
             return HttpResponseRedirect(reverse('salas'))
     context['formlab']=form_lab
     return render(request, template_name, context)
+

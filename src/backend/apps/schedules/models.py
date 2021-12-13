@@ -15,13 +15,13 @@ class LabPetition(models.Model):
         ('R','Rechazado'),
     )
     DAY = (
-        ('LU','Lunes'),
-        ('MA','Martes'),
-        ('MI','Miercoles'),
-        ('JU','Jueves'),
-        ('VI','Viernes'),  
-        ('SA','Sabado'),
-        ('DO','Domingo'),
+        ('1','Lunes'),
+        ('2','Martes'),
+        ('3','Miercoles'),
+        ('4','Jueves'),
+        ('5','Viernes'),  
+        ('6','Sabado'),
+        ('0','Domingo'),
     )
 
     name_petition = models.CharField(max_length=50, default="")
@@ -32,7 +32,7 @@ class LabPetition(models.Model):
     cant_pc_petition = models.IntegerField(default="")
     date_start_petition = models.DateField(null=True)
     date_finish_petition = models.DateField(null=True)
-    day_petition = models.CharField(max_length=2, choices=DAY, default="LU")
+    day_petition = models.CharField(max_length=2, choices=DAY, default="0")
     time_start_petition = models.TimeField(null=True)
     time_finish_petition = models.TimeField(null=True)
     memo_petition = models.CharField(max_length=250, default="", null=True)
@@ -66,28 +66,6 @@ class ModuleEvent(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     day = models.DateField(auto_now=False)
     
-class modulepetition(models.Model):
-    DAY = (
-        ('Lunes','Lunes'),
-        ('Martes','Martes'),
-        ('Miercoles','Miercoles'),
-        ('Jueves','Jueves'),
-        ('Viernes','Viernes'),  
-        ('Sabado','Sabado'),
-        ('Domingo','Domingo'),
-    )
-
-    day_mp = models.CharField(max_length=50, choices=DAY)
-    module_mp = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True, blank=True)
-    labpetition_mp = models.ForeignKey(LabPetition, on_delete=models.SET_NULL, null=True, blank=True)
-    
-    def __str__(self):
-        return "{} desde el {}".format(self.day_mp, self.module_mp)
-
-    def __unicode__(self):
-        return "{} desde el {}".format(self.day_mp, self.module_mp)
-
-
 #class Event(models.Model):
 #    name_event = models.CharField(max_length=20, default="", blank=True)
 #    day_event = models.ForeignKey(DayPetition, on_delete=models.SET_NULL, null=True, blank=True)
