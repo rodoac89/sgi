@@ -27,9 +27,7 @@
     <form action="{% url 'pcreview' %}" style="margin-left: 5%; margin-right: 5%;">
         <input type="hidden" name="Room" value="{{Room}}">
         <br>
-    
     {% for i in pc %}
-    
     <button type="submit" name="pc" value="{{i.name}}" class="btn btn-light-success d-inline-flex align-items-center btn-lg mr-6">
         <div class="d-flex flex-column text-right pr-3">
             <span class="text-dark-75 font-weight-bold font-size-sm">Revisar</span>
@@ -46,7 +44,6 @@
     </button>
     
     {% endfor %}
-    
     </form> 
 
     <div class="card-footer col-mg-2" ALIGN="CENTER">
@@ -57,31 +54,5 @@
 {% endblock %}
 
 {% block scripts %}
-<!--FILTRAR TABLA MEDIANTE UNA ENTRADA DE UN COMBOBOX-->
-<!--
-<script type="text/javascript">
-    function filterlab()
-    {
-        var input,table,tr,td,filter,i,displaydata;
-        input=document.getElementById("selected");
-        filter=input.value.toUpperCase();
-        table=document.getElementById("table");
-        tr=table.getElementsByTagName("tr");
-        for(i=0;tr.length;i++){
 
-            td=tr[i].getElementsByTagName("td")[1];
-            if(td){
-                displaydata=td.innerText;
-                if(displaydata.toUpperCase().indexOf(filter)>-1){
-                    tr[i].style.display="";
-                }
-                else{
-                    tr[i].style.display="none";
-                }
-            }
-        }
-    }
-
-
-</script>-->
 {% endblock %}
