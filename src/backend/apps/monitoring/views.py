@@ -292,22 +292,17 @@ def generalreports(request):
             j=1
             review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])) 
             for r in review:
-                if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
+                if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P":
                     if r.pc.room.room_name not in count_room_m_h:
                         count_room_m_h[r.pc.room.room_name] = 0
                     count_room_m_h[r.pc.room.room_name] +=1
                     
-                elif r.monitor == "D" or r.mouse=="D" or r.keyboard=="D" or r.cpu=="D":
-                    if r.pc.room.room_name not in count_room_m_h:
-                        count_room_m_h[r.pc.room.room_name] = 0
-                    count_room_m_h[r.pc.room.room_name] +=1
-                    
-                if r.software == "F" or r.software == "N":
+                if r.software != "O":
                     if r.pc.room.room_name not in count_room_m_s:
                         count_room_m_s[r.pc.room.room_name] = 0
                     count_room_m_s[r.pc.room.room_name] +=1 
                     
-                if r.SO == "F" or r.SO == "N":
+                if r.SO != "O":
                     if r.pc.room.room_name not in count_room_m_so:
                         count_room_m_so[r.pc.room.room_name] = 0
                     count_room_m_so[r.pc.room.room_name] +=1
@@ -367,14 +362,10 @@ def chart_maintenance_lab(request):
     end = year+'-12-31'
     review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in review:
-        if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
-            if r.pc.room.room_name not in count_room:
-               count_room[r.pc.room.room_name] = 0
-            count_room[r.pc.room.room_name] +=1
-        elif r.monitor == "D" or r.mouse == "D" or r.keyboard=="D" or r.cpu=="D":
-            if r.pc.room.room_name not in count_room:
-               count_room[r.pc.room.room_name] = 0
-            count_room[r.pc.room.room_name] +=1    
+        if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P":
+                    if r.pc.room.room_name not in count_room:
+                        count_room[r.pc.room.room_name] = 0
+                    count_room[r.pc.room.room_name] +=1
         elif r.SO == "F" or r.software == "F":
             if r.pc.room.room_name not in count_room:
                count_room[r.pc.room.room_name] = 0
