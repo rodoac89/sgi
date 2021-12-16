@@ -12,9 +12,11 @@ from django.http import HttpResponse
 from collections import Counter
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
+from datetime import datetime, timedelta, date
+import time
 
-def form_reports(request):
-    room = Room.objects.all().order_by('room_name')
+def form_reports(request, pc = 0):
+    context = {}  
     if request.method=='POST':
         aux = 0
         useremail = Externuser.objects.all()
@@ -31,8 +33,12 @@ def form_reports(request):
         reportes.category = request.POST['category']
         reportes.description = request.POST['description']
         reportes.save()
-        return redirect ('gratitude')    
-    context = { 'room':room}    
+        return redirect ('gratitude')   
+    if pc != 0:
+        context['pc'] = Workstation.objects.get(pk=pc)        
+    else:
+        context['rooms'] = Room.objects.all().order_by('room_name')
+        
     template_name = "form_reports.html"
     return render(request,template_name,context)
 
@@ -132,31 +138,49 @@ def gratitude(request):
     context={}
     return render(request,template_name,context)
 
+def create_bulk_schedule_review(title, date_start_review, date_end_review, room):
+    date_start = datetime.strptime(date_start_review, '%Y-%m-%dT%H:%M')
+    date_finish = datetime.strptime(date_end_review, '%Y-%m-%dT%H:%M')
+    weekDay = date_start.strftime('%w')
+    review_dates = [date_start + timedelta(days=x) for x in range((date_finish-date_start).days + 1) if (date_start + timedelta(days=x)).weekday() == time.strptime(weekDay, '%w').tm_wday]
+    schedules_review = []
+    for rd in review_dates:
+        schedulere = ScheduledReview()
+        schedulere.date_scheduled = rd
+        schedulere.title = title
+        schedulere.room = Room.objects.get( pk = room)
+        schedules_review.append(schedulere)
+    ScheduledReview.objects.bulk_create(schedules_review)
+    return False
+
+def create_schedule_review(title, date_review, room):
+    schedulere = ScheduledReview()
+    schedulere.date_scheduled = date_review
+    schedulere.title = title
+    schedulere.room = Room.objects.get( pk = room)
+    schedulere.save()
+    return True
+
 @login_required
 def ShowScheduledReview(request):
     schedule = ScheduledReview.objects.all()
     room = Room.objects.all()
     i = 0
-    if request.method=='POST':    
-        schedulere = ScheduledReview()
-        schedulere.date_scheduled = request.POST['date']
-        print (request.POST['date'])
-        #datetime_object = datetime.strptime(request.POST['date'], '%Y-%m-%d %H:%M:%S')
-        schedulere.title = request.POST['title']
-        schedulere.room = Room.objects.get( pk = request.POST['room'])
-        schedulere.save()
+    if request.POST: 
+        if 'recurrent' in request.POST:
+            create_bulk_schedule_review(request.POST['title'], request.POST['date'], request.POST['dateend'], request.POST['room'])
+        else:            
+            create_schedule_review(request.POST['title'], request.POST['date'], request.POST['room'])
+        
         return redirect ('ScheduledReview')   
     context = {'room':room,
     'schedule':schedule }
     template_name="ScheduledReview.html"
     return render(request,template_name,context)
 
-def pcreview(request):
-    resultado = request.GET['pc']
-    res = request.GET['Room']
-    room_asociado = Room.objects.get(room_name=res)
-    idr = room_asociado.id 
-    room_pc = Workstation.objects.get(name=resultado,room=idr)
+def pcreview(request, id_pc):
+    room_pc = Workstation.objects.get(pk=id_pc)
+    idr = room_pc.room.id
     id_pc = room_pc.id
     date_now = date.today()
     Schedule = ScheduledReview.objects.all()
@@ -182,8 +206,7 @@ def pcreview(request):
         rev.save()                     
         return redirect ('equipment_maintenance')
     context = {
-        'pc':resultado,
-        'Room':res
+        'pc':room_pc.name
     }
     template_name = "pcreview.html"
     return render(request,template_name,context)
@@ -273,22 +296,24 @@ def generalreports(request):
                     if r.pc.room.room_name not in count_room_m_h:
                         count_room_m_h[r.pc.room.room_name] = 0
                     count_room_m_h[r.pc.room.room_name] +=1
-                    total_m.append(j)
+                    
                 elif r.monitor == "D" or r.mouse=="D" or r.keyboard=="D" or r.cpu=="D":
                     if r.pc.room.room_name not in count_room_m_h:
                         count_room_m_h[r.pc.room.room_name] = 0
                     count_room_m_h[r.pc.room.room_name] +=1
-                    total_m.append(j)
+                    
                 if r.software == "F" or r.software == "N":
                     if r.pc.room.room_name not in count_room_m_s:
                         count_room_m_s[r.pc.room.room_name] = 0
                     count_room_m_s[r.pc.room.room_name] +=1 
-                    total_m.append(j)
+                    
                 if r.SO == "F" or r.SO == "N":
                     if r.pc.room.room_name not in count_room_m_so:
                         count_room_m_so[r.pc.room.room_name] = 0
                     count_room_m_so[r.pc.room.room_name] +=1
-                    total_m.append(j)                      
+                    
+                if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P" or r.software != "O" or r.SO !="O":
+                   total_m.append(j)                         
             reports = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))     
             for r in reports:
                 if r.category=="Hardware":
