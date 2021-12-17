@@ -16,152 +16,137 @@
 {% endblock %}
 {% block content %}
 
-<body>
-    <div class="card card-custom gutter-b">
-        <div class="card-header">
-            <div class="card-title">
-                <h1>Modificar solicitud</h1>
-            </div>
-        </div>
-        <div class="card-body">
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <div class="col-lg-3">
-                        <label>{{ formlab.name_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text"><i
-                                        class="la la-user"></i></span>
-                            </div>
-                            {{ formlab.name_petition }}
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <label>{{ formlab.email_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">@</span>
-                            </div>
-                            {{ formlab.email_petition }}
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <label>{{ formlab.nrc_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text"><i
-                                        class="flaticon2-browser"></i></span>
-                            </div>
-                            {{ formlab.nrc_petition }}
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <label>{{ formlab.campus_petition.label }}</label>
-                        {{ formlab.campus_petition }}
-                    </div>
-                    <div class="col-lg-2">
-                        <label>{{ formlab.laboratory_petition.label }}</label>
-                        {{ formlab.laboratory_petition }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group row">
-                            <div class="col-lg-4">
-                                <label for="pc">{{ formlab.cant_pc_petition.label }}</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                            <i class="flaticon2-browser"></i>
-                                        </span>
-                                    </div>
-                                    {{ formlab.cant_pc_petition }}
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <label>{{ formlab.day_start_petition.label }}</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                            <i class="ki ki-calendar"></i>
-                                        </span>
-                                    </div>
-                                    {{ formlab.day_start_petition}}
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <label>{{ formlab.day_finish_petition.label }}</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                            <i class="ki ki-calendar"></i>
-                                        </span>
-                                    </div>
-                                        {{ formlab.day_finish_petition }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-lg-12">
-                                <label>{{ formlab.memo_petition.label }}</label>
-                                {{ formlab.memo_petition }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group row">
-                            <div class="col-lg-12">
-                                <label>{{ formlab.status_petition.label }}</label>
-                                {{ formlab.status_petition }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-lg-4">
-                                <label>{{ formmod.day_mp.label }}</label>
-                                {{ formmod.day_mp }}
-                            </div>
-                            <div class="col-lg-3">
-                                <label>{{ formmod.module_start_mp.label }}</label>
-                                {{ formmod.module_start_mp }}
-                            </div>
-                            <div class="col-lg-3">
-                                <label>{{ formmod.module_finish_mp.label }}</label>
-                                {{ formmod.module_finish_mp }}
-                            </div>
-                            <div class="py-8">
-                                <a href="#addmodule" class="btn btn-icon btn-light-success pulse pulse-success mr-1" onclick="addElemento(getElementById('texto').value);">
-                                    <i class="flaticon2-add-square"></i>
-                                    <span class="pulse-ring"></span>
-                                </a>
-                                <a href="#deletemodule" class="btn btn-icon btn-light-danger pulse pulse-danger mr-1">
-                                    <i class="flaticon-delete"></i>
-                                    <span class="pulse-ring"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-lg-9 ml-lg-auto">
-                            <div class="login-actions">
-                                <button type="submit" class="btn btn-light-success font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
-                                <button type="reset" class="btn btn-light-danger font-weight-bold">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <a href="/schedules/administrar" class="btn btn-icon btn-light mb-0">
+                <i class="flaticon2-back"></i>
+            </a>
+            <h1 class="mb-0">Administrar petición</h1>
         </div>
     </div>
-</body>
+    <div class="card-body">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-lg-4">
+                    <label>{{ formlab.name_petition.label }}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text"><i
+                                    class="la la-user"></i></span>
+                        </div>
+                        {{ formlab.name_petition }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label>{{ formlab.email_petition.label }}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">@</span>
+                        </div>
+                        {{ formlab.email_petition }}
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label>{{ formlab.nrc_petition.label }}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text"><i
+                                    class="flaticon2-browser"></i></span>
+                        </div>
+                        {{ formlab.nrc_petition }}
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label for="pc">{{ formlab.cant_pc_petition.label }}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="flaticon2-browser"></i>
+                            </span>
+                        </div>
+                        {{ formlab.cant_pc_petition }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label>{{ formlab.campus_petition.label }}</label>
+                    {{ formlab.campus_petition }}
+                </div>
+                <div class="col-lg-3">
+                    <label>{{ formlab.laboratory_petition.label }}</label>
+                    {{ formlab.laboratory_petition }}
+                </div>
+                <div class="col-lg-3">
+                    <label>{{ formlab.date_start_petition.label }}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="ki ki-calendar"></i>
+                            </span>
+                        </div>
+                        {{ formlab.date_start_petition }}
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>{{ formlab.date_finish_petition.label }}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="ki ki-calendar"></i>
+                            </span>
+                        </div>
+                            {{ formlab.date_finish_petition }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-2">
+                    <label>{{ formlab.recurrence.label }}</label>
+                    {{ formlab.recurrence }}
+                </div>
+                <div class="col-lg-2">
+                    <label>{{ formlab.day_petition.label }}</label>
+                    {{ formlab.day_petition }}
+                </div>
+                <div class="col-lg-4">
+                    <label>{{ formlab.time_start_petition.label }}</label>
+                    {{ formlab.time_start_petition }}
+                </div>
+                <div class="col-lg-4">
+                    <label>{{ formlab.time_finish_petition.label }}</label>
+                    {{ formlab.time_finish_petition }}
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-12">
+                    <label>{{ formlab.memo_petition.label }}</label>
+                    {{ formlab.memo_petition }}
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group row">
+                    <div class="col-lg-2">
+                        <label>{{ formlab.status_petition.label }}</label>
+                        {{ formlab.status_petition }}
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="login-actions text-right">
+                            <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
+                            <button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
 {% block scripts %}
 <script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-timepicker.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-sweetalert2.js'%}"></script>
-<script>
-    $("#addmodule").click(function(){
-        
-    });
-</script>
 {% endblock %}
