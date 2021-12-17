@@ -9,10 +9,10 @@ import os
 
 
 class LabPetition(models.Model):
-    STATUS_PETITION = (
+    STATUS = (
+        ('A','Aceptada'),
+        ('R','Rechazada'),
         ('P','Pendiente'),
-        ('A','Aceptado'),
-        ('R','Rechazado'),
     )
     DAY = (
         ('1','Lunes'),
@@ -22,6 +22,11 @@ class LabPetition(models.Model):
         ('5','Viernes'),  
         ('6','Sabado'),
         ('0','Domingo'),
+    )
+    RECURRENCE = (
+        ('01','Diario'),
+        ('07','Semanal'),
+        ('28','Mensual'),
     )
 
     name_petition = models.CharField(max_length=50, default="")
@@ -35,8 +40,9 @@ class LabPetition(models.Model):
     day_petition = models.CharField(max_length=2, choices=DAY, default="0")
     time_start_petition = models.TimeField(null=True)
     time_finish_petition = models.TimeField(null=True)
+    recurrence = models.CharField(max_length=2, choices=RECURRENCE, default='01')
     memo_petition = models.CharField(max_length=250, default="", null=True)
-    status_petition = models.CharField(max_length=1, default="P", choices=STATUS_PETITION, blank=True)
+    status_petition = models.CharField(max_length=1, default="P")
     def __str__(self):
         return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.laboratory_petition)
 
@@ -65,6 +71,7 @@ class ModuleEvent(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     day = models.DateField(auto_now=False)
+    
     
 #class Event(models.Model):
 #    name_event = models.CharField(max_length=20, default="", blank=True)

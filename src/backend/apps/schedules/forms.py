@@ -7,6 +7,7 @@ from django.forms import widgets
 from django.forms.forms import Form
 from django.forms.widgets import DateInput, EmailInput, TimeInput
 from apps.schedules.models import LabPetition, Module
+from apps.core.models import Room
 from django.forms import ModelForm, Textarea
 
 class LabPetitionForm(forms.ModelForm):
@@ -24,6 +25,7 @@ class LabPetitionForm(forms.ModelForm):
             'time_start_petition',
             'time_finish_petition',
             'day_petition',
+            'recurrence',
             'memo_petition',
             'status_petition',
         ]
@@ -39,6 +41,7 @@ class LabPetitionForm(forms.ModelForm):
             'time_start_petition':'Hora inicio:',
             'time_finish_petition':'Hora termino:',
             'day_petition':'Día:',
+            'recurrence':'Recurrencia:',
             'memo_petition':'Mensaje:',
             'status_petition':'Status:',
         }
@@ -65,7 +68,9 @@ class LabPetitionForm(forms.ModelForm):
         self.fields['time_start_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['time_finish_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['day_petition'].widget.attrs.update({'class':'form-control'})
+        self.fields['recurrence'].widget.attrs.update({'class':'form-control'})
         self.fields['memo_petition'].widget.attrs.update({'class':'form-control'})
+        self.fields['status_petition'] = forms.ChoiceField(choices=([('A', 'Aceptado'),('R', 'Rechazado'),('P', 'Pendiente')]), required=False)
         self.fields['status_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['date_start_petition'].input_formats=[ '%d/%m/%Y' ]
         self.fields['date_finish_petition'].input_formats=[ '%d/%m/%Y' ]

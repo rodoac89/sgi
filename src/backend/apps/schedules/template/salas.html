@@ -91,22 +91,24 @@
 {% block scripts %}
 <script>
     $(document).ready(function () {
-        
+        {% for lab in laboratories %}
         var options = {
             series: [
             {% for me in modulevent %}
+            {% if me.event.labpetition.laboratory_petition == lab %}
             {
-                name: '{{day.year}}',
+                name: '{{ me.event }}',
                 data: [
                     {
-                        x: 'com001',
+                        x: '{{ lab.room_name }}',
                         y: [
-                            new Date(1000, 3, 20, 10, 0).getTime(),
-                            new Date(1000, 3, 20, 12, 0).getTime()
+                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, 10, 0).getTime(),
+                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, 12, 0).getTime()
                         ]
                     },
                 ]
             },
+            {% endif %}
             {% endfor %}
             ],
             
@@ -136,14 +138,12 @@
             xaxis: {
                 type: 'datetime',
                 datetimeFormatter:{
-                    year: 'yyyy',
-                    month:"mm",
-                    day: "dd",
+                    format: 'dd HH:mm',
                 },
-                  labels:{
+                labels:{
                     datetimeUTC: false,
                     show:true,
-                  },
+                },
                 tickAmount: 'dataPoints'
             },
             yaxis: {
@@ -156,14 +156,14 @@
                     const values = opts.ctx.rangeBar.getTooltipValues(opts)
 
                     return (
-                        'informacion de la reserva'
+                        '{{ lab.name_petition }}'
                     )
                 }
             },
             dataLabels: {
                 enabled: true,
                 formatter: function (val) {
-                    var label = {{ lab.id}}
+                    var label = {{ lab.id }}
         return label
     },
         style: {
@@ -192,9 +192,9 @@
         }],
         colors: [primary, success, warning, danger, info, free]
         };
-
     var chart = new ApexCharts(document.querySelector("#schedule-{{lab.id}}"), options);
     chart.render();
+    {% endfor %}
     });
 </script>
 <script>

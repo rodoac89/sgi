@@ -6,7 +6,7 @@ urlpatterns = [
     path('calendario/<int:id>/', views.calendario, name="calendario"),
     path('reservar/', views.reservar, name="reservar"),
     path('moduleconfig/', views.moduleconfig, name="moduleconfig"),
-    path('administrar/', views.administrar, name="administrar"),
+    path('administrar/solicitudes/', views.administrar_solicitudes, name="administrar_solicitudes"),
     path('administrarid/<int:id>/', views.administrarid, name="administrarid"),
     path('moduleid/<int:id>/', views.moduleid, name="moduleid"),
 ]

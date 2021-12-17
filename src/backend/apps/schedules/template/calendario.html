@@ -24,7 +24,7 @@
             </div>
             <div class="card-toolbar">
                 <a href="#" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
-                    <i class="ki ki-plus icon-md mr-2"></i>Add Event</a>
+                    <i class="ki ki-plus icon-md mr-2"></i>Crear solicitud</a>
             </div>
         </div>
         <div class="card-body">
@@ -62,39 +62,41 @@ return {
                 center: 'title',
             },
 
-            height: 800,
-            contentHeight: 780,
+            height: 1800,
+            contentHeight: 'auto',
             aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
 
-            nowIndicator: true,
-            now: TODAY + 'T09:25:00', // just for demo
 
             views: {
             },
-
+            minTime: '7:00',
+            maxTime: '23:59',
+            expandRows: 'true',
             defaultView: 'timeGridWeek',
-            defaultDate: TODAY,
+            titleFormat: {
+                month: 'long',
+                year: 'numeric',
+                day: 'numeric',
+                locale: 'es',
+                timeZone: 'locale',
+            },
 
-            editable: true,
+            firstDay:1,
+            editable: false,
             eventLimit: true, // allow "more" link when too many events
             navLinks: true,
             events: [
-                {% for reserva in labpetition %}
+                {% for me in modulevent %}
                 {
-                    title: '{{ reserva.name_petition }}',
-                    start: YM + '-01',
-                    description: '{{reserva.email_petition}}',
-                    className: "fc-event-danger"
-                },
-                {
-                    title: 'Reporting',
-                    start: YM + '-14T13:30:00',
+                    title: '{{me.event.name}}',
+                    start: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{me.module.start_module}}',
+                    end: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{me.module.finish_module}}',
                     description: 'Lorem ipsum dolor incid idunt ut labore',
-                    end: YM + '-14',
                     className: "fc-event-success"
                 },
                 {% endfor %}
             ],
+            displayEventTime: false,
 
             eventRender: function(info) {
                 var element = $(info.el);
