@@ -15,24 +15,44 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta, date
 import time
 
+def notificationreport(pc):
+    userlist = [] 
+    notiflist = [] 
+    users = dj_user.objects.all()
+    for i in users:
+        userlist.append(i.id)    
+    for j in userlist:    
+        notifi = Notif()
+        notifi.user = dj_user.objects.get(pk = j)
+        notifi.message = "Un Usuario ha reportado el equipo"+" "+pc.name
+        notifi.date = datetime.now()
+        notiflist.append(notifi)
+    Notif.objects.bulk_create(notiflist)
+    return True
+
+def existuser(email):
+    aux = 0
+    useremail = Externuser.objects.all()
+    for i in useremail:
+        if i.email == email:
+            aux=1
+    if aux==0:        
+        user = Externuser()
+        user.email = email
+        user.save()
+    return True    
+
 def form_reports(request, pc = 0):
     context = {}  
     if request.method=='POST':
-        aux = 0
-        useremail = Externuser.objects.all()
-        for i in useremail:
-            if i.email == request.POST['email']:
-                aux=1
-        if aux==0:        
-            user = Externuser()
-            user.email = request.POST['email']
-            user.save()
+        existuser(request.POST['email'])
         reportes = TicketReport()
         reportes.email = Externuser.objects.get(email = request.POST['email'])
         reportes.pc = Workstation.objects.get(pk = request.POST['Pc'])
         reportes.category = request.POST['category']
         reportes.description = request.POST['description']
         reportes.save()
+        notificationreport(reportes.pc)
         return redirect ('gratitude')   
     if pc != 0:
         context['pc'] = Workstation.objects.get(pk=pc)        
@@ -41,6 +61,7 @@ def form_reports(request, pc = 0):
         
     template_name = "form_reports.html"
     return render(request,template_name,context)
+
 
 
 def getpc(request):
@@ -103,7 +124,7 @@ def updateticketstate(request,id):
 def computer_management(request):
     if request.POST:
         request.session['Room']= request.POST['Room']
-        room_obtenido = Room.objects.get(room_name=request.session['Room'])
+        room_obtenido = Room.objects.get(pk=request.session['Room'])
         return redirect('equipment_maintenance')
     request.session['Room'] = None
     date_now = date.today()
@@ -121,10 +142,10 @@ def computer_management(request):
 
 def equipment_maintenance(request):
     if request.session['Room'] is not None or 'Room' not in request.session:
-        room_obtenido = Room.objects.get(room_name=request.session['Room'])
+        room_obtenido = Room.objects.get(pk =request.session['Room'])
         pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')     
         context={
-            'Room': request.session['Room'],
+            'Room': room_obtenido,
             'pc':pc
         }
         template_name="equipment_maintenance.html"
@@ -363,9 +384,9 @@ def chart_maintenance_lab(request):
     review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in review:
         if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P":
-                    if r.pc.room.room_name not in count_room:
-                        count_room[r.pc.room.room_name] = 0
-                    count_room[r.pc.room.room_name] +=1
+            if r.pc.room.room_name not in count_room:
+                count_room[r.pc.room.room_name] = 0
+            count_room[r.pc.room.room_name] +=1
         elif r.SO == "F" or r.software == "F":
             if r.pc.room.room_name not in count_room:
                count_room[r.pc.room.room_name] = 0

@@ -50,7 +50,7 @@
                {% if count_lab != 0 %}
                 <select name="Room" class="form-control" id="room_select">
                     {% for l in lab %}
-                    <option value="{{ l.room_name }}">{{l.room_name}}</option>
+                    <option value="{{ l.id }}">{{l.room_name}}</option>
                     {{request.session.Room}}
                     {% endfor %}
                 </select>
