@@ -252,7 +252,7 @@ def selectreviewpc(request):
         if i.scheduled_review is not None:
             if i.scheduled_review.id not in lista_schedule:
                 lista_schedule.append(i.scheduled_review.id)          
-    schedule = ScheduledReview.objects.all().filter(pk__in=lista_schedule)
+    schedule = ScheduledReview.objects.all().filter(pk__in=lista_schedule).order_by('-date_scheduled')
     page = request.GET.get('page', 1)
     paginator = Paginator (schedule, 10)
     try:
