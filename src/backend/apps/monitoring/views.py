@@ -2,9 +2,8 @@ from django.http.response import JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import TicketReport, Revision, ScheduledReview, Externuser
 from django.http import HttpResponse
-from apps.core.models import Workstation, Room
+from apps.core.models import Workstation, Room, Campus
 from apps.notification.models import Notif
-from datetime import datetime, date , timedelta
 from django.contrib.auth.models import User as dj_user
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
@@ -58,11 +57,20 @@ def form_reports(request, pc = 0):
         context['pc'] = Workstation.objects.get(pk=pc)        
     else:
         context['rooms'] = Room.objects.all().order_by('room_name')
-        
+        context['campus'] = Campus.objects.all().order_by('name')
     template_name = "form_reports.html"
     return render(request,template_name,context)
 
-
+def getroom(request):
+    if request.method == "POST":
+        campus_id = request.POST['campus_id']
+        try:
+            campus_name = Campus.objects.filter(pk = campus_id).first()
+            room = Room.objects.filter(campus = campus_name).order_by('room_name')
+        except Exception:
+            data['error_message'] = 'error'
+            return JsonResponse(data)
+        return JsonResponse(list(room.values('id', 'room_name')), safe = False)
 
 def getpc(request):
     if request.method == "POST":
@@ -267,10 +275,9 @@ def showpcreview(request):
         
 def updatepcreview(request, id):
     edit_review = get_object_or_404(Revision, id=id)
-    rev_id = request.GET['id']
     if request.method=='POST':
-        rev = Revision.objects.get(pk = rev_id)
-        rev.pc = Workstation.objects.get( pk = request.POST['pc'])
+        rev = Revision.objects.get(pk = edit_review.id)
+        rev.pc = Workstation.objects.get( pk = edit_review.pc.id)
         rev.monitor = request.POST['monitor']
         rev.mouse = request.POST['mouse']
         rev.keyboard = request.POST['keyboard']

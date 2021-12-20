@@ -52,14 +52,26 @@
       </div>
       {% if rooms %}
       <div class="form-group">
+        <div class="h4" ALIGN="LEFT">Selecciona el Campus</div>
+        <br>
+
+        <select id="campus_select" class="form-control" name="campus">
+          <option selected disabled="true"></option>
+          {% for i in campus %}
+          <option value="{{i.id}}">{{i.name}}</option>
+          {% endfor %}
+        </select>
+
+      </div>
+      <div class="form-group">
         <div class="h4" ALIGN="LEFT">Selecciona el laboratorio</div>
         <br>
 
         <select id="room_select" class="form-control" name="room">
           <option selected disabled="true"></option>
-          {% for i in rooms %}
+          <!--{% for i in rooms %}
           <option value="{{i.id}}">{{i.room_name}}</option>
-          {% endfor %}
+          {% endfor %}-->
         </select>
 
       </div>
@@ -187,6 +199,28 @@ $("#email").on("input", validate);
 
 </script>
 
+<!--getroom-->
+<script>
+
+  $("#campus_select").change(function () {
+    const campusId = $(this).val();
+    $.ajax({
+      type: "POST",
+      url: '{% url "getroom" %}',
+      data: {
+        'campus_id': campusId,
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function (data) {
+        let html_data = '<option value="">---------</option>';
+        data.forEach(function (data) {
+          html_data += `<option value="${data.id}">${data.room_name}</option>`
+        });
+        $("#room_select").html(html_data);
+      }
+    });
+  });
+</script>
 <!--getpc-->
 <script>
 
@@ -209,6 +243,7 @@ $("#email").on("input", validate);
     });
   });
 </script>
+
 
 
 {% endblock %}

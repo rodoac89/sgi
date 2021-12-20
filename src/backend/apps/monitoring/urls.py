@@ -15,6 +15,7 @@ urlpatterns = [
     path('email_autocomplete/',views.email_autocomplete,name="email_autocomplete"),
     path('updatepcreview_<int:id>/',views.updatepcreview,name="updatepcreview"),
     path('getpc/',views.getpc,name="getpc"),
+    path('getroom/',views.getroom,name="getroom"),
     path('generalreports/',views.generalreports,name="generalreports"),
     path('chart_report_lab/',views.chart_report_lab,name="chart_report_lab"),
     path('selectreviewpc/',views.selectreviewpc,name="selectreviewpc"),

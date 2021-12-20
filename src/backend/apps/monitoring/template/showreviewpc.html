@@ -179,9 +179,7 @@
                     
                     <br>
                     <div style="text-align: center;">
-                    <form action="{% url 'updatepcreview' review.id %}">
-                        <button name="id" value="{{review.id}}" class="btn btn-light-primary font-weight-bold mr-2">Editar</button>
-                        </form>
+                        <a href="{% url 'updatepcreview' review.id %}" class="btn btn-light-primary font-weight-bold mr-2">Editar</a>
                         </div>
                 </div>
                 <!--end::Body-->
@@ -197,18 +195,4 @@
 
 {% block scripts %}
 
-
-<!--<script>
-    $(document).ready(function(){
-    $("#search").keyup(function(){
-    _this = this;
-    $.each($("#table tbody tr"), function() {
-    if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
-    $(this).hide();
-    else
-    $(this).show();
-    });
-    });
-   });
-   </script>-->
 {% endblock %}
