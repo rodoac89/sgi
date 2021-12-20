@@ -4,7 +4,7 @@
 </li>
 
 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-    <a href="{% url 'salas' %}" class=" menu-link menu-toggle">
+    <a href="{% url 'calendar_day' %}" class=" menu-link menu-toggle">
         <span class="svg-icon menu-icon">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
                 height="24px" viewBox="0 0 24 24" version="1.1">
@@ -44,13 +44,13 @@
         <i class="menu-arrow"></i>
         <ul class="menu-subnav">
             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                <a href="{% url 'reservar' %}" class="menu-link menu-toggle">
+                <a href="{% url 'reserve_room' %}" class="menu-link menu-toggle">
                     <i class="menu-bullet menu-bullet-line"><span></span></i>
-                    <span class="menu-text">Crear solicitud</span>                    
+                    <span class="menu-text">Crear solicitud</span>
                 </a>                
             </li>
             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                <a href="{% url 'administrar_solicitudes' %}" class="menu-link menu-toggle">
+                <a href="{% url 'manage_request' %}" class="menu-link menu-toggle">
                     <i class="menu-bullet menu-bullet-line"><span></span></i>
                     <span class="menu-text">Administrar solicitudes</span>                    
                 </a>                
@@ -79,7 +79,7 @@
         <i class="menu-arrow"></i>
         <ul class="menu-subnav">
             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                <a href="{% url 'moduleconfig' %}" class="menu-link menu-toggle">
+                <a href="{% url 'manage_module' %}" class="menu-link menu-toggle">
                     <i class="menu-bullet menu-bullet-line"><span></span></i>
                     <span class="menu-text">Módulos</span>                    
                 </a>                

@@ -2,11 +2,12 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('salas/', views.salas, name="salas"),
-    path('calendario/<int:id>/', views.calendario, name="calendario"),
-    path('reservar/', views.reservar, name="reservar"),
-    path('moduleconfig/', views.moduleconfig, name="moduleconfig"),
-    path('administrar/solicitudes/', views.administrar_solicitudes, name="administrar_solicitudes"),
-    path('administrarid/<int:id>/', views.administrarid, name="administrarid"),
-    path('moduleid/<int:id>/', views.moduleid, name="moduleid"),
+    path('salas/', views.calendar_day, name="calendar_day"),
+    path('calendario/<int:id>/', views.calendar_week, name="calendar_week"),
+    path('reservar/', views.reserve_room, name="reserve_room"),
+    path('moduleconfig/', views.manage_module, name="manage_module"),
+    path('moduleid/<int:id>/', views.manage_module_id, name="manage_module_id"),
+    path('administrar/solicitudes/', views.manage_request, name="manage_request"),
+    path('administrar/solicitudes/<int:id>/', views.manage_request_id, name="manage_request_id"),
+    
 ]
