@@ -15,8 +15,15 @@ import time
 def calendar_day(request):
     template_name="calendar_day.html"
     context = {}
-    selectdate = "20/12/2021"
-    modulevent = ModuleEvent.objects.filter(day=datetime.strptime(selectdate, "%d/%m/%Y").date())
+    selectdate = datetime.today().strftime("%d/%m/%Y")
+    
+    if request.POST:
+        selectdate = datetime.strptime(request.POST['selecteddate'], "%d/%m/%Y").date()
+    else:
+        selectdate = datetime.strptime(selectdate, "%d/%m/%Y").date()
+    
+    
+    modulevent = ModuleEvent.objects.filter(day=selectdate)
     room_list = Room.objects.all()
     roompetition = RoomPetition.objects.filter(status_petition="A")
     eventinfo = Event.objects.all()
@@ -24,6 +31,7 @@ def calendar_day(request):
     context['room_list']=room_list
     context['modulevent']=modulevent
     context['eventinfo']=eventinfo
+    context['selectdate'] = selectdate
     return render(request, template_name, context)
 
 def calendar_week(request, id):
@@ -49,8 +57,23 @@ def manage_module(request):
     context['moduleform'] = moduleform
     return render(request, template_name, context)
 
+def manage_module_id(request, id):
+    template_name = "manage_module_id.html"
+    modid = Module.objects.get(id = id)
+    context = {}
+    if request.method == 'GET':
+        form_module = ModuleForm(instance = modid)
+        context['formmodule'] = form_module
+    else:
+        form_module = ModuleForm(request.POST, instance = modid)
+        if form_module.is_valid():
+            form_module.save()
+            return HttpResponseRedirect(reverse('manage_module'))
+    context['formmodule'] = form_module
+    return render(request, template_name, context)
+
 def deletemodule(request, id):
-    template_name = "moduleconfig.html"
+    template_name = "manage_module.html"
     context = {}
     Module.objects.filter(id=id).delete()
     return render(request, template_name, context)
@@ -60,6 +83,28 @@ def manage_request(request):
     context = {}
     context['roompetition'] = RoomPetition.objects.all()
     context['modules'] = Module.objects.all()
+    return render(request, template_name, context)
+
+def manage_request_id(request, id):
+    template_name = "manage_request_id.html"
+    context = {}
+    labid = RoomPetition.objects.get(id = id)
+    status = labid.status_petition
+    if request.method == 'GET':
+        form_lab=RoomPetitionForm(instance = labid)
+        context['formlab']=form_lab
+    else:
+        form_lab=RoomPetitionForm(request.POST, instance = labid)
+        if form_lab.is_valid():
+            print(status)
+            form_lab.save()
+            if status!='A' and labid.status_petition=='A':
+                reserve_event(labid)
+            if status=='A' and labid.status_petition!='A':
+                delete_event(labid)
+            return HttpResponseRedirect(reverse('manage_request'))
+    context['formlab']=form_lab
+    print(form_lab.errors)
     return render(request, template_name, context)
 
 def reserve_event(petition):
@@ -88,43 +133,14 @@ def delete_event(petition):
     getevent = Event.objects.get(roompetition_event=petition)
     ModuleEvent.objects.filter(event=getevent).delete()
     Event.objects.filter(roompetition_event=petition).delete()
-    
-    
-def manage_request_id(request, id):
-    template_name = "manage_request_id.html"
-    context = {}
-    labid = RoomPetition.objects.get(id = id)
-    status = labid.status_petition
-    if request.method == 'GET':
-        form_lab=RoomPetitionForm(instance = labid)
-        context['formlab']=form_lab
-    else:
-        form_lab=RoomPetitionForm(request.POST, instance = labid)
-        if form_lab.is_valid():
-            print(status)
-            form_lab.save()
-            if status!='A' and labid.status_petition=='A':
-                reserve_event(labid)
-            if status=='A' and labid.status_petition!='A':
-                delete_event(labid)
-            return HttpResponseRedirect(reverse('manage_request'))
-    context['formlab']=form_lab
-    print(form_lab.errors)
-    return render(request, template_name, context)
 
-def manage_module_id(request, id):
-    template_name = "manage_module_id.html"
-    modid = Module.objects.get(id = id)
+def report_data(request):
+    template_name = "report_data.html"
     context = {}
-    if request.method == 'GET':
-        form_module = ModuleForm(instance = modid)
-        context['formmodule'] = form_module
-    else:
-        form_module = ModuleForm(request.POST, instance = modid)
-        if form_module.is_valid():
-            form_module.save()
-            return HttpResponseRedirect(reverse('manage_module'))
-    context['formmodule'] = form_module
+    campusobj = Campus.objects.all().order_by('name')
+    modulevent = ModuleEvent.objects.all().order_by('day')
+    context['modulevent']=modulevent
+    context['campusobj']=campusobj
     return render(request, template_name, context)
 
 def reserve_room(request):

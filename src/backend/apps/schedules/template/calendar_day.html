@@ -20,7 +20,8 @@
         </div>
     </div>
     <div class="card-body">
-        <form action="" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'calendar_day' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="form-group row">
                 <div class="col-lg-2">
                     <label>Campus</label>
@@ -44,7 +45,7 @@
                 <div class="col-lg-4">
                     <label>Fecha</label>
                     <div class="input-group date">
-                        <input type="text" class="form-control" id="kt_datepicker_7" data-date-format="dd/mm/yyyy" readonly="readonly">
+                        <input type="text" name="selecteddate" class="form-control" id="kt_datepicker_7" data-date-format="dd/mm/yyyy" readonly="readonly" value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}">
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 <i class="la la-calendar"></i>
@@ -72,13 +73,13 @@
             <tbody>
                 {% for rm in room_list %}
                 <tr data-row="lab{{ rm.id }}" class="datatable-row">
-                    <td data-field="LabName" class="datatable-cell">
+                    <td data-field="LabName" class="datatable-cell pt-6">
                         <a type="button" href="{% url 'calendar_week' rm.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ rm }}</a>
                     </td>
-                    <td data-field="PC" class="datatable-cell">
-                        <span>{{rm.workstation_set.all|length}}</span>
+                    <td data-field="PC" class="datatable-cell pt-12">
+                        <span>{{rm.workstation_set.all.count}}</span>
                     </td>
-                    <td data-field="Schedule" class="datatable-cell-center datatable-cell"
+                    <td data-field="Schedule" class="datatable-cell-center datatable-cell pt-1"
                         id="schedule-{{rm.id}}"></td>
                 </tr>
                 {% endfor %}
@@ -92,21 +93,25 @@
 <script>
     $(document).ready(function () {
         {% for rm in room_list %}
+        var color_list = [];
+        color_list.push('#546E7A');
+        color_list.push('#E91E63');
         var options = {
             series: [
             {% for rp in roompetition %}
             {% if rm == rp.room_petition %}
             {% for me in modulevent %}
-            {% if me.module.start_module == rp.time_start_petition %}
+            {% if me.module.start_module == rp.time_start_petition and me.event.roompetition_event == rp %}
             {
                 name: '{{ rp.name_petition }}',
                 data: [
                     {
-                        x: 'NRC {{ rp.nrc_petition }}',
+                        x: '{{ rm }}',
                         y: [
-                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{me.event.roompetition_event.time_start_petition.hour}}, {{me.event.roompetition_event.time_start_petition.minute}}).getTime(),
-                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{me.event.roompetition_event.time_finish_petition.hour}}, {{me.event.roompetition_event.time_finish_petition.minute}}).getTime()
-                        ]
+                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_start_petition.hour}}, {{rp.time_start_petition.minute}}).getTime(),
+                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_finish_petition.hour}}, {{rp.time_finish_petition.minute}}).getTime()
+                        ],
+                        
                     },
                 ]
             },
@@ -115,16 +120,24 @@
             {% endif %}
             {% endfor %}
             ],
+            colors: color_list,
             chart: {
+                id: '{{rm.id}}',
                 type: 'rangeBar',
                 height: 100,
                 zoom: {
                     enabled: false
                 },
+                toolbar: {
+                    show: false,
+                }
             },
             tooltip: {
                 enabled: true,
                 followCursor: true,
+                marker: {
+                    show: true,
+                },
                 x: {
                     show: true,
                     format: 'HH:mm',
@@ -140,8 +153,11 @@
             },
             xaxis: {
                 type: 'datetime',
-                min: new Date(2021, 12, 20, 3, 0).getTime(),
-                max: new Date(2021, 12, 20, 20, 59).getTime(),
+                min: new Date({{selectdate.year}}, {{selectdate.month}}, {{selectdate.day}}, 7, 0).getTime(),
+                max: new Date({{selectdate.year}}, {{selectdate.month}}, {{selectdate.day}}, 23, 59).getTime(),
+                labels: {
+                    datetimeUTC: false,
+                }
             },
             yaxis: {
                 show: false,
@@ -151,7 +167,7 @@
                 formatter: function (val) {
                     {% for ev in eventinfo %}
                     {% if ev.roompetition_event.room_petition == rm %}
-                    var label = {{ ev.roompetition_event.computer_petition }}
+                    var label = '{{ ev.name_event }}'
                     {% endif %}
                     {% endfor %}
                     return label
@@ -167,7 +183,6 @@
                     inverseColors: true,
                     opacityFrom: 1,
                     opacityTo: 1,
-                    stops: [50, 0, 100, 100]
                 }
             },
             animations: {
@@ -189,8 +204,7 @@
             legend: {
                 show: false,
             },
-            colors: [primary]
-            };
+        };
         var chart = new ApexCharts(document.querySelector("#schedule-{{rm.id}}"), options);
         chart.render();
         {% endfor %}

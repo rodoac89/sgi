@@ -43,6 +43,10 @@ class RoomPetition(models.Model):
     recurrence = models.CharField(max_length=2, choices=RECURRENCE, default='01')
     memo_petition = models.CharField(max_length=250, default="", null=True)
     status_petition = models.CharField(max_length=1, default="P")
+    
+    def events_related_petition(self):
+        return self.event_set.all()
+    
     def __str__(self):
         return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.room_petition)
 
@@ -68,6 +72,9 @@ class Event(models.Model):
     name_event = models.CharField(max_length=50)
     roompetition_event = models.ForeignKey(RoomPetition, on_delete=models.SET_NULL, null=True, blank=True)
     type_event = models.CharField(max_length=1, default="N")
+    
+    def get_related_modules(self):
+        return self.moduleevent_set.all()
     
     def __str__(self):
         return "{}".format(self.name_event)
