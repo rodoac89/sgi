@@ -197,7 +197,7 @@ elif os.getenv('CHANNEL') == 'production':
 else:
     config = heroku_postgresql
     
-DATABASES = config
+DATABASES = sqlite
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

@@ -1,0 +1,211 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+{% block pagetitle %}Reportes de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-6">
+				<!--begin::Card-->
+				<div class="card card-custom gutter-b">
+					<div class="card-body">
+						<!--begin::Chart-->
+						<canvas id="reportlab-chart"></canvas>
+						<!--end::Chart-->
+					</div>
+				</div>
+				<!--end::Card-->
+		</div>
+    <div class="col-lg-6">
+			<!--begin::Card-->
+		  <div class="card card-custom gutter-b">
+			  <div class="card-body">
+					<!--begin::Chart-->
+					<canvas id="maintenancelab-chart"></canvas>
+					<!--end::Chart-->
+				</div>
+      </div>
+			<!--end::Card-->
+		</div>
+    <div class="col-lg-6">
+			<!--begin::Card-->
+		  <div class="card card-custom gutter-b">
+			  <div class="card-body">
+          <div class="d-flex align-items-center">
+            <h4 class="card-label font-weight-bolder text-dark">Formularios realizados:</h4></p>
+            <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{c_formularios}}</span> 
+        </div>
+				</div>
+      </div>
+			<!--end::Card-->
+		</div>
+    <div class="col-lg-6">
+			<!--begin::Card-->
+		  <div class="card card-custom gutter-b">
+			  <div class="card-body">
+            <div class="d-flex align-items-center">
+					      <h4 class="card-label font-weight-bolder text-dark">Instalaciones realizadas:</h4></p>
+                <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{c_instalations}}</span> 
+            </div>
+      </div>
+      </div>
+			<!--end::Card-->
+		</div>
+    <div class="col-lg-6 col-xxl-4">
+      <!--begin::List Widget 1-->
+      <div class="card card-custom card-stretch gutter-b">
+          <!--begin::Header-->
+          <div class="card-header border-0 pt-5">
+              <h3 class="card-title align-items-start flex-column">
+                  <span class="card-label font-weight-bolder text-dark">Licencias totales {{t_stock}}</span>
+                  <span class="text-muted mt-3 font-weight-bold font-size-sm"></span>
+              </h3>
+              
+          </div>
+          <!--end::Header--> 
+          <!--begin::Body-->
+          
+          <div class="card-body pt-8">
+            {% for i,j in count_room_hardware.items %}
+            <div class="pt-1">
+              <!--begin::Item-->
+              <div class="d-flex align-items-center pb-9">
+                <!--begin::Symbol-->
+                <div class="symbol symbol-45 symbol-light mr-4">
+                  <span class="symbol-label">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\Display1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"/>
+                          <path d="M11,20 L11,17 C11,16.4477153 11.4477153,16 12,16 C12.5522847,16 13,16.4477153 13,17 L13,20 L15.5,20 C15.7761424,20 16,20.2238576 16,20.5 C16,20.7761424 15.7761424,21 15.5,21 L8.5,21 C8.22385763,21 8,20.7761424 8,20.5 C8,20.2238576 8.22385763,20 8.5,20 L11,20 Z" fill="#000000" opacity="0.3"/>
+                          <path d="M3,5 L21,5 C21.5522847,5 22,5.44771525 22,6 L22,16 C22,16.5522847 21.5522847,17 21,17 L3,17 C2.44771525,17 2,16.5522847 2,16 L2,6 C2,5.44771525 2.44771525,5 3,5 Z M4.5,8 C4.22385763,8 4,8.22385763 4,8.5 C4,8.77614237 4.22385763,9 4.5,9 L13.5,9 C13.7761424,9 14,8.77614237 14,8.5 C14,8.22385763 13.7761424,8 13.5,8 L4.5,8 Z M4.5,10 C4.22385763,10 4,10.2238576 4,10.5 C4,10.7761424 4.22385763,11 4.5,11 L7.5,11 C7.77614237,11 8,10.7761424 8,10.5 C8,10.2238576 7.77614237,10 7.5,10 L4.5,10 Z" fill="#000000"/>
+                      </g>
+                  </svg><!--end::Svg Icon--></span>
+                  </span>
+                </div>
+                <!--end::Symbol-->
+                <!--begin::Text-->
+                <div class="d-flex flex-column flex-grow-1">
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                </div>
+                <!--end::Text-->
+                <!--begin::label-->
+                <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <!--end::label-->
+                
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+      </div>   
+    </div>
+    <div class="col-lg-6 col-xxl-4">
+      <!--begin::List Widget 1-->
+      <div class="card card-custom card-stretch gutter-b">
+          <!--begin::Header-->
+          <div class="card-header border-0 pt-5">
+              <h3 class="card-title align-items-start flex-column">
+                  <span class="card-label font-weight-bolder text-dark">Cantidad de licencias en uso</span>
+                  <span class="text-muted mt-3 font-weight-bold font-size-sm"></span>
+              </h3>
+              
+          </div>
+          <!--end::Header--> 
+          <!--begin::Body-->
+          
+          <div class="card-body pt-8">
+            {% for i,j in count_room_software.items %}
+            <div class="pt-1">
+              <!--begin::Item-->
+              <div class="d-flex align-items-center pb-9">
+                <!--begin::Symbol-->
+                <div class="symbol symbol-45 symbol-light mr-4">
+                  <span class="symbol-label">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\Display1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"/>
+                          <path d="M11,20 L11,17 C11,16.4477153 11.4477153,16 12,16 C12.5522847,16 13,16.4477153 13,17 L13,20 L15.5,20 C15.7761424,20 16,20.2238576 16,20.5 C16,20.7761424 15.7761424,21 15.5,21 L8.5,21 C8.22385763,21 8,20.7761424 8,20.5 C8,20.2238576 8.22385763,20 8.5,20 L11,20 Z" fill="#000000" opacity="0.3"/>
+                          <path d="M3,5 L21,5 C21.5522847,5 22,5.44771525 22,6 L22,16 C22,16.5522847 21.5522847,17 21,17 L3,17 C2.44771525,17 2,16.5522847 2,16 L2,6 C2,5.44771525 2.44771525,5 3,5 Z M4.5,8 C4.22385763,8 4,8.22385763 4,8.5 C4,8.77614237 4.22385763,9 4.5,9 L13.5,9 C13.7761424,9 14,8.77614237 14,8.5 C14,8.22385763 13.7761424,8 13.5,8 L4.5,8 Z M4.5,10 C4.22385763,10 4,10.2238576 4,10.5 C4,10.7761424 4.22385763,11 4.5,11 L7.5,11 C7.77614237,11 8,10.7761424 8,10.5 C8,10.2238576 7.77614237,10 7.5,10 L4.5,10 Z" fill="#000000"/>
+                      </g>
+                  </svg><!--end::Svg Icon--></span>
+                  </span>
+                </div>
+                <!--end::Symbol-->
+                <!--begin::Text-->
+                <div class="d-flex flex-column flex-grow-1">
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                </div>
+                <!--end::Text-->
+                <!--begin::label-->
+                <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <!--end::label-->
+                
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+      </div>   
+    </div>  
+    <div class="col-lg-6 col-xxl-4">
+      <!--begin::List Widget 1-->
+      <div class="card card-custom card-stretch gutter-b">
+          <!--begin::Header-->
+          <div class="card-header border-0 pt-5">
+              <h3 class="card-title align-items-start flex-column">
+                  <span class="card-label font-weight-bolder text-dark">Cantidad de licencias proximas a vencer</span>
+                  <span class="text-muted mt-3 font-weight-bold font-size-sm"></span>
+              </h3>
+              
+          </div>
+          <!--end::Header--> 
+          <!--begin::Body-->
+          
+          <div class="card-body pt-8">
+            {% for i,j in count_room_so.items %}
+            <div class="pt-1">
+              <!--begin::Item-->
+              <div class="d-flex align-items-center pb-9">
+                <!--begin::Symbol-->
+                <div class="symbol symbol-45 symbol-light mr-4">
+                  <span class="symbol-label">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Devices\Display1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"/>
+                          <path d="M11,20 L11,17 C11,16.4477153 11.4477153,16 12,16 C12.5522847,16 13,16.4477153 13,17 L13,20 L15.5,20 C15.7761424,20 16,20.2238576 16,20.5 C16,20.7761424 15.7761424,21 15.5,21 L8.5,21 C8.22385763,21 8,20.7761424 8,20.5 C8,20.2238576 8.22385763,20 8.5,20 L11,20 Z" fill="#000000" opacity="0.3"/>
+                          <path d="M3,5 L21,5 C21.5522847,5 22,5.44771525 22,6 L22,16 C22,16.5522847 21.5522847,17 21,17 L3,17 C2.44771525,17 2,16.5522847 2,16 L2,6 C2,5.44771525 2.44771525,5 3,5 Z M4.5,8 C4.22385763,8 4,8.22385763 4,8.5 C4,8.77614237 4.22385763,9 4.5,9 L13.5,9 C13.7761424,9 14,8.77614237 14,8.5 C14,8.22385763 13.7761424,8 13.5,8 L4.5,8 Z M4.5,10 C4.22385763,10 4,10.2238576 4,10.5 C4,10.7761424 4.22385763,11 4.5,11 L7.5,11 C7.77614237,11 8,10.7761424 8,10.5 C8,10.2238576 7.77614237,10 7.5,10 L4.5,10 Z" fill="#000000"/>
+                      </g>
+                  </svg><!--end::Svg Icon--></span>
+                  </span>
+                </div>
+                <!--end::Symbol-->
+                <!--begin::Text-->
+                <div class="d-flex flex-column flex-grow-1">
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                </div>
+                <!--end::Text-->
+                <!--begin::label-->
+                <span class="font-weight-bolder label label-xl label-light-primary label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <!--end::label-->
+                
+              </div>
+          </div>
+          {% endfor %}
+      </div>   
+    </div> 
+               
+    </div> 
+                                   
+{% endblock %}

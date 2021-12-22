@@ -38,10 +38,23 @@
 {% block content %}
 
 
-<div class="container">
-	<!--begin::Card-->
+
+
 	<div class="card card-custom gutter-b">
 		<div class="card-body">
+
+			<form class=" col-12 navbar-search" method="GET" action="{% url 'licenses:search_license' %}" > 
+				<div class="input-group col-4 justify-content-end" style="float:right; margin-bottom: 2%; ">
+				  <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..." aria-label="Search" aria-describedby="basic-addon2" type="search" name="buscar">
+				  <div class="input-group-append">
+					<button class="btn btn-primary" type="submit">
+					  <i class="fas fa-search fa-sm"></i>
+					</button>
+				  </div>
+				</div>
+			  </form>
+
+
 			<!--begin: Datatable-->
 			<table id="example" class="table table-striped table-bordered" style="width:100%">
 				<thead>
@@ -50,7 +63,7 @@
 						<th>Nombre</th>
 						<th>Tipo</th>
 						<th>Cantidad</th>
-						<th>Activas</th>
+						<!-- <th>Activas</th> -->
 						<th>Fecha de caducidad</th>
 						<th class="text-center" style="width: 10%;">Editar</th>
 					</tr>
@@ -62,7 +75,7 @@
 						<td>{{ p.license_name }}</td>
 						<td>{{ p.license_type }}</td>
 						<td>{{ p.license_stock }}</td>
-						<td>{{ p.license_in_use }}</td>
+						<!-- <td>{{ p.license_in_use }}</td> -->
 						<td>{{ p.license_due_date }}</td>
 						<td>
 							<div class="col-3 offset-1">

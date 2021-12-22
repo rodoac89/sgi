@@ -5,3 +5,4 @@ from .models import *
 
 admin.site.register(SoftwareForm)
 admin.site.register(LicensesList)
+admin.site.register(TypeLicense)
