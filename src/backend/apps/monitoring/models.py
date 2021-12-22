@@ -12,15 +12,23 @@ class Externuser (models.Model):
     def __str__(self):
         return self.email
 
-class Report(models.Model):
+class TicketReport(models.Model):
+    STATE_TICKET = [
+        ('A', 'Abierto'),
+        ('C', 'Cerrado')
+        
+    ]
     email = models.ForeignKey(Externuser,on_delete=models.SET_NULL,blank=True,null=True)
     pc = models.ForeignKey(Workstation,on_delete=models.SET_NULL,blank=True,null=True)
     category = models.CharField(max_length=20, blank=False, null=False)
     description = models.CharField(max_length=200)
     date_created = models.DateTimeField(auto_now_add=True)
-
+    state = models.CharField(max_length=1,blank=True,null=True,choices=STATE_TICKET,default='A')
+    comment = models.CharField(max_length=200,blank=True,null=True)
+    date_comment = models.DateTimeField(blank=True, null=True)
+    user = user = models.ForeignKey(dj_user, on_delete=models.SET_NULL,blank=True,null=True)
     def __str__(self):
-        return "{} - {} - {} - {}".format(self.email,self.pc,self.category,self.description)
+        return "{} - {} - {}".format(self.pc,self.category,self.description)
     class Meta:
         ordering = ['-id']
 

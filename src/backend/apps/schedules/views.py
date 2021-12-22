@@ -4,97 +4,154 @@ from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.urls.base import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.auth import get_user_model
 from apps.core.models import Room, Campus, Workstation
-from apps.schedules.models import LabPetition, modulepetition, module
-from apps.schedules.forms import LabPetitionForm, ModulePetitionForm
+from apps.schedules.models import RoomPetition, Module, Event, ModuleEvent
+from apps.schedules.forms import RoomPetitionForm, ModuleForm
+from datetime import date, timedelta, datetime
+import time 
 
 # Create your views here.
 
-def salas(request):
-    template_name="salas.html"
-    context={}
-    laboratories=Room.objects.all()
-    campus=Campus.objects.all()
-    labpetition=LabPetition.objects.filter(status_petition='P')
-    module=modulepetition.objects.all()
-    context['laboratories']=laboratories
-    context['campus']=campus
-    context['labpetition']=labpetition
-    context['module']=module
-    return render(request, template_name, context)
-
-def calendario(request):
-    template_name="calendario.html"
-    context={}
-    #context['name'] = request.GET['name']
-    return render(request, template_name, context)
-
-def reserva(request):
-    template_name="reserva.html"
-    context={}
-    #context['name'] = request.GET['name']
-    return render(request, template_name, context)
-
-def administrar(request):
-    template_name="administrar.html"
-    context={}
-    labpetition=LabPetition.objects.all()
-    modpetition=modulepetition.objects.all()
-    context['labpetition']=labpetition
-    context['modpetition']=modpetition
-    return render(request, template_name, context)
-
-def administrarid(request, id):
-    template_name="administrarid.html"
-    labid=LabPetition.objects.get(id = id)
-    modpetition=modulepetition.objects.filter(labpetition_mp=labid)
-    print(labid)
-    print(modpetition)
-    context={}
-    if request.method == 'GET':
-        form_lab=LabPetitionForm(instance = labid)
-        form_mod=ModulePetitionForm(instance = modpetition)
-        context['formlab']=form_lab
-        context['formmod']=form_lab
+def calendar_day(request):
+    template_name="calendar_day.html"
+    context = {}
+    selectdate = datetime.today().strftime("%d/%m/%Y")
+    
+    if request.POST:
+        selectdate = datetime.strptime(request.POST['selecteddate'], "%d/%m/%Y").date()
     else:
-        form_lab=LabPetitionForm(request.POST, instance = labid)
-        form_mod=ModulePetitionForm(request.POST, instance = modpetition)
-        if form_lab.is_valid() and form_mod.is_valid():
-            lab=form_lab.save()
-            mod=form_mod.save()
-            mod.labpetition_mp = lab
-            mod.save()
-            return HttpResponseRedirect(reverse('administrar'))
-        print(form_lab.errors)
-        print(form_mod.errors)
-    context['formlab']=form_lab
-    context['formmod']=form_mod
+        selectdate = datetime.strptime(selectdate, "%d/%m/%Y").date()
+    
+    
+    modulevent = ModuleEvent.objects.filter(day=selectdate)
+    room_list = Room.objects.all()
+    roompetition = RoomPetition.objects.filter(status_petition="A")
+    eventinfo = Event.objects.all()
+    context['roompetition']=roompetition
+    context['room_list']=room_list
+    context['modulevent']=modulevent
+    context['eventinfo']=eventinfo
+    context['selectdate'] = selectdate
     return render(request, template_name, context)
 
-def reservar(request):
-    template_name="reservar.html"
+def calendar_week(request, id):
+    template_name="calendar_week.html"
     context={}
-    form_lab=LabPetitionForm(request.POST or None, prefix='formlab')
-    form_mod=ModulePetitionForm(request.POST or None, prefix='formmod')
+    roomobj = Room.objects.get(id = id)
+    roompetition = RoomPetition.objects.filter(room_petition = roomobj, status_petition="A")
+    modulevent = ModuleEvent.objects.filter(event__roompetition_event__room_petition = roomobj)
+    context['roompetition']=roompetition
+    context['modulevent']=modulevent
+    context['room']=roomobj
+    return render(request, template_name, context)
+
+def manage_module(request):
+    template_name = "manage_module.html"
+    context = {}
+    context['moduledata'] = Module.objects.all().order_by('resume_module')
+    moduleform= ModuleForm(request.POST or None)
     if request.method == 'POST':
-        print(form_mod)
-        if form_mod.is_valid() and form_lab.is_valid():
-            lab=form_lab.save()
-            mod=form_mod.save()
-            mod.labpetition_mp = lab
-            mod.save()
-            return HttpResponseRedirect(reverse('administrar'))
-        else:
-            context['formmod']=form_mod
-            context['formlab']=form_lab
-        print(form_lab.errors)
-        print(form_mod.errors)
+        if moduleform.is_valid():
+            moduleform.save()
+            return HttpResponseRedirect(reverse('manage_module'))
+    context['moduleform'] = moduleform
+    return render(request, template_name, context)
+
+def manage_module_id(request, id):
+    template_name = "manage_module_id.html"
+    modid = Module.objects.get(id = id)
+    context = {}
     if request.method == 'GET':
-        context['formmod']=form_mod
-        
+        form_module = ModuleForm(instance = modid)
+        context['formmodule'] = form_module
+    else:
+        form_module = ModuleForm(request.POST, instance = modid)
+        if form_module.is_valid():
+            form_module.save()
+            return HttpResponseRedirect(reverse('manage_module'))
+    context['formmodule'] = form_module
+    return render(request, template_name, context)
+
+def deletemodule(request, id):
+    template_name = "manage_module.html"
+    context = {}
+    Module.objects.filter(id=id).delete()
+    return render(request, template_name, context)
+
+def manage_request(request):
+    template_name="manage_request.html"
+    context = {}
+    context['roompetition'] = RoomPetition.objects.all()
+    context['modules'] = Module.objects.all()
+    return render(request, template_name, context)
+
+def manage_request_id(request, id):
+    template_name = "manage_request_id.html"
+    context = {}
+    labid = RoomPetition.objects.get(id = id)
+    status = labid.status_petition
+    if request.method == 'GET':
+        form_lab=RoomPetitionForm(instance = labid)
+        context['formlab']=form_lab
+    else:
+        form_lab=RoomPetitionForm(request.POST, instance = labid)
+        if form_lab.is_valid():
+            print(status)
+            form_lab.save()
+            if status!='A' and labid.status_petition=='A':
+                reserve_event(labid)
+            if status=='A' and labid.status_petition!='A':
+                delete_event(labid)
+            return HttpResponseRedirect(reverse('manage_request'))
     context['formlab']=form_lab
-    context['formmod']=form_mod
+    print(form_lab.errors)
+    return render(request, template_name, context)
+
+def reserve_event(petition):
+    event_obj = Event.objects.create(name_event=petition.name_petition, roompetition_event=petition)
+    date_current = petition.date_start_petition
+    date_finish = petition.date_finish_petition
+    weekDay = petition.day_petition
+    recurrence = int(petition.recurrence)
+    modules = Module.objects.filter(start_module__range=(petition.time_start_petition,petition.time_finish_petition)).order_by('start_module')
+    #event_dates = [date_start + timedelta(days=x) for x in range((date_finish-date_start).days + 1) if (date_start + timedelta(days=x)).weekday() == time.strptime(weekDay, '%w').tm_wday]
+    event_dates = []
+    while date_current < date_finish:
+        if date_current.weekday() == time.strptime(weekDay, '%w').tm_wday or recurrence == 1:
+            event_dates.append(date_current)
+            date_current = date_current + timedelta(days=recurrence)
+        else:
+            date_current = date_current + timedelta(days=1)
+    module_events = []
+    for ed in event_dates:
+        for m in modules:
+           module_events.append(ModuleEvent(event=event_obj, module=m, day=ed))
+    ModuleEvent.objects.bulk_create(module_events)
+    return False
+
+def delete_event(petition):
+    getevent = Event.objects.get(roompetition_event=petition)
+    ModuleEvent.objects.filter(event=getevent).delete()
+    Event.objects.filter(roompetition_event=petition).delete()
+
+def report_data(request):
+    template_name = "report_data.html"
+    context = {}
+    campusobj = Campus.objects.all().order_by('name')
+    modulevent = ModuleEvent.objects.all().order_by('day')
+    context['modulevent']=modulevent
+    context['campusobj']=campusobj
+    return render(request, template_name, context)
+
+def reserve_room(request):
+    template_name = "reserve_room.html"
+    context = {}
+    context['modules'] = Module.objects.all()
+    form_lab=RoomPetitionForm(request.POST or None)
+    if request.method == 'POST':
+        if form_lab.is_valid():
+            form_lab.save()
+            return HttpResponseRedirect(reverse('calendar_day'))
+    context['formlab']=form_lab
+    print(form_lab.errors)
     return render(request, template_name, context)

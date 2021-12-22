@@ -1,8 +1,8 @@
 from django.contrib import admin
-from apps.schedules.models import LabPetition, modulepetition
+from apps.schedules.models import RoomPetition, Module, Event, ModuleEvent
 
-admin.site.register(LabPetition)
-admin.site.register(modulepetition)
-#admin.site.register(Event)
-#admin.site.register(Schedule)
+admin.site.register(RoomPetition)
+admin.site.register(Module)
+admin.site.register(Event)
+admin.site.register(ModuleEvent)
 
