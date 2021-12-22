@@ -26,6 +26,11 @@ class Room(models.Model):
     created_date = models.DateField(auto_now_add=True)
     active = models.BooleanField(default=True)
     inactive_by = models.TextField(default="")
+    
+    def get_approved_petitions(self):
+        a = self.roompetition_set.all().filter(status_petition='A')
+        print(a)
+        return a
 
     def __str__(self):
         return "{} - {}".format(self.campus.name, self.room_name)

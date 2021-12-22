@@ -44,12 +44,6 @@
 return {
     //main function to initiate the module
     init: function() {
-        var todayDate = moment().startOf('day');
-        var YM = todayDate.format('YYYY-MM');
-        var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
-        var TODAY = todayDate.format('YYYY-MM-DD');
-        var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
-
         var calendarEl = document.getElementById('kt_calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list' ],
@@ -60,12 +54,12 @@ return {
             header: {
                 left: 'prev,next today',
                 center: 'title',
+                right: 'timeGridWeek,timeGridDay'
             },
 
             height: 1800,
             contentHeight: 'auto',
             aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
-
 
             views: {
             },
@@ -86,14 +80,19 @@ return {
             eventLimit: true, // allow "more" link when too many events
             navLinks: true,
             events: [
+                {% for rp in roompetition %}
                 {% for me in modulevent %}
+                {% if me.module.start_module == rp.time_start_petition %}
                 {
-                    title: '{{me.event.name}}',
-                    start: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{me.module.start_module}}',
-                    end: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{me.module.finish_module}}',
-                    description: 'Lorem ipsum dolor incid idunt ut labore',
-                    className: "fc-event-success"
+                    title: '{{me.event.name_event}}',
+                    start: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{rp.time_start_petition}}',
+                    end: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{rp.time_finish_petition}}',
+                    description: '{{ rp.email_petition }} {{ rp.memo_petition }} Computadores: {{ rp.computer_petition }}',
+                    className: "fc-event-solid-info fc-event-light",
+                    
                 },
+                {% endif %}
+                {% endfor %}
                 {% endfor %}
             ],
             displayEventTime: false,

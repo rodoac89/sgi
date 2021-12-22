@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import os
 
 
-class LabPetition(models.Model):
+class RoomPetition(models.Model):
     STATUS = (
         ('A','Aceptada'),
         ('R','Rechazada'),
@@ -33,8 +33,8 @@ class LabPetition(models.Model):
     email_petition = models.CharField(max_length=150, default="")
     nrc_petition = models.CharField(max_length=10, default="", blank=True)
     campus_petition = models.ForeignKey(Campus, on_delete=models.SET_NULL, null=True)
-    laboratory_petition = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
-    cant_pc_petition = models.IntegerField(default="")
+    room_petition = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
+    computer_petition = models.IntegerField(default="")
     date_start_petition = models.DateField(null=True)
     date_finish_petition = models.DateField(null=True)
     day_petition = models.CharField(max_length=2, choices=DAY, default="0")
@@ -43,11 +43,15 @@ class LabPetition(models.Model):
     recurrence = models.CharField(max_length=2, choices=RECURRENCE, default='01')
     memo_petition = models.CharField(max_length=250, default="", null=True)
     status_petition = models.CharField(max_length=1, default="P")
+    
+    def events_related_petition(self):
+        return self.event_set.all()
+    
     def __str__(self):
-        return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.laboratory_petition)
+        return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.room_petition)
 
     def __unicode__(self):
-        return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.laboratory_petition)
+        return "{} - {} - {}".format(self.name_petition, self.campus_petition, self.room_petition)
 
 class Module(models.Model):
     resume_module = models.CharField(max_length=50, default="")
@@ -61,11 +65,19 @@ class Module(models.Model):
         return "{} : {} - {}".format(self.name_module, self.start_module, self.finish_module)
 
 class Event(models.Model):
-    name = models.CharField(max_length=50)
-    labpetition = models.ForeignKey(LabPetition, on_delete=models.SET_NULL, null=True, blank=True)
+    TYPE = (
+        ('N','Normal'),
+        ('E','Especial'),
+    )
+    name_event = models.CharField(max_length=50)
+    roompetition_event = models.ForeignKey(RoomPetition, on_delete=models.SET_NULL, null=True, blank=True)
+    type_event = models.CharField(max_length=1, default="N")
+    
+    def get_related_modules(self):
+        return self.moduleevent_set.all()
     
     def __str__(self):
-        return "{}".format(self.name)
+        return "{}".format(self.name_event)
 
 class ModuleEvent(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
@@ -79,7 +91,7 @@ class ModuleEvent(models.Model):
 #    module_event = models.ForeignKey(Module, on_delete=models.SET_NULL,null=True, blank=True)
 
 #class Schedule(models.Model):
-#    lab_schedule = models.ForeignKey(LabPetition, on_delete=models.SET_NULL,null=True, blank=True)
+#    lab_schedule = models.ForeignKey(RoomPetition, on_delete=models.SET_NULL,null=True, blank=True)
 #    event_schedule = models.ForeignKey(Event, on_delete=models.SET_NULL,null=True, blank=True)
     
 

@@ -6,20 +6,20 @@ from datetime import date, datetime
 from django.forms import widgets
 from django.forms.forms import Form
 from django.forms.widgets import DateInput, EmailInput, TimeInput
-from apps.schedules.models import LabPetition, Module
+from apps.schedules.models import RoomPetition, Module
 from apps.core.models import Room
 from django.forms import ModelForm, Textarea
 
-class LabPetitionForm(forms.ModelForm):
+class RoomPetitionForm(forms.ModelForm):
     class Meta:
-        model = LabPetition
+        model = RoomPetition
         fields = [
             'name_petition',
             'email_petition',
             'nrc_petition',
             'campus_petition',
-            'laboratory_petition',
-            'cant_pc_petition',
+            'room_petition',
+            'computer_petition',
             'date_start_petition',
             'date_finish_petition',
             'time_start_petition',
@@ -34,8 +34,8 @@ class LabPetitionForm(forms.ModelForm):
             'email_petition':'Email:',
             'nrc_petition':'NRC:',
             'campus_petition':'Sede:',
-            'laboratory_petition':'Laboratorio:',
-            'cant_pc_petition':'Computadores:',
+            'room_petition':'Laboratorio:',
+            'computer_petition':'Computadores:',
             'date_start_petition':'Fecha inicio:',
             'date_finish_petition':'Fecha termino:',
             'time_start_petition':'Hora inicio:',
@@ -54,13 +54,13 @@ class LabPetitionForm(forms.ModelForm):
         }
 
     def __init__(self,*args, **kwargs):
-        super(LabPetitionForm, self).__init__(*args,**kwargs)
+        super(RoomPetitionForm, self).__init__(*args,**kwargs)
         self.fields['name_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['email_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['nrc_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['campus_petition'].widget.attrs.update({'class':'form-control'})
-        self.fields['laboratory_petition'].widget.attrs.update({'class':'form-control'})
-        self.fields['cant_pc_petition'].widget.attrs.update({'class':'form-control'})
+        self.fields['room_petition'].widget.attrs.update({'class':'form-control'})
+        self.fields['computer_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['date_start_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['date_finish_petition'].widget.attrs.update({'class':'form-control'})
         self.fields['time_start_petition'] = forms.ChoiceField(choices=[(o.start_module, str(o)) for o in Module.objects.all().order_by('start_module')])
