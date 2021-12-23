@@ -2,8 +2,6 @@
 {% load static %}
 {% block pagetitle %}Reservar{% endblock %}
 {% block breadcumbs %}
-{% block css %}
-{% endblock css %}
 
 <li class="breadcrumb-item text-muted">
     <a href="" class="text-muted">Camino</a>
@@ -17,11 +15,14 @@
 
 {% endblock %}
 {% block content %}
-<!-- Modal create campus-->
+
 <div class="card card-custom gutter-b">
     <div class="card-header">
         <div class="card-title">
-            <h1>Crear solicitud</h1>
+            <a href="/schedules/administrar" class="btn btn-icon btn-light mb-0">
+                <i class="flaticon2-back"></i>
+            </a>
+            <h1 class="mb-0">Administrar petición</h1>
         </div>
     </div>
     <div class="card-body">
@@ -55,14 +56,14 @@
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <label for="pc">{{ formlab.cant_pc_petition.label }}</label>
+                    <label for="pc">{{ formlab.computer_petition.label }}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <i class="flaticon2-browser"></i>
                             </span>
                         </div>
-                        {{ formlab.cant_pc_petition }}
+                        {{ formlab.computer_petition }}
                     </div>
                 </div>
             </div>
@@ -73,8 +74,8 @@
                     {{ formlab.campus_petition }}
                 </div>
                 <div class="col-lg-3">
-                    <label>{{ formlab.laboratory_petition.label }}</label>
-                    {{ formlab.laboratory_petition }}
+                    <label>{{ formlab.room_petition.label }}</label>
+                    {{ formlab.room_petition }}
                 </div>
                 <div class="col-lg-3">
                     <label>{{ formlab.date_start_petition.label }}</label>
@@ -124,10 +125,18 @@
                     {{ formlab.memo_petition }}
                 </div>
             </div>
-            <div class="card-footer text-right">
-                <div class="login-actions">
-                    <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
-                    <button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
+            <div class="card-footer">
+                <div class="form-group row">
+                    <div class="col-lg-2">
+                        <label>{{ formlab.status_petition.label }}</label>
+                        {{ formlab.status_petition }}
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="login-actions text-right">
+                            <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
+                            <button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -140,5 +149,4 @@
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-timepicker.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-sweetalert2.js'%}"></script>
-<script src="{%static 'js/pages/crud/forms/widgets/select2.js'%}"></script>
 {% endblock %}
