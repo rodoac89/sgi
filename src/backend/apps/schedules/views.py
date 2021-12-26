@@ -6,31 +6,24 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from apps.core.models import Room, Campus, Workstation
 from apps.schedules.models import RoomPetition, Module, Event, ModuleEvent
-from apps.schedules.forms import RoomPetitionForm, ModuleForm
+from apps.schedules.forms import RoomPetitionForm, ModuleForm, StatusRoomPetitionForm
 from datetime import date, timedelta, datetime
 import time 
 
-# Create your views here.
-
 def calendar_day(request):
-    template_name="calendar_day.html"
+    template_name = "calendar_day.html"
     context = {}
     selectdate = datetime.today().strftime("%d/%m/%Y")
-    
     if request.POST:
         selectdate = datetime.strptime(request.POST['selecteddate'], "%d/%m/%Y").date()
     else:
         selectdate = datetime.strptime(selectdate, "%d/%m/%Y").date()
-    
-    
     modulevent = ModuleEvent.objects.filter(day=selectdate)
     room_list = Room.objects.all()
     roompetition = RoomPetition.objects.filter(status_petition="A")
-    eventinfo = Event.objects.all()
-    context['roompetition']=roompetition
-    context['room_list']=room_list
-    context['modulevent']=modulevent
-    context['eventinfo']=eventinfo
+    context['roompetition'] = roompetition
+    context['room_list'] = room_list
+    context['modulevent'] = modulevent
     context['selectdate'] = selectdate
     return render(request, template_name, context)
 
@@ -81,30 +74,25 @@ def deletemodule(request, id):
 def manage_request(request):
     template_name="manage_request.html"
     context = {}
-    context['roompetition'] = RoomPetition.objects.all()
+    context['roompetition'] = RoomPetition.objects.all().order_by('-datetime_petition')
     context['modules'] = Module.objects.all()
     return render(request, template_name, context)
 
 def manage_request_id(request, id):
     template_name = "manage_request_id.html"
     context = {}
-    labid = RoomPetition.objects.get(id = id)
-    status = labid.status_petition
-    if request.method == 'GET':
-        form_lab=RoomPetitionForm(instance = labid)
-        context['formlab']=form_lab
-    else:
-        form_lab=RoomPetitionForm(request.POST, instance = labid)
-        if form_lab.is_valid():
-            print(status)
-            form_lab.save()
-            if status!='A' and labid.status_petition=='A':
-                reserve_event(labid)
-            if status=='A' and labid.status_petition!='A':
-                delete_event(labid)
-            return HttpResponseRedirect(reverse('manage_request'))
-    context['formlab']=form_lab
-    print(form_lab.errors)
+    roompetition = RoomPetition.objects.get(id = id)
+    formroom = StatusRoomPetitionForm(request.POST or None, instance = roompetition)
+    status = roompetition.status_petition
+    if formroom.is_valid():
+        formroom.save()
+        if status!='A' and roompetition.status_petition=='A':
+            reserve_event(roompetition)
+        elif status=='A' and roompetition.status_petition!='A':
+            delete_event(roompetition)
+        return HttpResponseRedirect(reverse('manage_request'))
+    context['formlab'] = formroom
+    context['roompetition'] = roompetition
     return render(request, template_name, context)
 
 def reserve_event(petition):
@@ -146,12 +134,15 @@ def report_data(request):
 def reserve_room(request):
     template_name = "reserve_room.html"
     context = {}
-    context['modules'] = Module.objects.all()
-    form_lab=RoomPetitionForm(request.POST or None)
+    campusobj = Campus.objects.all()
+    formroom = RoomPetitionForm(request.POST or None, initial={'status_petition':'P'})
+    context['formroom'] = formroom
+    context['campusobj'] = campusobj
     if request.method == 'POST':
-        if form_lab.is_valid():
-            form_lab.save()
+        if formroom.is_valid():
+            formroom.save()
             return HttpResponseRedirect(reverse('calendar_day'))
-    context['formlab']=form_lab
-    print(form_lab.errors)
+        else:
+            print(formroom.errors)
+            return render(request, template_name, context)
     return render(request, template_name, context)

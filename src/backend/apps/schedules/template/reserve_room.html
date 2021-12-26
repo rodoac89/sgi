@@ -1,129 +1,217 @@
-{% extends '_partials/_base.html' %}
-{% load static %}
-{% block pagetitle %}Reservar{% endblock %}
-{% block content %}
-<!-- Modal create campus-->
-<div style="margin-left: auto; margin-right: auto;" class="card col-9  card-custom gutter-b example example-compact">
-    <div class="card-header">
-        <div class="h1 pt-8">Solicitar la reserva de una sala</div>    
-    </div>
-    <div class="card card-custom gutter-b">
-        <div class="card-body">
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <div class="col-lg-4">
-                        <label>{{ formlab.name_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text"><i
-                                        class="la la-user"></i></span>
-                            </div>
-                            {{ formlab.name_petition }}
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <label>{{ formlab.email_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">@</span>
-                            </div>
-                            {{ formlab.email_petition }}
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <label>{{ formlab.nrc_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text"><i
-                                        class="flaticon2-browser"></i></span>
-                            </div>
-                            {{ formlab.nrc_petition }}
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <label for="pc">{{ formlab.computer_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="flaticon2-browser"></i>
-                                </span>
-                            </div>
-                            {{ formlab.computer_petition }}
-                        </div>
-                    </div>
-                </div>
+{% extends '_partials/_base.html' %} {% load static %} {% block pagetitle %}Reservar{% endblock %} {% block content %}
 
-                <div class="form-group row">
-                    <div class="col-lg-3">
-                        <label>{{ formlab.campus_petition.label }}</label>
-                        {{ formlab.campus_petition }}
-                    </div>
-                    <div class="col-lg-3">
-                        <label>{{ formlab.room_petition.label }}</label>
-                        {{ formlab.room_petition }}
-                    </div>
-                    <div class="col-lg-3">
-                        <label>{{ formlab.date_start_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="ki ki-calendar"></i>
-                                </span>
-                            </div>
-                            {{ formlab.date_start_petition }}
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <label>{{ formlab.date_finish_petition.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="ki ki-calendar"></i>
-                                </span>
-                            </div>
-                                {{ formlab.date_finish_petition }}
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-lg-2">
-                        <label>{{ formlab.recurrence.label }}</label>
-                        {{ formlab.recurrence }}
-                    </div>
-                    <div class="col-lg-2">
-                        <label>{{ formlab.day_petition.label }}</label>
-                        {{ formlab.day_petition }}
-                    </div>
-                    <div class="col-lg-4">
-                        <label>{{ formlab.time_start_petition.label }}</label>
-                        {{ formlab.time_start_petition }}
-                    </div>
-                    <div class="col-lg-4">
-                        <label>{{ formlab.time_finish_petition.label }}</label>
-                        {{ formlab.time_finish_petition }}
-                    </div>
-
-                </div>
-                <div class="form-group row">
-                    <div class="col-lg-12">
-                        <label>{{ formlab.memo_petition.label }}</label>
-                        {{ formlab.memo_petition }}
-                    </div>
-                </div>
-                <div class="card-footer text-right">
-                    <div class="login-actions">
-                        <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
-                        <button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+<div style="margin-left: auto; margin-right: auto" class="card col-9 card-custom gutter-b example example-compact">
+	<div class="card-header">
+		<div class="h1 pt-8">Solicitar la reserva de una sala</div>
+	</div>
+	<div class="card card-custom gutter-b">
+		<div class="card-body">
+			<form action="" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				{% if formroom.errors %} {% for field in formroom %} {% for error in field.errors %}
+				<div class="alert alert-danger">
+					<strong>{{ error|escape }}</strong>
+				</div>
+				{% endfor %} {% endfor %} {% for error in formlab.non_field_errors %}
+				<div class="alert alert-danger">
+					<strong>{{ error|escape }}</strong>
+				</div>
+				{% endfor %} {% endif %}
+				<div class="form-group row">
+					<div class="col-lg-3">
+						<label>{{ formroom.event_petition.label }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-paper-plane"></i></span>
+							</div>
+							{{ formroom.event_petition }}
+						</div>
+					</div>
+					<div class="col-lg-5">
+						<label>{{ formroom.name_petition.label }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="la la-user"></i></span>
+							</div>
+							{{ formroom.name_petition }}
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<label>{{ formroom.email_petition.label }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend"><span class="input-group-text">@</span></div>
+							{{ formroom.email_petition }}
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-lg-3">
+						<label>{{ formroom.computer_petition.label }}</label>
+						<div class="input-group">{{ formroom.computer_petition }}</div>
+					</div>
+					<div class="col-lg-5">
+						<div class="input-daterange input-group" id="kt_datepicker_8">
+							<label>{{ formroom.date_start_petition.label }}</label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<i class="ki ki-calendar"></i>
+									</span>
+								</div>
+								{{ formroom.date_start_petition }}
+								<span class="input-group-text"><i class="la la-ellipsis-h"></i></span>
+								{{ formroom.date_finish_petition }}
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2">
+						<label>{{ formroom.recurrence.label }}</label>
+						{{ formroom.recurrence }}
+					</div>
+					<div class="col-lg-2">
+						<label>{{ formroom.day_petition.label }}</label>
+						{{ formroom.day_petition }}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-lg-6">
+						<label>{{ formroom.time_start_petition.label }}</label>
+						{{ formroom.time_start_petition }}
+					</div>
+					<div class="col-lg-6">
+						<label>{{ formroom.time_finish_petition.label }}</label>
+						{{ formroom.time_finish_petition }}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-lg-3">
+						<label>Campus:</label>
+						<select class='form-control selectpicker' id="lista1" name="lista1">
+							{% for c in campusobj %}
+							<option value="{{c}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-lg-3">
+						<label>{{ formroom.room_petition.label }}</label>
+						{{ formroom.room_petition }}
+					</div>
+					<div class="col-lg-3">
+						<label>{{ formroom.type_petition.label }}</label>
+						{{ formroom.type_petition }}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-lg-12">
+						<label>{{ formroom.memo_petition.label }}</label>
+						{{ formroom.memo_petition }}
+					</div>
+				</div>
+				<div class="card-footer">
+					<div class="form-group row">
+						<div class="col-lg-2">
+							<p hidden>
+								{{ formroom.datetime_petition }}
+								{{ formroom.status_petition }}
+							</p>
+						</div>
+						<div class="col-lg-10">
+							<div class="login-actions text-right">
+								<button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
+								<button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
-{% endblock %}
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-timepicker.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-nouislider.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/bootstrap-sweetalert2.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/select2.js'%}"></script>
+<script>
+	var select1 = jQuery('#id_recurrence'),
+	select2 = jQuery('#id_day_petition');
+
+	select1.selectpicker().on('change', function () {
+	select2.prop('disabled', $(this).val() === '01').selectpicker('refresh');
+	});
+</script>
+<script>
+	var KTKBootstrapTouchspin = (function () {
+		var demos = function () {
+			$("#kt_touchspin_1, #kt_touchspin_2_1").TouchSpin({
+				buttondown_class: "btn btn-secondary",
+				buttonup_class: "btn btn-secondary",
+
+				min: 0,
+				max: 100,
+				step: 1,
+				boostat: 5,
+				maxboostedstep: 10,
+			});
+		};
+		var validationStateDemos = function () {
+			$("#kt_touchspin_2_validate").TouchSpin({
+				buttondown_class: "btn btn-secondary",
+				buttonup_class: "btn btn-secondary",
+
+				min: 0,
+				max: 100,
+				step: 1,
+				boostat: 5,
+				maxboostedstep: 10,
+			});
+		};
+		return {
+			init: function () {
+				demos();
+				validationStateDemos();
+			},
+		};
+	})();
+	jQuery(document).ready(function () {
+		KTKBootstrapTouchspin.init();
+	});
+</script>
+<script>
+	var KTBootstrapMaxlength = (function () {
+		var demos = function () {
+			$("#kt_maxlength_8").maxlength({
+				threshold: 5,
+				warningClass: "label label-success label-rounded label-inline",
+				limitReachedClass: "label label-primary label-rounded label-inline",
+			});
+			$("#kt_maxlength_9").maxlength({
+				threshold: 5,
+				warningClass: "label label-success label-rounded label-inline",
+				limitReachedClass: "label label-primary label-rounded label-inline",
+			});
+			$("#kt_maxlength_10").maxlength({
+				threshold: 5,
+				warningClass: "label label-success label-rounded label-inline",
+				limitReachedClass: "label label-primary label-rounded label-inline",
+			});
+			$("#kt_maxlength_11").maxlength({
+				threshold: 5,
+				warningClass: "label label-success label-rounded label-inline",
+				limitReachedClass: "label label-primary label-rounded label-inline",
+			});
+		};
+		return {
+			init: function () {
+				demos();
+			},
+		};
+	})();
+	jQuery(document).ready(function () {
+		KTBootstrapMaxlength.init();
+	});
+</script>
 {% endblock %}

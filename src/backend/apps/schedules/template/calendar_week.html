@@ -23,7 +23,7 @@
                 <h3 class="card-label">{{ room.campus }} - {{ room.room_name }}</h3>
             </div>
             <div class="card-toolbar">
-                <a href="#" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
+                <a href="{% url 'reserve_room' %}" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
                     <i class="ki ki-plus icon-md mr-2"></i>Crear solicitud</a>
             </div>
         </div>

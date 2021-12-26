@@ -55,7 +55,6 @@
                                     <div class="nav-link d-flex text-left" data-toggle="tab" role="tab" aria-selected="false" href="#href{{rp.id}}" id="id{{rp.id}}">
                                         <span class="bullet bullet-bar bg-warning align-self-stretch"></span>
                                         <div class="d-flex flex-column flex-grow-1 flex-shrink-0 m-0 mx-2"><h4>{{ rp.name_petition }}</h4>
-                                            <div class="text-dark font-weight-bold mx-4">{{rp.campus_petition }}</div>
                                             <div class="text-dark font-weight-bold mx-4">{{rp.room_petition }}</div>
                                         </div>
                                     </div>
@@ -74,7 +73,6 @@
                                     <div class="nav-link d-flex text-left" data-toggle="tab" role="tab" aria-selected="false" href="#href{{rp.id}}" id="id{{rp.id}}">
                                         <span class="bullet bullet-bar bg-success align-self-stretch"></span>
                                         <div class="d-flex flex-column flex-grow-1 flex-shrink-0 m-0 mx-2"><h4>{{ rp.name_petition }}</h4>
-                                            <div class="text-dark font-weight-bold mx-4">{{rp.campus_petition }}</div>
                                             <div class="text-dark font-weight-bold mx-4">{{rp.room_petition }}</div>
                                         </div>
                                     </div>
@@ -93,7 +91,6 @@
                                     <div class="nav-link d-flex text-left" data-toggle="tab" role="tab" aria-selected="false" href="#href{{rp.id}}" id="id{{rp.id}}">
                                         <span class="bullet bullet-bar bg-danger align-self-stretch"></span>
                                         <div class="d-flex flex-column flex-grow-1 flex-shrink-0 m-0 mx-2"><h4>{{ rp.name_petition }}</h4>
-                                            <div class="text-dark font-weight-bold mx-4">{{rp.campus_petition }}</div>
                                             <div class="text-dark font-weight-bold mx-4">{{rp.room_petition }}</div>
                                         </div>
                                     </div>
@@ -122,7 +119,7 @@
                                 {% endif %}
                                     <a class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h2 m-0 pt-5">{{ rp.name_petition }}</a>
                                     <div class="font-weight-bold text-dark-50 font-size-lg pb-2">{{ rp.email_petition }}</div>
-                                    <div class="text-dark-50 font-size-sm pb-4">Dia y Hora de la peticion: --------</div>
+                                    <div class="text-dark-50 font-size-sm pb-4">Dia de la peticion: {{rp.datetime_petition}}</div>
                                 </div>
                                 <div class="pt-6">
                                     <div class="d-flex align-items-center pb-5">
@@ -148,7 +145,7 @@
                                                     </div>
                                                     <div class="d-flex flex-column flex-grow-1">
                                                         <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Laboratorio:</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.room_petition }}</span>
+                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.room_petition.room_name }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center pb-5">
@@ -157,7 +154,7 @@
                                                     </div>
                                                     <div class="d-flex flex-column flex-grow-1">
                                                         <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Cantidad de PCs</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.cant_pc_petition }}</span>
+                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.computer_petition }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -169,8 +166,8 @@
                                                         <span class="nav-icon input-group-text"><i class="flaticon2-browser"></i></span>
                                                     </div>
                                                     <div class="d-flex flex-column flex-grow-1">
-                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">NRC:</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.nrc_petition }}</span>
+                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Tipo de evento:</a>
+                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.get_type_petition_display }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center pb-5">
@@ -199,7 +196,7 @@
                                     </div>
                                     <div class="card-scroll" style="height: 150px;">
                                         <div class="d-flex bg-light-primary rounded-xl flex-column flex-center py-2">
-                                            <div class="font-weight-bold text-dark-50 font-size-lg pb-2">Empieza el {{ rp.get_day_petition_display }} a las {{ rp.time_start_petition }} y termina a las {{ rp.time_finish_petition }}</div>
+                                            <div class="font-weight-bold text-dark-50 font-size-lg pb-2">Todos los {{ rp.get_day_petition_display }} de {{ rp.time_start_petition }} a {{ rp.time_finish_petition }}</div>
                                         </div>
                                     </div>
                                 </div>

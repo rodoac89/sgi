@@ -45,7 +45,7 @@
                 <div class="col-lg-4">
                     <label>Fecha</label>
                     <div class="input-group date">
-                        <input type="text" name="selecteddate" class="form-control" id="kt_datepicker_7" data-date-format="dd/mm/yyyy" readonly="readonly" value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}">
+                        <input type="text" name="selecteddate" class="form-control" id="kt_datepicker_9" data-date-format="dd/mm/yyyy" readonly="readonly" value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}">
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 <i class="la la-calendar"></i>
@@ -94,32 +94,34 @@
     $(document).ready(function () {
         {% for rm in room_list %}
         var color_list = [];
-        color_list.push('#546E7A');
+        var data_event = [];
+        {% for rp in roompetition %}
+        {% if rm == rp.room_petition %}
+        {% for me in modulevent %}
+        {% if me.module.start_module == rp.time_start_petition and me.event.roompetition_event == rp %}
+        data_event.push({
+            name: '{{ rp.event_petition }}',
+            data: [
+                {
+                    x: '{{ rm.room_name }}',
+                    y: [
+                        new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_start_petition.hour}}, {{rp.time_start_petition.minute}}).getTime(),
+                        new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_finish_petition.hour}}, {{rp.time_finish_petition.minute}}).getTime()
+                    ],
+                },
+            ]
+        },)
+        {% if rp.type_petition == 'E' %}
         color_list.push('#E91E63');
+        {% else %}
+        color_list.push('#3F51B5');
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
         var options = {
-            series: [
-            {% for rp in roompetition %}
-            {% if rm == rp.room_petition %}
-            {% for me in modulevent %}
-            {% if me.module.start_module == rp.time_start_petition and me.event.roompetition_event == rp %}
-            {
-                name: '{{ rp.name_petition }}',
-                data: [
-                    {
-                        x: '{{ rm }}',
-                        y: [
-                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_start_petition.hour}}, {{rp.time_start_petition.minute}}).getTime(),
-                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_finish_petition.hour}}, {{rp.time_finish_petition.minute}}).getTime()
-                        ],
-                        
-                    },
-                ]
-            },
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-            {% endfor %}
-            ],
+            series: data_event,
             colors: color_list,
             chart: {
                 id: '{{rm.id}}',
@@ -164,13 +166,8 @@
             },
             dataLabels: {
                 enabled: true,
-                formatter: function (val) {
-                    {% for ev in eventinfo %}
-                    {% if ev.roompetition_event.room_petition == rm %}
-                    var label = '{{ ev.name_event }}'
-                    {% endif %}
-                    {% endfor %}
-                    return label
+                formatter: function(val,obj) {
+                    return obj.w.config.series[obj.seriesIndex].name;
                 },
             },
             fill: {

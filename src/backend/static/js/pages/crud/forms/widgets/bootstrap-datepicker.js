@@ -136,7 +136,6 @@ var KTBootstrapDatepicker = function () {
             lenguage: "es",
             format: "dd/mm/yyyy",
             todayHighlight: true,
-            startDate: new Date(),
             autoclose: true,
             todayBtn: "linked",
             orientation: "bottom left",
