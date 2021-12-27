@@ -5,8 +5,10 @@ from apps.core.models import Room
 
 
 software_form_status =[
-    (1, 'No realizada'),
-    (2, 'Realizada')
+    (1, 'Igresada'),
+    (2, 'en proceso'),
+    (3, 'Aprobada'),
+    (4, 'Rechazada')
 ]
 
 
@@ -26,7 +28,7 @@ class SoftwareForm(models.Model):
     status = models.IntegerField(
         null=False, blank=False,
         choices = software_form_status,
-        default= 2
+        default= 1
     )
     creation_date = models.DateField('Creation date', auto_now = True, auto_now_add = False)
     name_user = models.CharField(max_length=30)

@@ -59,21 +59,21 @@
 													<div class="form-group row col-12">
 														<label class="col-2 col-form-label">Nombre</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="name_user" value="{{ formulario.name_user }}" />
+															<input class="form-control" type="text" name="name_user" value="{{ formulario.name_user }}"  readonly/>
 														</div>
 														<label class="col-2 col-form-label">Apellido</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="last_name" value="{{ formulario.last_name }}" />
+															<input class="form-control" type="text" name="last_name" value="{{ formulario.last_name }}" readonly/>
 														</div>
 													</div>
 													<div class="form-group row col-12">
 														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="rut" value="{{ formulario.rut }}" />
+															<input class="form-control" type="text" name="rut" value="{{ formulario.rut }}" readonly/>
 														</div>
 														<label for="example-search-input" class="col-2 col-form-label">Email</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="email" value="{{ formulario.email }}" />
+															<input class="form-control" type="text" name="email" value="{{ formulario.email }}" readonly/>
 														</div>
 													</div>
 
@@ -90,8 +90,8 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="subject" value="{{ formulario.subject }}" id="example-text-input" /></th>
-																	<th ><input class="form-control" type="text" name="nrc" value="{{ formulario.nrc }}" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="subject" value="{{ formulario.subject }}" id="example-text-input" readonly/></th>
+																	<th ><input class="form-control" type="text" name="nrc" value="{{ formulario.nrc }}" id="example-text-input"readonly /></th>
 																	
 																</tr>
 
@@ -115,8 +115,8 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" /></th>
-																	<th ><input class="form-control" type="text" name="software_type" value="{{ formulario.software_type }}" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" readonly/></th>
+																	<th ><input class="form-control" type="text" name="software_type" value="{{ formulario.software_type }}" id="example-text-input" readonly/></th>
 																</tr>
 
 															</tbody>
@@ -124,7 +124,7 @@
 														</table>
 													</div>
 
-													<div class="form-group row fv-plugins-icon-container col-6">
+													<div class="form-group row fv-plugins-icon-container col-8">
 														<table class="table table-bordered">
 															
 															<thead class="table-dark">
@@ -136,7 +136,7 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.room_name }}" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.room_name }}" id="example-text-input" readonly/></th>
 
 																</tr>
 
@@ -146,11 +146,56 @@
 															
 
 														</table>
+
+
 													</div>
+
+													<div class="form-group row fv-plugins-icon-container col-7">
+
+														<table class="table table-bordered">
+																
+															<thead class="table-dark">
+																<tr>
+																	<th>Estado</th>
+																	<th></th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	{% if formulario.status == 1 %}
+																	<th ><span class="badge badge-info">Ingresada</span></th>
+																	{% elif formulario.status == 2 %}
+																	<th ><span class="badge badge-warning">En proceso</span></th>
+																	{% elif formulario.status == 3 %}
+																	<th ><span class="badge badge-success">Aprobada</span></th>
+																	{% elif formulario.status == 4 %}
+																	<th ><span class="badge badge-danger">Rechazada</span></th>
+																	{% endif %}
+																	<th class="text-center">
+																		<form method="POST" action="{% url 'licenses:status_form' formulario.id_request %}">
+																			{% csrf_token %}
+																			<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+																				<button href="" class="btn btn-success font-weight-bold" value="3" name="status">Aprobar</button>
+																				<button href="" class="btn btn-danger font-weight-bold" value="4" name="status">Rechazar</button>
+																				<button href="" class="btn btn-warning font-weight-bold" value="2" name="status">En proceso</button>
+																			</div>
+																		</form>
+																	</th>
+																</tr>
+
+															</tbody>
+
+														
+															
+
+														</table>
+													</div>	
 
 													<div class="form-group row " style="width: 90%;">
 														<label for="exampleFormControlTextarea1">Detalles: </label>
-														<input class="form-control" id="details" type="text" rows="3" value="{{ formulario.details }}"></input>
+														<input class="form-control" id="details" type="text" rows="3" value="{{ formulario.details }}" readonly></input>
 													</div>
 
 													

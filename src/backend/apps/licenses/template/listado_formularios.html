@@ -73,7 +73,7 @@
 						<th>Asignatura</th>
 						<th>Nrc</th>
 						<th>Nombre del software</th>
-						<th>Aprobar</th>
+						<!--<th>Aprobar</th>!-->
 						<th>Detalles</th>
 
 					</tr>
@@ -82,12 +82,15 @@
 					{% for p in solicitudes %}
 					<tr>
 						<td>{{ p.id_request }}</td>
-						<td>{% ifequal p.status 1 %}
-							<p><i class="fas fa-check-circle" style="color: green;"></i> Realizada</p>
-							{% else %}
-							<p><i class="fas fa-times-circle" style="color: red;"> </i> No realizada</p>
-
-							{% endifequal %}
+						<td>{% if p.status == 1 %}
+							<span class="badge badge-info">Ingresada</span>
+							{% elif p.status == 2 %}
+							<span class="badge badge-warning">En proceso</span>
+							{% elif p.status == 3 %}
+							<span class="badge badge-success">Aprobada</span>
+							{% elif p.status == 4 %}
+							<span class="badge badge-danger">Rechazada</span>
+							{% endif %}
 						</td>
 						<td>{{ p.creation_date }}</td>
 						<td>{{ p.name_user }} {{ p.last_name }}</td>
@@ -97,7 +100,7 @@
 						<td>{{ p.subject }}</td>
 						<td>{{ p.nrc }}</td>
 						<td>{{ p.software_name }}</td>
-						<td class="text-center">
+						<!--<td class="text-center">
 							{% if p.status == 2 %}
 							<form method="POST" action="{% url 'licenses:status_form' p.id_request %}">
 								{% csrf_token %}
@@ -110,11 +113,11 @@
 							<button href="{% url 'licenses:status_form' p.id_request %}" name="status_request" class="btn btn-danger" style="width: 80%;"><i class="fas fa-times"></i></button>
 							</form>
 							{% endif %}
-
+						</td>!-->
 						<td>
 							<form method="get" action="{% url 'licenses:form_info1' %}">
 								{% csrf_token %}
-							<button href="{%url 'licenses:form_info1' %}" value="{{ p.id_request }}" name="id_user" class="btn btn-primary"> Info </button>
+							<button href="{% url 'licenses:form_info1' %}" value="{{ p.id_request }}" name="id_user" class="btn btn-primary"> Info </button>
 							</form>
 					</tr>
 					{% endfor %}

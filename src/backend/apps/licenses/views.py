@@ -37,7 +37,9 @@ def form_info1(request):
             data_forms = SoftwareForm.objects.get(id_request=int(request.GET['id_user']))
             context['formulario'] = data_forms
     return render(request, "info_formulario1.html", context)   
-    
+
+
+
 def form_list(request):
     software_forms = SoftwareForm.objects.all()
     data = {
@@ -90,27 +92,42 @@ def search_form(request):
     
 
 
+# def status_form(request, id):
+    
+    
+#     software_forms = get_object_or_404(SoftwareForm, id_request=id)
+#     data={
+#         'solicitudes': SoftwareForm.objects.all()
+#     }
+#     i = software_forms.status
+
+#     if request.method == 'POST':
+#         if i == 2:
+#             SoftwareForm.objects.filter(id_request=id).update(status=1)
+            
+#             return render(request,'listado_formularios.html', data) 
+#         else: 
+#             SoftwareForm.objects.filter(id_request=id).update(status=2)
+            
+#             return render(request,'listado_formularios.html', data)     
+
+#     return render(request, 'listado_formularios.html', data)
+
 def status_form(request, id):
-    
-    
-    software_forms = get_object_or_404(SoftwareForm, id_request=id)
-    data={
-        'solicitudes': SoftwareForm.objects.all()
+
+    status = request.POST["status"]
+
+   
+
+    SoftwareForm.objects.filter(id_request=id).update(status=status)
+
+    software_forms = SoftwareForm.objects.all()
+    data = {
+        'solicitudes': software_forms
     }
-    i = software_forms.status
 
-    if request.method == 'POST':
-        if i == 2:
-            SoftwareForm.objects.filter(id_request=id).update(status=1)
-            
-            return render(request,'listado_formularios.html', data) 
-        else: 
-            SoftwareForm.objects.filter(id_request=id).update(status=2)
-            
-            return render(request,'listado_formularios.html', data)     
-
-    return render(request, 'listado_formularios.html', data)
-
+  
+    return render(request, "listado_formularios.html", data)    
 
 
 
