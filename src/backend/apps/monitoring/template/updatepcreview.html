@@ -21,7 +21,6 @@
 {% block content %}
 <form method="POST">
     {% csrf_token %}
-    <input type="hidden" name="user" value="{{ request.user.username }}">
 <!-- Modal Monitor-->
 <div class="modal fade" id="revisionm" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

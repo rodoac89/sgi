@@ -7,7 +7,6 @@ from apps.notification.models import Notif
 from django.contrib.auth.models import User as dj_user
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
-from django.http import HttpResponse
 from collections import Counter
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
@@ -231,7 +230,7 @@ def pcreview(request, id_pc):
         rev.SO = request.POST['so']
         rev.software = request.POST['sw']
         rev.observation = request.POST['observaciones']
-        rev.user = dj_user.objects.get(username = request.POST['user'])
+        rev.user = dj_user.objects.get(pk = request.user.id)
         rev.save()                     
         return redirect ('equipment_maintenance')
     context = {
@@ -286,7 +285,7 @@ def updatepcreview(request, id):
         rev.software = request.POST['sw']
         rev.observation = request.POST['observaciones']
         rev.date_created = datetime.now()
-        rev.user = dj_user.objects.get(username = request.POST['user'])
+        rev.user = dj_user.objects.get(pk = request.user.id)
         rev.save()
         return redirect ('showreviewpc')
     context = {
