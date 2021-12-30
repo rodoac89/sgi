@@ -1,41 +1,18 @@
-{% extends '_partials/_base.html' %}
-{% load static %}
-{% block pagetitle %}Pagina en blanco{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Crossing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap" rel="stylesheet">
 
-{% block title %}Modulo de licencias{% endblock %}
-
-{% block breadcumbs %}
-
-<li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">Camino</a>
-</li>
-<li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">a</a>
-</li>
-<li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">su pagina</a>
-</li>
+    <link rel="stylesheet" href="css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    
 
 
-{% endblock %}
-
-{% block notificaciones %}
-
-<li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">Camino</a>
-</li>
-<li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">a</a>
-</li>
-<li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">su pagina</a>
-</li>
-
-
-{% endblock %}
-
-<!--Probando git-->
-{% block content %}
     <div class="d-flex flex-column-fluid">
 							<!--begin::Container-->
 							<div class="container">
@@ -50,7 +27,7 @@
 												</div>
 											</div>
 											<!--begin::Form-->
-											<form action="{% url 'licenses:form_create' %}" method="POST">
+											<form action=" { % url 'guardarFormulario' % }" method="POST">
 
 												{% csrf_token %} 
 												<div class="card-body row justify-content-center">
@@ -58,24 +35,32 @@
 													<div class="form-group row col-12">
 														<label class="col-2 col-form-label">Nombre</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="name_user" value="{{ formulario.name_user }}" />
+															<input class="form-control" type="text" name="name_user" value="" />
 														</div>
 														<label class="col-2 col-form-label">Apellido</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="last_name" value="{{ formulario.last_name }}" />
+															<input class="form-control" type="text" name="last_name" value="" />
 														</div>
 													</div>
 													<div class="form-group row col-12">
 														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="rut" value="{{ formulario.rut }}" />
+															<input class="form-control" type="text" name="rut" value="" />
 														</div>
 														<label for="example-search-input" class="col-2 col-form-label">Correo institucional</label>
 														<div class="col-4">
-															<input class="form-control" type="text" name="email" value="{{ formulario.email }}" />
+															<input class="form-control" type="text" name="email" value="" />
 														</div>
 													</div>
-													
+													<div class="form-group row col-12">
+														<label class="col-4 col-form-label">¿La licencias es para alguna asignatura?</label>
+														<div class="col-6">
+															<label class="col-2 col-form-label">No</label><input type="radio" name="radios">
+															<label class="col-2 col-form-label">Si</label><input type="radio" name="radios">
+
+														</div>
+
+													</div>
 
 													<div class="form-group row fv-plugins-icon-container col-12">
 														<table class="table table-bordered">
@@ -90,13 +75,28 @@
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="subject" value="{{ formulario.subject }}" id="example-text-input" /></th>
-																	<th ><input class="form-control" type="text" name="nrc" value="{{ formulario.nrc }}" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="subject" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="nrc" value="" id="example-text-input" /></th>
 																	
 																</tr>
 
 															</tbody>
 
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																</tr>
+
+															</tbody>
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																</tr>
+
+															</tbody>
 															
 
 														</table>
@@ -108,77 +108,54 @@
 															<thead class="table-dark">
 																<tr>
 																	<th class="" style="width: 60%;">Nombre</th>
-																	<th class="" style="width: 10%;">Tipo de licencia</th>
+																	<th class="" style="width: 10%;">Con licencia</th>
+																	<th class="" style="width: 10%;">Open souce</th>
+																	<th class="" style="width: 10%;">Trial</th>
+																	<th class="" style="width: 10%;">Otro</th>
 																</tr>
 															</thead>
 															
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" /></th>
-																	<th >
-																		<div class="dropdown">
-																			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																				Dropdown button
-																			</button>
-																			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-																				<a class="dropdown-item" href="#">Action</a>
-																				<a class="dropdown-item" href="#">Another action</a>
-																				<a class="dropdown-item" href="#">Something else here</a>
-																			</div>
-																		</div>
-																	</th>
+																	<th ><input class="form-control" type="text" name="software_name" value="" id="example-text-input" /></th>
+																	<th ><input type="radio" name="radios"></th>
+																	<th ><input type="radio" name="radios"></th>
+																	<th ><input type="radio" name="radios"></th>
+																	<th ><input type="radio" name="radios"></th>
 																</tr>
 
 															</tbody>
-
-														
-															
-
-														</table>
-													</div>
-
-													<div class="form-group row fv-plugins-icon-container col-8">
-														<table class="table table-bordered">
-															
-															<thead class="table-dark">
-																<tr>
-																	<th class="" style="width: 60%;">Laboratorio</th>
-																	<th class="" style="width: 10%;"></th>
-																</tr>
-															</thead>
-															
 
 															<tbody>
 																<tr>
-																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" /></th>
-																	<th >
-																		<div class="dropdown">
-																			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																				Dropdown button
-																			</button>
-																			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-																				<a class="dropdown-item" href="#">Action</a>
-																				<a class="dropdown-item" href="#">Another action</a>
-																				<a class="dropdown-item" href="#">Something else here</a>
-																			</div>
-																		</div>
-																		
-																	</th>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input type="radio" name="radios1"></th>
+																	<th ><input type="radio" name="radios1"></th>
+																	<th ><input type="radio" name="radios1"></th>
+																	<th ><input type="radio" name="radios"></th>
 																</tr>
 
 															</tbody>
 
-														
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" value="" id="example-text-input" /></th>
+																	<th ><input type="radio" name="radios2"></th>
+																	<th ><input type="radio" name="radios2"></th>
+																	<th ><input type="radio" name="radios2"></th>
+																	<th ><input type="radio" name="radios"></th>
+																</tr>
+
+															</tbody>
 															
 
 														</table>
 													</div>
-
 													
 													<div class="form-group row " style="width: 90%;">
 														<label for="exampleFormControlTextarea1">Detalles por considerar para la instalación (Enlace de descarga, instrucciones específicas de instalación o configuración, etc.):</label>
-														<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" value="{{ formulario.details }}"></textarea>
+														<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 													</div>
 
 													<div class="form-group mb-8">
@@ -198,11 +175,12 @@
 														</div>
 													</div>
 													
+												
 												</div>
 												<div class="card-footer">
 													<div class="row col-12 justify-content-end">
 														<div class="col-2">
-															<button  type="submit" class="btn btn-success mr-2">Submit</button>
+															<a href="{% url 'licenses:form_create' %}" type="submit" class="btn btn-success mr-2">Submit</a>
 														</div>
 													</div>
 												</div>
@@ -216,7 +194,7 @@
 							<!--end::Container-->
 						</div>
 
-{% endblock %}
-
-{% block scripts %}
-{% endblock %}
+<script src="js/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+</body>
+</html>
