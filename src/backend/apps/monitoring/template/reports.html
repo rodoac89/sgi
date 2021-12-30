@@ -20,9 +20,6 @@
 {% endblock %}
 
 {% block content %}
-<style text="type/css">
-    div.container { max-width: 1200px }
-</style>
 <div class="card card-custom">
     
     <div class="card-header flex-wrap border-0 pt-6 pb-0">
@@ -67,9 +64,9 @@
                     {% elif reporte.state == "C" %}
                     <td><span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
                     {% endif %}
-                    <td><form action="{% url 'updateticketstate' reporte.id %}">
-                        <button class="btn btn-light-primary font-weight-bold mr-2">Ver</button>
-                        </form></td>
+                    <td>
+                        <a href="{% url 'updateticketstate' reporte.id %}" class="btn btn-light-primary font-weight-bold mr-2">Ver</a>
+                    </td>
                 </tr>
                 {% endfor %}
                 
@@ -104,40 +101,6 @@
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<!--<script src="https://code.jquery.com/jquery-3.4.1.js"
-integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-<script src="{% static 'js/pages/datatablejquery/dataTables.responsive.min.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
--->
-<!--<script type="text/javascript">
-    function filterlab()
-    {
-        var input,table,tr,td,filter,i,displaydata;
-        input=document.getElementById("select");
-        filter=input.value.toUpperCase();
-        table=document.getElementById("table");
-        tr=table.getElementsByTagName("tr");
-        for(i=0;tr.length;i++){
-
-            td=tr[i].getElementsByTagName("td")[6];
-            if(td){
-                displaydata=td.innerText;
-                if(displaydata.toUpperCase().indexOf(filter)>-1){
-                    tr[i].style.display="";
-                }
-                else{
-                    tr[i].style.display="none";
-                }
-            }
-        }
-    }
-
-
-</script>-->
 <script>
     $(document).ready(function(){
     $("#search").keyup(function(){
@@ -153,26 +116,7 @@ integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="ano
 </script>
 
 
-<!--
-<script>
 
-$(document).ready(function($) {
-  $('#select').change(function() {
-    $('table').show();
-    var selection = $(this).val();
-    var dataset = $('#table').find('tr');
-    // show all rows first
-    dataset.show();
-    // filter the rows that should be hidden
-    dataset.filter(function(index, item) {
-      return $(item).find('td:first-child').text().split(',').indexOf(selection) === -1;
-    }).hide();
-
-  });
-});
-
-
-</script>-->
 
 
 {% endblock %}
