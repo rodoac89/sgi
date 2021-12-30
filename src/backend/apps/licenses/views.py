@@ -1,11 +1,12 @@
 
 """from Labs.backend.apps.licenses.models import form_software"""
-from datetime import datetime
+
+from datetime import datetime, timedelta
 from apps.licenses.forms import SoftwareRequestForm, EnterLicensesForm
 from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
-
+from django.utils import timezone
 from .models import LicensesList, SoftwareForm
 
 
@@ -23,11 +24,13 @@ def form_index(request):
 
 def forms_view(request):
     context={}
+    
     if request.GET:
         if 'id_user' in request.GET:
             data_forms = SoftwareForm.objects.get(id_request=int(request.GET['id_user']))
             context['formulario'] = data_forms
-      
+    
+
     return render(request, "solicitudes_software.html", context)
 
 def form_info1(request):
@@ -215,48 +218,92 @@ def search_license(request):
 #------REPORTES------#
 
 def reportes(request):
-    return render(request, 'reportes1.html')
+    context = {}
+    #-----------Licencias-----------#
+    all_licenses = LicensesList.objects.all()
+    total_licenses = len(all_licenses)
+    context['total_licenses'] = total_licenses
+    today = datetime.now()
+    due_date = today + timedelta(weeks=8)
+    licenses_near_due_date = all_licenses.filter(license_due_date__range=(today,due_date))
+    total_licenses_near_due_date = len(licenses_near_due_date)
+    context['total_licenses_near_due_date'] = total_licenses_near_due_date
 
-def licenses_reports(request):
-    count_forms_request = []
-    count_instalations_done = []
-    count_licenses = []
-    count_licenses_in_use = []
-    count_licenses_in_use2 = []
-    count_licenses_in_due = []
-    date = datetime.today()
-    year = date.strftime("%Y")
-    begin = year+'-01-01'
-    end = year+'-12-31'
-    #------formularios------#
-    form_reports = SoftwareForm.objects.filter(creation_date__range=(begin,end))     
-    for r in form_reports:
-        if r.id_request is not None:
-            count_forms_request.append(1)
-    form_reports1 = SoftwareForm.objects.filter(status=1)     
-    for r in form_reports1:
-        if r.id_request is not None:
-            count_instalations_done.append(1)        
-    c_formularios=sum(count_forms_request)   
-    c_instalations=sum(count_instalations_done) 
-    #------licencias------#
-    licenses_reports = LicensesList.objects.all()     
-    for r in licenses_reports:
-        if r.id_license is not None:
-            count_licenses.append(1)  
-    licenses_reports1 = LicensesList.objects.all() 
-    total_stock = 0
-    for stock in licenses_reports1:
-        total_stock += stock.license_stock
+
+    #-----------Formularios-----------#
+
+    all_forms_request = SoftwareForm.objects.all()
+    total_forms_requested = len(all_forms_request)
+    context['total_forms_requested'] = total_forms_requested
+    this_year = today.year
+    all_forms_request.filter(creation_date__year=this_year)
+    context['yearly_software_request'] = {
+        "January": 10,
+        "February": len(all_forms_request.filter(creation_date__month=2)),
+        "March":  len(all_forms_request.filter(creation_date__month=3)),
+        "April":  len(all_forms_request.filter(creation_date__month=4)),
+        "May":  len(all_forms_request.filter(creation_date__month=5)),
+        "June":  len(all_forms_request.filter(creation_date__month=6)),
+        "July":  len(all_forms_request.filter(creation_date__month=7)),
+        "August":  len(all_forms_request.filter(creation_date__month=8)),
+        "September":  len(all_forms_request.filter(creation_date__month=9)),
+        "October":  len(all_forms_request.filter(creation_date__month=10)),
+        "November":  len(all_forms_request.filter(creation_date__month=11)),
+        "December":  len(all_forms_request.filter(creation_date__month=12))
+    }
+
+
+
+
+
+    # count_forms_request = []
+    # count_instalations_done = []
+    # count_licenses = []
+    # count_licenses_in_use = []
+    # count_licenses_in_use2 = []
+    # count_licenses_in_due = []
+    # date = datetime.today()
+    # year = date.strftime("%Y")
+    # begin = year+'-01-01'
+    # end = year+'-12-31'
+    # ------formularios------#
+    # form_reports = SoftwareForm.objects.filter(creation_date__range=(begin,end))     
+    # for r in form_reports:
+    #     if r.id_request is not None:
+    #         count_forms_request.append(1)
+    # form_reports1 = SoftwareForm.objects.filter(status=1)     
+    # for r in form_reports1:
+    #     if r.id_request is not None:
+    #         count_instalations_done.append(1)        
+    # c_formularios=sum(count_forms_request)   
+    # c_instalations=sum(count_instalations_done) 
+    # ------licencias------#
+    # licenses_reports = LicensesList.objects.all()     
+    # for r in licenses_reports:
+    #     if r.id_license is not None:
+    #         count_licenses.append(1)
+    # print('-----------------------------------------------------------------------------------------------------------------------')  
+
+    # print(licenses_reports)  
+    # c_licenses = licenses_reports.__len__
+    # licenses_reports1 = LicensesList.objects.all() 
+    # total_stock = 0
+    # for stock in licenses_reports1:
+    #     total_stock += stock.license_stock
     
-    c_licenses=sum(count_licenses)
+    # c_licenses=sum(count_licenses)
 
 
 
 
-    context={'c_formularios':c_formularios, 'c_instalations':c_instalations, 'c_licenses':c_licenses, 't_stock':total_stock, }    
+       
     return render(request,'reportes.html', context)
 
+
+
+
+
+    
 
 
 

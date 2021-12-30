@@ -177,9 +177,69 @@
 																		<form method="POST" action="{% url 'licenses:status_form' formulario.id_request %}">
 																			{% csrf_token %}
 																			<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-																				<button href="" class="btn btn-success font-weight-bold" value="3" name="status">Aprobar</button>
-																				<button href="" class="btn btn-danger font-weight-bold" value="4" name="status">Rechazar</button>
-																				<button href="" class="btn btn-warning font-weight-bold" value="2" name="status">En proceso</button>
+																				<button href="" type="button" class="btn btn-success font-weight-bold" data-toggle="modal" data-target="#exampleModal" value="3" name="status">Aprobar</button>
+																				<button href="" type="button" class="btn btn-danger font-weight-bold" data-toggle="modal" data-target="#exampleModal2" value="4" name="status">Rechazar</button>
+																				<button href="" type="button" class="btn btn-warning font-weight-bold" data-toggle="modal" data-target="#exampleModal3" value="2" name="status">En proceso</button>
+																			</div>
+																			<!-- Modals -->
+																			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																				<div class="modal-dialog" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																					<h5 class="modal-title" id="exampleModalLabel">Cambio de estado</h5>
+																					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																						<span aria-hidden="true">&times;</span>
+																					</button>
+																					</div>
+																					<div class="modal-body" style="font-size: 24px;">
+																					¿Esta seguro de aprobar?
+																					</div>
+																					<div class="modal-footer">
+																					<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+																					<button href="" class="btn btn-success font-weight-bold" data-toggle="modal" data-target="#exampleModal" value="3" name="status">Aprobar</button>
+																					</div>
+																				</div>
+																				</div>
+																			</div>
+
+																			<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																				<div class="modal-dialog" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																					<h5 class="modal-title" id="exampleModalLabel">Cambio de estado</h5>
+																					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																						<span aria-hidden="true">&times;</span>
+																					</button>
+																					</div>
+																					<div class="modal-body" style="font-size: 24px;">
+																					¿Esta seguro de rechazar?
+																					</div>
+																					<div class="modal-footer">
+																					<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+																					<button href="" class="btn btn-danger font-weight-bold" data-toggle="modal" data-target="#exampleModal2" value="4" name="status">Rechazar</button>
+																					</div>
+																				</div>
+																				</div>
+																			</div>
+
+																			<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																				<div class="modal-dialog" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																					<h5 class="modal-title" id="exampleModalLabel">Cambio de estado</h5>
+																					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																						<span aria-hidden="true">&times;</span>
+																					</button>
+																					</div>
+																					<div class="modal-body" style="font-size: 24px;">
+																					¿Esta seguro cambiar a en proceso?
+																					</div>
+																					<div class="modal-footer">
+																					<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+																					<button href="" class="btn btn-warning font-weight-bold" data-toggle="modal" data-target="#exampleModal3" value="2" name="status">En proceso</button>
+																					</div>
+																				</div>
+																				</div>
 																			</div>
 																		</form>
 																	</th>

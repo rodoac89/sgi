@@ -5,7 +5,7 @@ from django.urls.resolvers import URLPattern
 
 from apps.licenses.views import formulario"""
 from django.urls import path, include
-from .views import EnterLicensesView, SoftwareRequestView, adm_licencias, enter_licenses, form_info, form_info1, form_list, home, labs, equipos, pc, SoftwareRequestForm, prueba, reportes, software_request_done, form_index, forms_view, form_list, enter_licenses, form_info1, edit_license, delete_license, licenses_reports, search_license, search_form, status_form
+from .views import EnterLicensesView, SoftwareRequestView, adm_licencias, enter_licenses, form_info, form_info1, form_list, home, labs, equipos, pc, SoftwareRequestForm, prueba, reportes, software_request_done, form_index, forms_view, form_list, enter_licenses, form_info1, edit_license, delete_license, search_license, search_form, status_form
 urlpatterns = [
     path('', home, name = 'index' ),
     path('form_index/', form_index, name = 'form_index'),
@@ -26,7 +26,6 @@ urlpatterns = [
     path('edit_license/<id>/', edit_license, name="edit_license"),
     path('delete_license/<id>/', delete_license, name="delete_license"),
     path('status_form/<id>/', status_form, name="status_form"),
-    path('licenses_reports/', licenses_reports, name="licenses_reports"),
     path('search_license/', search_license, name="search_license"),
     path('prueba/', prueba, name="prueba"),
     path('reportes/', reportes, name="reportes"),
