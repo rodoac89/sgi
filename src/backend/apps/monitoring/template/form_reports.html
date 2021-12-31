@@ -41,7 +41,7 @@
     <div class="card-body">
       {% csrf_token %}
       <div class="form-group">
-        <div class="h4" ALIGN="LEFT">Correo Institucional</div>
+        <div class="h4" style="text-align: left;">Correo Institucional</div>
         <br>
         <div class="ui-widget">
           <input id="email" name="email" class="form-control" placeholder="Ej:pablo@uandresbello.edu"
@@ -52,7 +52,7 @@
       </div>
       {% if rooms %}
       <div class="form-group">
-        <div class="h4" ALIGN="LEFT">Selecciona el Campus</div>
+        <div class="h4" style="text-align: left;">Selecciona el Campus</div>
         <br>
 
         <select id="campus_select" class="form-control" name="campus">
@@ -64,21 +64,18 @@
 
       </div>
       <div class="form-group">
-        <div class="h4" ALIGN="LEFT">Selecciona el laboratorio</div>
+        <div class="h4" style="text-align: left;">Selecciona el laboratorio</div>
         <br>
 
         <select id="room_select" class="form-control" name="room">
           <option selected disabled="true"></option>
-          <!--{% for i in rooms %}
-          <option value="{{i.id}}">{{i.room_name}}</option>
-          {% endfor %}-->
         </select>
 
       </div>
 
       <br>
       <div class="form-group">
-        <div class="h4" ALIGN="LEFT">Seleccione el PC que presenta el problema</div>
+        <div class="h4" style="text-align: left;">Seleccione el PC que presenta el problema</div>
         <br>
         <select id="pc_select" class="form-control-sm custom-select" name="Pc">
           <option selected disabled="true"></option>
@@ -86,7 +83,7 @@
       </div>
       {% else %}
       <div class="form-group">
-        <div class="h4" ALIGN="LEFT">Estás reportando el pc: </div>
+        <div class="h4" style="text-align: left;">Estás reportando el pc: </div>
         <br>
         <select id="pc_select" class="form-control-sm custom-select" name="Pc">
           <option selected value="{{ pc.id }}">{{pc.name}}</option>
@@ -95,7 +92,7 @@
       {% endif %}
       <br>
       <div class="form-group">
-        <div class="h4" ALIGN="LEFT">El PC presenta mal funcionamiento en:</div>
+        <div class="h4" style="text-align: left;">El PC presenta mal funcionamiento en:</div>
         <br>
         <select id="category" name="category" class="form-control">
           <option>Hardware</option>
@@ -105,11 +102,11 @@
       </div>
       <br>
       <div class="form-group mb-1">
-        <div class="h4" ALIGN="LEFT">Describa a continuación el problema que presenta el PC</div>
+        <div class="h4" style="text-align: left;">Describa a continuación el problema que presenta el PC</div>
         <br>
         <textarea id="description" name="description" class="form-control" rows="3"></textarea>
       </div>
-      <div class="card-footer" ALIGN="CENTER">
+      <div class="card-footer" style="text-align: center;">
         <button type="submit" class="btn btn-primary mr-2">Emitir Reporte</button>
       </div>
 

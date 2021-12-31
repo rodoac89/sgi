@@ -77,9 +77,28 @@
                                             <span></span>
                                             Abierto
                                         </label>
-                                        
+                                        <label class="radio radio-warning">
+                                            <input type="radio"  name="state" value="R"/>
+                                                <span></span>
+                                                Revisando
+                                            </label>
                                         {% endif %}        
                                     </div>
+                                    <div class="radio-inline">
+                                        {% if report.state == "R" %}
+                                        <label class="radio radio-danger">
+                                            <input type="radio" name="state" value="A"/>
+                                                <span></span>
+                                                Abierto
+                                        </label>   
+                                            <label class="radio radio-warning">
+                                            <input type="radio" checked="checked" name="state" value="R"/>
+                                                <span></span>
+                                                Revisando
+                                            </label>
+                                            
+                                            {% endif %}        
+                                        </div>
                                     <div class="radio-inline">
                                         {% if report.state == "C" %}
                                         <label class="radio radio-danger">
@@ -87,6 +106,11 @@
                                             <span></span>
                                             Abierto
                                           </label>
+                                          <label class="radio radio-warning">
+                                            <input type="radio" disabled name="state" value="R"/>
+                                                <span></span>
+                                                Revisando
+                                            </label>
                                             <label class="radio radio-success">
                                             <input type="radio" checked="checked" name="state" value="C"/>
                                                 <span></span>
@@ -115,7 +139,24 @@
                             <div class="card-footer" style="text-align: center;">
                                 <button type="submit" class="btn btn-primary mr-2" >Actualizar Estado</button> 
                             </div>
+                            
                             {% elif report.comment != None %}
+                            {% if report.state == "R" %}
+                            <div style="text-align: center;" class="col-12">
+                                <textarea id="comment" name="comment" class="form-control" rows="3">{{report.comment}}</textarea>
+                                <label id="commenterror" style="display: none;" for="exampleTextarea"><span class="text-danger"></span></label> 
+                            </div>
+                            <div class="card-body row justify-content-center">
+                            <label class="col-2 col-form-label">Fecha de Comentario</label>
+                            <div class="col-4">
+                                <label class="col-form-label">{{report.date_comment}}</label>
+                            </div>
+                            </div>
+                            <div class="card-footer" style="text-align: center;">
+                                <button type="submit" class="btn btn-primary mr-2" >Actualizar Estado</button> 
+                            </div>
+
+                            {% elif report.state == "C" %}
                             <div style="text-align: center;" class="col-12">
                                 <textarea name="comment" disabled class="form-control" rows="3">{{report.comment}}</textarea>
                             </div>
@@ -127,7 +168,7 @@
                             </div>    
                             <div class="card-footer"></div>
                             {% endif %}
-                            
+                            {% endif %}
                     </form> 
                         </div>
                     </div>

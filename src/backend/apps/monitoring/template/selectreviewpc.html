@@ -21,11 +21,16 @@
 
 <div class="card card-custom">
     
+    {% if  count_schedule == 0%}
     <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <label class="h4" style="text-align: center;">No hay revisiones para mostrar</label></div>
+        {% else %}    
+     <div class="card-header flex-wrap border-0 pt-6 pb-0">
         <div class="card-title">
             <h3 class="card-label">Visualizar Revisiones de los PC 
              <span class="text-muted pt-2 font-size-sm d-block">Selecciona una revisión para continuar</span></h3>
         </div>
+        <br>
         <div class="col-lg-9 col-xl-8">
             <div class="row align-items-center">
             </div>
@@ -66,7 +71,8 @@
             {% endfor %}
         </tbody>
 
-    </table>    
+    </table>  
+    {% endif %}
     {% if reviews.has_other_pages %}
     <ul class="pagination">
         {% if reviews.has_previus %}

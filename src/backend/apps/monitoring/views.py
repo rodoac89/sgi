@@ -151,7 +151,15 @@ def computer_management(request):
 def equipment_maintenance(request):
     if request.session['Room'] is not None or 'Room' not in request.session:
         room_obtenido = Room.objects.get(pk =request.session['Room'])
-        pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')     
+        date_now = date.today()
+        rev = Revision.objects.all().filter(date_created__date=date_now)
+        pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name') 
+        lrev = []
+        for i in rev:
+            if i.pc is not None:
+                if i.pc.id not in lrev:
+                    lrev.append(i.pc.id) 
+        print(lrev)            
         context={
             'Room': room_obtenido,
             'pc':pc
@@ -253,6 +261,7 @@ def selectreviewpc(request):
             if i.scheduled_review.id not in lista_schedule:
                 lista_schedule.append(i.scheduled_review.id)          
     schedule = ScheduledReview.objects.all().filter(pk__in=lista_schedule).order_by('-date_scheduled')
+    count_schedule = schedule.count()
     page = request.GET.get('page', 1)
     paginator = Paginator (schedule, 10)
     try:
@@ -261,7 +270,7 @@ def selectreviewpc(request):
         sch = paginator.page(1)
     except EmptyPage:
         sch = paginator.page(paginator.num_pages)
-    context = {'sch':sch}
+    context = {'sch':sch, 'count_schedule': count_schedule}
     temaplate_name="selectreviewpc.html"
     return render(request,temaplate_name,context)    
 
