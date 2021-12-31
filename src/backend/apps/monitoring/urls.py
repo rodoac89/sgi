@@ -21,6 +21,6 @@ urlpatterns = [
     path('selectreviewpc/',views.selectreviewpc,name="selectreviewpc"),
     path('chart_maintenance_lab/',views.chart_maintenance_lab,name="chart_maintenance_lab"),
     path('selectdate/',views.selectdate,name="selectdate"),
-    path('updateticketstate_<int:id>/',views.updateticketstate,name="updateticketstate"),
+    path('updateticketstate/<int:id>/',views.updateticketstate,name="updateticketstate"),
 
 ]

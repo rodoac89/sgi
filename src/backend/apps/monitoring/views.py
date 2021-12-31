@@ -24,6 +24,7 @@ def notificationreport(pc):
         notifi.user = dj_user.objects.get(pk = j)
         notifi.message = "Un Usuario ha reportado el equipo"+" "+pc.name
         notifi.date = datetime.now()
+        notifi.url = "reports"
         notiflist.append(notifi)
     Notif.objects.bulk_create(notiflist)
     return True
