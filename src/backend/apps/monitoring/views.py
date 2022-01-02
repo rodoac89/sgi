@@ -152,17 +152,19 @@ def equipment_maintenance(request):
     if request.session['Room'] is not None or 'Room' not in request.session:
         room_obtenido = Room.objects.get(pk =request.session['Room'])
         date_now = date.today()
-        rev = Revision.objects.all().filter(date_created__date=date_now)
-        pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name') 
+        pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')
         lrev = []
-        for i in rev:
-            if i.pc is not None:
-                if i.pc.id not in lrev:
-                    lrev.append(i.pc.id) 
-        print(lrev)            
+        lnotrev = []
+        rev = Revision.objects.all().filter(date_created__date=date_now)
+        for i in pc:
+            if rev.filter(pc__id=i.id).exists():
+                lrev.append(i.id)
+            else:
+                lnotrev.append(i.id)             
+        prev = Workstation.objects.all().filter(pk__in=lrev).order_by('name')
+        pnotrev = Workstation.objects.all().filter(pk__in=lnotrev).order_by('name')             
         context={
-            'Room': room_obtenido,
-            'pc':pc
+            'Room': room_obtenido,'pc':pc, 'pcnotrev':pnotrev, 'pcrev':prev
         }
         template_name="equipment_maintenance.html"
         return render(request,template_name,context)
