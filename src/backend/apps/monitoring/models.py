@@ -56,10 +56,6 @@ class Revision (models.Model):
         ('N', 'No Tiene')
     ]
     
-    STATE = [
-        ('R' , 'Revisado'),
-        ('P', 'Pendiente')
-    ]
     scheduled_review = models.ForeignKey(ScheduledReview,on_delete=models.SET_NULL,blank=True,null=True)
     pc = models.ForeignKey(Workstation,on_delete=models.SET_NULL,blank=True,null=True)
     monitor = models.CharField(max_length=2,null=False,blank=False,choices=Hardware_Revision,default="")
@@ -69,7 +65,6 @@ class Revision (models.Model):
     SO = models.CharField(max_length=2,null=False,blank=False,choices=Software_SO_Revision,default="")
     software = models.CharField(max_length=2,null=False,blank=False,choices=Software_SO_Revision,default="")
     observation = models.CharField(max_length=200)
-    state = models.CharField(max_length=1,null=False,blank=False,choices=STATE,default="P")
     date_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(dj_user, on_delete=models.CASCADE,default="")
 

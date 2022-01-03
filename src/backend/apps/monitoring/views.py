@@ -121,7 +121,7 @@ def updateticketstate(request,id):
         ticket.state = request.POST['state']
         ticket.comment = request.POST['comment']
         ticket.date_comment = datetime.now()
-        ticket.user = dj_user.objects.get(username = request.POST['user'])
+        ticket.user = dj_user.objects.get(pk = request.user.id)
         ticket.save()
         return redirect ('reports')
     template_name="updateticketstate.html"
@@ -155,16 +155,15 @@ def equipment_maintenance(request):
         pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')
         lrev = []
         lnotrev = []
-        rev = Revision.objects.all().filter(date_created__date=date_now)
         for i in pc:
-            if rev.filter(pc__id=i.id).exists():
+            if Revision.objects.filter(date_created__date=date_now,pc__id=i.id).exists():
                 lrev.append(i.id)
             else:
-                lnotrev.append(i.id)             
+                lnotrev.append(i.id)           
         prev = Workstation.objects.all().filter(pk__in=lrev).order_by('name')
         pnotrev = Workstation.objects.all().filter(pk__in=lnotrev).order_by('name')             
         context={
-            'Room': room_obtenido,'pc':pc, 'pcnotrev':pnotrev, 'pcrev':prev
+            'Room': room_obtenido, 'pcnotrev':pnotrev, 'pcrev':prev
         }
         template_name="equipment_maintenance.html"
         return render(request,template_name,context)
@@ -278,7 +277,7 @@ def selectreviewpc(request):
 
 def showpcreview(request):
     if request.session['id'] is not None or 'id' not in request.session:
-        reviews = Revision.objects.all().filter(scheduled_review=request.session['id']).order_by('id')
+        reviews = Revision.objects.all().filter(scheduled_review=request.session['id']).order_by('pc')
         template_name = "showreviewpc.html"
         return render(request,template_name,{ 'reviews':reviews })        
     else:
