@@ -100,7 +100,6 @@ def email_autocomplete(request):
 
 @login_required
 def reports(request):
-    lab = Room.objects.all()
     reportes = TicketReport.objects.all()
     page = request.GET.get('page', 1)
     paginator = Paginator (reportes, 10)
@@ -111,7 +110,7 @@ def reports(request):
     except EmptyPage:
         reports = paginator.page(paginator.num_pages)
     template_name="reports.html"
-    context = {'reports': reports, 'lab':lab}
+    context = {'reports': reports}
     return render(request,template_name,context)
 
 def updateticketstate(request,id):
