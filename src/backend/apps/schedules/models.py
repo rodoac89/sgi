@@ -20,8 +20,8 @@ class RoomPetition(models.Model):
         ('0','Domingo'),
     )
     RECURRENCE = (
-        ('07','Semanal'),
         ('01','Diario'),
+        ('07','Semanal'),
         ('28','Mensual'),
     )
     TYPE = (
@@ -35,17 +35,17 @@ class RoomPetition(models.Model):
     computer_petition = models.IntegerField(default="")
     date_start_petition = models.DateField(null=True)
     date_finish_petition = models.DateField(null=True)
-    day_petition = models.CharField(max_length=1, choices=DAY, default="1")
+    day_petition = models.CharField(max_length=1, choices=DAY, default="1", null=True)
     time_start_petition = models.TimeField(null=True)
     time_finish_petition = models.TimeField(null=True)
-    recurrence = models.CharField(max_length=2, choices=RECURRENCE, default='07')
+    recurrence_petition = models.CharField(max_length=2, choices=RECURRENCE, default='01')
     memo_petition = models.CharField(max_length=100, default="", null=True)
     type_petition = models.CharField(max_length=1, choices=TYPE, default="N")
     status_petition = models.CharField(max_length=1, choices=STATUS, default="P", null=True)
-    datetime_petition = models.DateTimeField(default=datetime.now(), blank=True)
+    datetime_petition = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return "{} - {} - {}".format(self.name_petition, self.room_petition)
+        return "{} - {}".format(self.name_petition, self.room_petition)
 
 class Module(models.Model):
     resume_module = models.CharField(max_length=50, default="")
@@ -56,17 +56,13 @@ class Module(models.Model):
     def __str__(self):
         return "{} : {} - {}".format(self.name_module, self.start_module, self.finish_module)
 
-class Event(models.Model):    
-    name_event = models.CharField(max_length=50)
-    roompetition_event = models.ForeignKey(RoomPetition, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return "{}".format(self.name_event)
-
 class ModuleEvent(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    roompetition = models.ForeignKey(RoomPetition, on_delete=models.SET_NULL, null=True, blank=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     day = models.DateField(auto_now=False)
+    
+    def __str__(self):
+        return "{} - {} - {}".format(self.roompetition, self.module, self.day)
     
 #class Event(models.Model):
 #    name_event = models.CharField(max_length=20, default="", blank=True)

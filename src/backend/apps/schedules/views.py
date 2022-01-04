@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from apps.core.models import Room, Campus, Workstation
-from apps.schedules.models import RoomPetition, Module, Event, ModuleEvent
+from apps.schedules.models import RoomPetition, Module, ModuleEvent
 from apps.schedules.forms import RoomPetitionForm, ModuleForm, StatusRoomPetitionForm
 from datetime import date, timedelta, datetime
 import time 
@@ -74,8 +74,10 @@ def deletemodule(request, id):
 def manage_request(request):
     template_name="manage_request.html"
     context = {}
+    formroom = StatusRoomPetitionForm(request.POST or None)
     context['roompetition'] = RoomPetition.objects.all().order_by('-datetime_petition')
     context['modules'] = Module.objects.all()
+    context['formroom'] = formroom
     return render(request, template_name, context)
 
 def manage_request_id(request, id):
@@ -91,36 +93,42 @@ def manage_request_id(request, id):
         elif status=='A' and roompetition.status_petition!='A':
             delete_event(roompetition)
         return HttpResponseRedirect(reverse('manage_request'))
+    elif request.GET.get('DeleteButton'):
+        RoomPetition.objects.filter(id = request.GET.get('DeleteButton')).delete()
+        return HttpResponseRedirect(reverse('manage_request'))
     context['formlab'] = formroom
     context['roompetition'] = roompetition
     return render(request, template_name, context)
 
+def request_delete_id(request, id):
+    object = RoomPetition.objects.filter(id=id)
+    object.delete()
+    return HttpResponseRedirect(reverse('manage_request'))
+
 def reserve_event(petition):
-    event_obj = Event.objects.create(name_event=petition.name_petition, roompetition_event=petition)
     date_current = petition.date_start_petition
     date_finish = petition.date_finish_petition
     weekDay = petition.day_petition
-    recurrence = int(petition.recurrence)
+    recurrence_petition = int(petition.recurrence_petition)
     modules = Module.objects.filter(start_module__range=(petition.time_start_petition,petition.time_finish_petition)).order_by('start_module')
     #event_dates = [date_start + timedelta(days=x) for x in range((date_finish-date_start).days + 1) if (date_start + timedelta(days=x)).weekday() == time.strptime(weekDay, '%w').tm_wday]
     event_dates = []
     while date_current < date_finish:
-        if date_current.weekday() == time.strptime(weekDay, '%w').tm_wday or recurrence == 1:
+        if date_current.weekday() == time.strptime(weekDay, '%w').tm_wday or recurrence_petition == 1:
             event_dates.append(date_current)
-            date_current = date_current + timedelta(days=recurrence)
+            date_current = date_current + timedelta(days=recurrence_petition)
         else:
             date_current = date_current + timedelta(days=1)
     module_events = []
     for ed in event_dates:
         for m in modules:
-           module_events.append(ModuleEvent(event=event_obj, module=m, day=ed))
+           module_events.append(ModuleEvent(roompetition=petition, module=m, day=ed))
     ModuleEvent.objects.bulk_create(module_events)
     return False
 
 def delete_event(petition):
-    getevent = Event.objects.get(roompetition_event=petition)
-    ModuleEvent.objects.filter(event=getevent).delete()
-    Event.objects.filter(roompetition_event=petition).delete()
+    ModuleEvent.objects.filter(roompetition=petition).delete()
+
 
 def report_data(request):
     template_name = "report_data.html"
@@ -139,10 +147,8 @@ def reserve_room(request):
     context['formroom'] = formroom
     context['campusobj'] = campusobj
     if request.method == 'POST':
+        print(formroom.errors)
         if formroom.is_valid():
             formroom.save()
             return HttpResponseRedirect(reverse('calendar_day'))
-        else:
-            print(formroom.errors)
-            return render(request, template_name, context)
     return render(request, template_name, context)

@@ -2,9 +2,14 @@ from django import forms
 from django.forms import fields
 from datetime import date, datetime
 from django.forms.widgets import DateInput, DateTimeInput, EmailInput, NumberInput, Select, TextInput, TimeInput
-from apps.schedules.models import RoomPetition, Module
+from apps.schedules.models import RoomPetition, Module, ModuleEvent
 from apps.core.models import Room
 from django.forms import ModelForm, Textarea
+
+def get_room_by_filter():
+    
+    p = ModuleEvent.objects.filter(day = "", module__star_module__gte = '')
+    pass
 
 class RoomPetitionForm(forms.ModelForm):
     class Meta:
@@ -20,7 +25,7 @@ class RoomPetitionForm(forms.ModelForm):
             'time_start_petition',
             'time_finish_petition',
             'day_petition',
-            'recurrence',
+            'recurrence_petition',
             'memo_petition',
             'type_petition',
             'status_petition',
@@ -30,14 +35,14 @@ class RoomPetitionForm(forms.ModelForm):
             'event_petition':'Nombre del evento:',
             'name_petition':'Nombre del usuario:',
             'email_petition':'Email:',
-            'room_petition':'Laboratorio:',
+            'room_petition':'Sala:',
             'computer_petition':'Computadores:',
             'date_start_petition':'Fecha inicio y final:',
             'date_finish_petition':'Fecha inicio y final:',
             'time_start_petition':'Hora inicio:',
             'time_finish_petition':'Hora termino:',
             'day_petition':'Día:',
-            'recurrence':'Recurrencia:',
+            'recurrence_petition':'Recurrencia:',
             'memo_petition':'Mensaje:',
             'type_petition':'Tipo de evento:',
             'status_petition':'Status:',
@@ -54,7 +59,7 @@ class RoomPetitionForm(forms.ModelForm):
             'time_start_petition':Select(choices=([(o.start_module, str(o)) for o in Module.objects.all().order_by('start_module')]), attrs={'class':'form-control selectpicker'}),
             'time_finish_petition':Select(choices=([(o.finish_module, str(o)) for o in Module.objects.all().order_by('start_module')]), attrs={'class':'form-control selectpicker'}),
             'day_petition':Select(attrs={'class':'form-control selectpicker'}),
-            'recurrence':Select(attrs={'class':'form-control selectpicker'}),
+            'recurrence_petition':Select(attrs={'class':'form-control selectpicker'}),
             'memo_petition':Textarea(attrs={'class':'form-control', 'cols':30, 'rows':3, 'id':'kt_maxlength_11', 'maxlength':'100', 'placeholder':'Ej: Necesario para hacer una prueba'}),
             'type_petition':Select(attrs={'class':'form-control selectpicker'}),
             'status_petition':Select(attrs={'class':'form-control selectpicker'}),
@@ -62,7 +67,9 @@ class RoomPetitionForm(forms.ModelForm):
         }
     def __init__(self,*args, **kwargs):
         super(RoomPetitionForm, self).__init__(*args,**kwargs)
+        self.initial['day_petition'] = '3'
         self.initial['status_petition'] = 'P'
+        self.initial['datetime_petition'] = datetime.now()
         self.fields['date_start_petition'].input_formats=[ '%d/%m/%Y' ]
         self.fields['date_finish_petition'].input_formats=[ '%d/%m/%Y' ]
     
@@ -71,15 +78,15 @@ class RoomPetitionForm(forms.ModelForm):
         event_petition = self.cleaned_data.get('event_petition')
         name_petition = self.cleaned_data.get('name_petition')
         email_petition = self.cleaned_data.get('email_petition')
-        room_petition = self.cleaned_data.get('room_petition')
         computer_petition = self.cleaned_data.get('computer_petition')
         date_start_petition = self.cleaned_data.get('date_start_petition')
         date_finish_petition = self.cleaned_data.get('date_finish_petition')
         time_start_petition = self.cleaned_data.get('time_start_petition')
         time_finish_petition = self.cleaned_data.get('time_finish_petition')
         day_petition = self.cleaned_data.get('day_petition')
-        recurrence = self.cleaned_data.get('recurrence')
+        recurrence_petition = self.cleaned_data.get('recurrence_petition')
         memo_petition = self.cleaned_data.get('memo_petition')
+        room_petition = self.cleaned_data.get('room_petition') # if self.cleaned_data.get('room_petition') is not None else get_room_by_filter(efefef,rdfgdfg)
         type_petition = self.cleaned_data.get('type_petition')
         status_petition = self.cleaned_data.get('status_petition')
         if len(event_petition) < 3:
@@ -108,15 +115,15 @@ class RoomPetitionForm(forms.ModelForm):
         else:
             self.fields['date_finish_petition'].widget.attrs.update({'class':'form-control datetimepicker-input is-valid'})
         if time_start_petition > time_finish_petition:
-            self.fields['time_finish_petition'].widget.attrs.update({'class':'form-control selectpicker is-invalid'})
-            self._errors['time_finish_petition'] = self.error_class(['Modulo inicial ocurre despues de su modulo final'])
-        else:
-            self.fields['time_finish_petition'].widget.attrs.update({'class':'form-control selectpicker is-valid'})
+            self._errors['time_finish_petition'] = self.error_class(['Modulo inicial ocurre despues del modulo final'])
         if len(memo_petition) < 4:
             self.fields['memo_petition'].widget.attrs.update({'class':'form-control is-invalid'})
             self._errors['memo_petition'] = self.error_class(['El mensaje debe tener al menos 4 letras'])
         else:
             self.fields['memo_petition'].widget.attrs.update({'class':'form-control is-valid'})
+        if room_petition is None:
+            self._errors['room_petition'] = self.error_class(['Ingrese una sala valida'])
+        print(get_room_by_filter())
         return self.cleaned_data
     
 class StatusRoomPetitionForm(forms.ModelForm):
@@ -142,12 +149,8 @@ class ModuleForm(forms.ModelForm):
             'finish_module':'Hora de termino',
         }
         widgets={
-            'start_module':TimeInput(attrs={'id':'kt_timepicker_5'}),
-            'finish_module':TimeInput(attrs={'id':'kt_timepicker_5'}),
+            'resume_module':TextInput(attrs={'class':'form-control', 'placeholder':'Ej: 1D'}),
+            'name_module':TextInput(attrs={'class':'form-control', 'placeholder':'Ej: Modulo 1 Diurno'}),
+            'start_module':TimeInput(attrs={'class':'form-control', 'readonly':'readonly', 'id':'kt_timepicker_5', 'placeholder':'Ej: 08:00'}),
+            'finish_module':TimeInput(attrs={'class':'form-control', 'readonly':'readonly', 'id':'kt_timepicker_5', 'placeholder':'Ej: 09:00'}),
         }
-    def __init__(self,*args, **kwargs):
-        super(ModuleForm, self).__init__(*args,**kwargs)
-        self.fields['resume_module'].widget.attrs.update({'class':'form-control'})
-        self.fields['name_module'].widget.attrs.update({'class':'form-control'})
-        self.fields['start_module'].widget.attrs.update({'class':'form-control'})
-        self.fields['finish_module'].widget.attrs.update({'class':'form-control'})

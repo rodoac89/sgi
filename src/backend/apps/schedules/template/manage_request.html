@@ -119,96 +119,111 @@
                                 {% endif %}
                                     <a class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h2 m-0 pt-5">{{ rp.name_petition }}</a>
                                     <div class="font-weight-bold text-dark-50 font-size-lg pb-2">{{ rp.email_petition }}</div>
-                                    <div class="text-dark-50 font-size-sm pb-4">Dia de la peticion: {{rp.datetime_petition}}</div>
+                                    <div class="text-dark-50 font-size-sm pb-2">Dia de la peticion: {{rp.datetime_petition}}</div>
+                                    <div class="font-weight-bold text-dark-50 font-size-lg pb-4">Mensaje: {{rp.memo_petition}}</div>
                                 </div>
-                                <div class="pt-6">
-                                    <div class="d-flex align-items-center pb-5">
-                                        <span class="bullet bullet-bar bg-primary align-self-stretch"></span>
-                                        <span class="card-scroll text-dark-75 font-size-lg m-0 pb-2 mx-2">{{ rp.memo_petition }}</span>
-                                    </div>
-                                    <!--AQUI COMIENZA-->
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="d-flex flex-column flex-grow-1">
-                                                <div class="d-flex align-items-center pb-5">
-                                                    <div class="symbol symbol-45 symbol-light mr-2">
-                                                        <span class="nav-icon input-group-text"><i class="flaticon2-map"></i></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Sede:</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.room_petition.campus }}</span>
-                                                    </div>
+                                <div class="row pt-5">
+                                    <div class="col-lg-6">
+                                        <div class="d-flex flex-column flex-grow-1">
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon2-map"></i></span>
                                                 </div>
-                                                <div class="d-flex align-items-center pb-5">
-                                                    <div class="symbol symbol-45 symbol-light mr-2">
-                                                        <span class="nav-icon input-group-text"><i class="flaticon2-search"></i></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Laboratorio:</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.room_petition.room_name }}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-items-center pb-5">
-                                                    <div class="symbol symbol-45 symbol-light mr-2">
-                                                        <span class="nav-icon input-group-text"><i class="flaticon-download-1"></i></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Cantidad de PCs</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.computer_petition }}</span>
-                                                    </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Sede:</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.room_petition.campus }}</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="d-flex flex-column flex-grow-1">
-                                                <div class="d-flex align-items-center pb-5">
-                                                    <div class="symbol symbol-45 symbol-light mr-2">
-                                                        <span class="nav-icon input-group-text"><i class="flaticon2-browser"></i></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Tipo de evento:</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.get_type_petition_display }}</span>
-                                                    </div>
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon2-search"></i></span>
                                                 </div>
-                                                <div class="d-flex align-items-center pb-5">
-                                                    <div class="symbol symbol-45 symbol-light mr-2">
-                                                        <span class="nav-icon input-group-text"><i class="flaticon2-calendar-1"></i></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Dia Inicio:</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.date_start_petition }}</span>
-                                                    </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Laboratorio:</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.room_petition.room_name }}</span>
                                                 </div>
-                                                <div class="d-flex align-items-center pb-5">
-                                                    <div class="symbol symbol-45 symbol-light mr-2">
-                                                        <span class="nav-icon input-group-text"><i class="flaticon2-calendar-1"></i></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Dia Final:</a>
-                                                        <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.date_finish_petition }}</span>
-                                                    </div>
+                                            </div>
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon-download-1"></i></span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Cantidad de PCs</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.computer_petition }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon-download-1"></i></span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Cantidad de PCs</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.computer_petition }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-column flex-grow-1">
-                                        <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Dias y horas:</a>
-                                    </div>
-                                    <div class="card-scroll" style="height: 150px;">
-                                        <div class="d-flex bg-light-primary rounded-xl flex-column flex-center py-2">
-                                            <div class="font-weight-bold text-dark-50 font-size-lg pb-2">Todos los {{ rp.get_day_petition_display }} de {{ rp.time_start_petition }} a {{ rp.time_finish_petition }}</div>
+                                    <div class="col-lg-6">
+                                        <div class="d-flex flex-column flex-grow-1">
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon2-browser"></i></span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Tipo de evento:</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.get_type_petition_display }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon2-calendar-1"></i></span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Dia Inicio:</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.date_start_petition }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon2-calendar-1"></i></span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Dia Final:</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.date_finish_petition }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center pb-5">
+                                                <div class="symbol symbol-45 symbol-light mr-2">
+                                                    <span class="nav-icon input-group-text"><i class="flaticon-download-1"></i></span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Cantidad de PCs</a>
+                                                    <span class="text-dark-75 font-size-lg font-weight-bolder">{{ rp.computer_petition }}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1">
+                                    <a class="text-muted text-hover-primary font-size-sm font-weight-bolder">Dias y horas:</a>
+                                </div>
+                                <div class="d-flex align-items-center pb-5">
+                                    <span class="bullet bullet-bar bg-primary align-self-stretch"></span>
+                                    {% if rp.recurrence_petition == '01' %}
+                                    <span class="text-dark-75 font-size-lg font-weight-bolder pt-1 mx-2">Todos los días de {{ rp.time_start_petition }} a {{ rp.time_finish_petition }}</span>
+                                    {% elif rp.recurrence_petition == '07' %}
+                                    <span class="text-dark-75 font-size-lg font-weight-bolder pt-1 mx-2">Semanalmente los días {{ rp.get_day_petition_display }} de {{ rp.time_start_petition }} a {{ rp.time_finish_petition }}</span>
+                                    {% elif rp.recurrence_petition == '28' %}
+                                    <span class="text-dark-75 font-size-lg font-weight-bolder pt-1 mx-2">Mensualmente los días {{ rp.get_day_petition_display }} de {{ rp.time_start_petition }} a {{ rp.time_finish_petition }}</span>
+                                    {% endif %}
                                 </div>
                                 <div class="row pt-4">
                                     <div class="ml-lg-auto">
                                         <a href="{% url 'manage_request_id' rp.id %}" class="btn btn-light-success font-weight-bold">Modificar</a>
                                     </div>
                                 </div>
-                                <!--end::Footer-->
                             </div>
                         </div>
-                        <!--end::Body-->
                     </div>
                 </div>
                 {% endfor %}

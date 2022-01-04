@@ -21,18 +21,20 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-xl-5">
-        <div class="card card-custom card-stretch gutter-b">
-            <div class="card-header border-0 pt-8">
-                <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label font-weight-bolder text-dark">Modulos</span>
-                </h3>
-                <div class="row">
-                    <input type="text" class="form-control datatable-input" id="name_module" onkeyup="Name()"
-                        placeholder="Nombre Modulo">
+    <div class="col-lg-5">
+        <div class="card card-custom">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="col-lg-7">
+                        <h1 class="mb-0">Módulos</h1>
+                    </div>
+                    <div class="col-lg-5">
+                        <input type="text" class="form-control datatable-input" id="name_module" onkeyup="Name()"
+                            placeholder="Identificador">
+                    </div>
                 </div>
             </div>
-            <div class="card-body pt-2 pb-0 mt-n3">
+            <div class="card-body mt-n3">
                 <div class="tab-content" id="myTabTables9">
                     <div class="tab-pane fade show active" id="kt_tab_pane_9_2" role="tabpanel" aria-labelledby="kt_tab_pane_9_2">
                         <div class="table-responsive"  id="table_data">
@@ -79,25 +81,43 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-7">
-        <div class="card card-custom card-stretch gutter-b">
-            <div class="card-header border-0 pt-8">
-                <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label font-weight-bolder text-dark">Crear Modulo</span>
-                </h3>
+    <div class="col-lg-7">
+        <div class="card card-custom">
+            <div class="card-header">
+                <div class="card-title">
+                    <h1 class="mb-0">Crear módulo</h1>
+                </div>
             </div>
-            <form action="" method="POST" enctype="multipart/form-data">
-                <div class="card-body">
+            <div class="card-body pb-0 mt-n3">
+                <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ moduleform }}
-                </div>
-                <div class="card-footer">
-                    <div class="login-actions">
-                        <button type="submit" class="btn btn-light-success font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
-                        <button type="reset" class="btn btn-light-danger font-weight-bold">Cancelar</button>
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.resume_module.label }}</label>
+                            {{ moduleform.resume_module }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.name_module.label }}</label>
+                            {{ moduleform.name_module }}
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.start_module.label }}</label>
+                            {{ moduleform.start_module }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.finish_module.label }}</label>
+                            {{ moduleform.finish_module }}
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <div class="login-actions">
+                            <button type="submit" class="btn btn-light-success font-weight-bold" id="kt_sweetalert_demo_3_3">Crear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
