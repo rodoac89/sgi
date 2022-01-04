@@ -62,6 +62,7 @@ def form_reports(request, pc = 0):
     return render(request,template_name,context)
 
 def getroom(request):
+    data = {}
     if request.method == "POST":
         campus_id = request.POST['campus_id']
         try:
@@ -73,6 +74,7 @@ def getroom(request):
         return JsonResponse(list(room.values('id', 'room_name')), safe = False)
 
 def getpc(request):
+    data = {}
     if request.method == "POST":
         room_id = request.POST['room_id']
         try:
@@ -152,10 +154,11 @@ def equipment_maintenance(request):
         room_obtenido = Room.objects.get(pk =request.session['Room'])
         date_now = date.today()
         pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')
+        s = ScheduledReview.objects.get(date_scheduled__date=date_now,room=request.session['Room'])
         lrev = []
         lnotrev = []
         for i in pc:
-            if Revision.objects.filter(date_created__date=date_now,pc__id=i.id).exists():
+            if Revision.objects.filter(scheduled_review=s,pc__id=i.id).exists():
                 lrev.append(i.id)
             else:
                 lnotrev.append(i.id)           
