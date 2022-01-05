@@ -30,9 +30,20 @@
             <div class="row align-items-center">
             </div>
         </div>
-        <br>
-        <br>
-    <table class="table">
+        <div class="col-lg-9 col-xl-8">
+            <div class="row align-items-center">
+            <div class="col-md-4 my-2 my-md-0">
+            <div class="input-icon">
+			<input type="text" class="form-control" placeholder="Buscar" id="search" />
+			<span>
+			<i class="flaticon2-search-1 text-muted"></i>
+			</span>
+			</div>
+			</div>
+            </div>
+        </div>>
+    <br>    
+    <table class="table" id="table">
         <thead class="thead-dark">
             <tr>
                 <th>Título</th>
@@ -81,9 +92,7 @@
 {% endblock %}
 
 {% block scripts %}
-
-
-<!--<script>
+<script>
     $(document).ready(function(){
     $("#search").keyup(function(){
     _this = this;
@@ -95,5 +104,5 @@
     });
     });
    });
-   </script>-->
+   </script>
 {% endblock %}

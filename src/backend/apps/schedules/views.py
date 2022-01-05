@@ -32,7 +32,7 @@ def calendar_week(request, id):
     context={}
     roomobj = Room.objects.get(id = id)
     roompetition = RoomPetition.objects.filter(room_petition = roomobj, status_petition="A")
-    modulevent = ModuleEvent.objects.filter(event__roompetition_event__room_petition = roomobj)
+    modulevent = ModuleEvent.objects.filter(petition__room_petition = roomobj)
     context['roompetition']=roompetition
     context['modulevent']=modulevent
     context['room']=roomobj
@@ -122,12 +122,12 @@ def reserve_event(petition):
     module_events = []
     for ed in event_dates:
         for m in modules:
-           module_events.append(ModuleEvent(roompetition=petition, module=m, day=ed))
+           module_events.append(ModuleEvent(petition=petition, module=m, day=ed))
     ModuleEvent.objects.bulk_create(module_events)
     return False
 
 def delete_event(petition):
-    ModuleEvent.objects.filter(roompetition=petition).delete()
+    ModuleEvent.objects.filter(petition=petition).delete()
 
 
 def report_data(request):

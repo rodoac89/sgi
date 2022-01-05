@@ -2,40 +2,75 @@ from django.http.response import JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import TicketReport, Revision, ScheduledReview, Externuser
 from django.http import HttpResponse
-from apps.core.models import Workstation, Room
+from apps.core.models import Workstation, Room, Campus
 from apps.notification.models import Notif
-from datetime import datetime, date , timedelta
 from django.contrib.auth.models import User as dj_user
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
-from django.http import HttpResponse
 from collections import Counter
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
+from datetime import datetime, timedelta, date
+import time
 
-def form_reports(request):
-    room = Room.objects.all().order_by('room_name')
+def notificationreport(pc):
+    userlist = [] 
+    notiflist = [] 
+    users = dj_user.objects.all()
+    for i in users:
+        userlist.append(i.id)    
+    for j in userlist:    
+        notifi = Notif()
+        notifi.user = dj_user.objects.get(pk = j)
+        notifi.message = "Un Usuario ha reportado el equipo"+" "+pc.name
+        notifi.date = datetime.now()
+        notifi.url = "reports"
+        notiflist.append(notifi)
+    Notif.objects.bulk_create(notiflist)
+    return True
+
+def existuser(email):
+    aux = 0
+    useremail = Externuser.objects.all()
+    for i in useremail:
+        if i.email == email:
+            aux=1
+    if aux==0:        
+        user = Externuser()
+        user.email = email
+        user.save()
+    return True    
+
+def form_reports(request, pc = 0):
+    context = {}  
     if request.method=='POST':
-        aux = 0
-        useremail = Externuser.objects.all()
-        for i in useremail:
-            if i.email == request.POST['email']:
-                aux=1
-        if aux==0:        
-            user = Externuser()
-            user.email = request.POST['email']
-            user.save()
+        existuser(request.POST['email'])
         reportes = TicketReport()
         reportes.email = Externuser.objects.get(email = request.POST['email'])
         reportes.pc = Workstation.objects.get(pk = request.POST['Pc'])
         reportes.category = request.POST['category']
         reportes.description = request.POST['description']
         reportes.save()
-        return redirect ('gratitude')    
-    context = { 'room':room}    
+        notificationreport(reportes.pc)
+        return redirect ('gratitude')   
+    if pc != 0:
+        context['pc'] = Workstation.objects.get(pk=pc)        
+    else:
+        context['rooms'] = Room.objects.all().order_by('room_name')
+        context['campus'] = Campus.objects.all().order_by('name')
     template_name = "form_reports.html"
     return render(request,template_name,context)
 
+def getroom(request):
+    if request.method == "POST":
+        campus_id = request.POST['campus_id']
+        try:
+            campus_name = Campus.objects.filter(pk = campus_id).first()
+            room = Room.objects.filter(campus = campus_name).order_by('room_name')
+        except Exception:
+            data['error_message'] = 'error'
+            return JsonResponse(data)
+        return JsonResponse(list(room.values('id', 'room_name')), safe = False)
 
 def getpc(request):
     if request.method == "POST":
@@ -97,7 +132,7 @@ def updateticketstate(request,id):
 def computer_management(request):
     if request.POST:
         request.session['Room']= request.POST['Room']
-        room_obtenido = Room.objects.get(room_name=request.session['Room'])
+        room_obtenido = Room.objects.get(pk=request.session['Room'])
         return redirect('equipment_maintenance')
     request.session['Room'] = None
     date_now = date.today()
@@ -115,10 +150,10 @@ def computer_management(request):
 
 def equipment_maintenance(request):
     if request.session['Room'] is not None or 'Room' not in request.session:
-        room_obtenido = Room.objects.get(room_name=request.session['Room'])
+        room_obtenido = Room.objects.get(pk =request.session['Room'])
         pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')     
         context={
-            'Room': request.session['Room'],
+            'Room': room_obtenido,
             'pc':pc
         }
         template_name="equipment_maintenance.html"
@@ -132,31 +167,49 @@ def gratitude(request):
     context={}
     return render(request,template_name,context)
 
+def create_bulk_schedule_review(title, date_start_review, date_end_review, room):
+    date_start = datetime.strptime(date_start_review, '%Y-%m-%dT%H:%M')
+    date_finish = datetime.strptime(date_end_review, '%Y-%m-%dT%H:%M')
+    weekDay = date_start.strftime('%w')
+    review_dates = [date_start + timedelta(days=x) for x in range((date_finish-date_start).days + 1) if (date_start + timedelta(days=x)).weekday() == time.strptime(weekDay, '%w').tm_wday]
+    schedules_review = []
+    for rd in review_dates:
+        schedulere = ScheduledReview()
+        schedulere.date_scheduled = rd
+        schedulere.title = title
+        schedulere.room = Room.objects.get( pk = room)
+        schedules_review.append(schedulere)
+    ScheduledReview.objects.bulk_create(schedules_review)
+    return False
+
+def create_schedule_review(title, date_review, room):
+    schedulere = ScheduledReview()
+    schedulere.date_scheduled = date_review
+    schedulere.title = title
+    schedulere.room = Room.objects.get( pk = room)
+    schedulere.save()
+    return True
+
 @login_required
 def ShowScheduledReview(request):
     schedule = ScheduledReview.objects.all()
     room = Room.objects.all()
     i = 0
-    if request.method=='POST':    
-        schedulere = ScheduledReview()
-        schedulere.date_scheduled = request.POST['date']
-        print (request.POST['date'])
-        #datetime_object = datetime.strptime(request.POST['date'], '%Y-%m-%d %H:%M:%S')
-        schedulere.title = request.POST['title']
-        schedulere.room = Room.objects.get( pk = request.POST['room'])
-        schedulere.save()
+    if request.POST: 
+        if 'recurrent' in request.POST:
+            create_bulk_schedule_review(request.POST['title'], request.POST['date'], request.POST['dateend'], request.POST['room'])
+        else:            
+            create_schedule_review(request.POST['title'], request.POST['date'], request.POST['room'])
+        
         return redirect ('ScheduledReview')   
     context = {'room':room,
     'schedule':schedule }
     template_name="ScheduledReview.html"
     return render(request,template_name,context)
 
-def pcreview(request):
-    resultado = request.GET['pc']
-    res = request.GET['Room']
-    room_asociado = Room.objects.get(room_name=res)
-    idr = room_asociado.id 
-    room_pc = Workstation.objects.get(name=resultado,room=idr)
+def pcreview(request, id_pc):
+    room_pc = Workstation.objects.get(pk=id_pc)
+    idr = room_pc.room.id
     id_pc = room_pc.id
     date_now = date.today()
     Schedule = ScheduledReview.objects.all()
@@ -178,12 +231,11 @@ def pcreview(request):
         rev.SO = request.POST['so']
         rev.software = request.POST['sw']
         rev.observation = request.POST['observaciones']
-        rev.user = dj_user.objects.get(username = request.POST['user'])
+        rev.user = dj_user.objects.get(pk = request.user.id)
         rev.save()                     
         return redirect ('equipment_maintenance')
     context = {
-        'pc':resultado,
-        'Room':res
+        'pc':room_pc.name
     }
     template_name = "pcreview.html"
     return render(request,template_name,context)
@@ -200,7 +252,7 @@ def selectreviewpc(request):
         if i.scheduled_review is not None:
             if i.scheduled_review.id not in lista_schedule:
                 lista_schedule.append(i.scheduled_review.id)          
-    schedule = ScheduledReview.objects.all().filter(pk__in=lista_schedule)
+    schedule = ScheduledReview.objects.all().filter(pk__in=lista_schedule).order_by('-date_scheduled')
     page = request.GET.get('page', 1)
     paginator = Paginator (schedule, 10)
     try:
@@ -223,10 +275,9 @@ def showpcreview(request):
         
 def updatepcreview(request, id):
     edit_review = get_object_or_404(Revision, id=id)
-    rev_id = request.GET['id']
     if request.method=='POST':
-        rev = Revision.objects.get(pk = rev_id)
-        rev.pc = Workstation.objects.get( pk = request.POST['pc'])
+        rev = Revision.objects.get(pk = edit_review.id)
+        rev.pc = Workstation.objects.get( pk = edit_review.pc.id)
         rev.monitor = request.POST['monitor']
         rev.mouse = request.POST['mouse']
         rev.keyboard = request.POST['keyboard']
@@ -235,7 +286,7 @@ def updatepcreview(request, id):
         rev.software = request.POST['sw']
         rev.observation = request.POST['observaciones']
         rev.date_created = datetime.now()
-        rev.user = dj_user.objects.get(username = request.POST['user'])
+        rev.user = dj_user.objects.get(pk = request.user.id)
         rev.save()
         return redirect ('showreviewpc')
     context = {
@@ -269,26 +320,23 @@ def generalreports(request):
             j=1
             review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])) 
             for r in review:
-                if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
+                if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P":
                     if r.pc.room.room_name not in count_room_m_h:
                         count_room_m_h[r.pc.room.room_name] = 0
                     count_room_m_h[r.pc.room.room_name] +=1
-                    total_m.append(j)
-                elif r.monitor == "D" or r.mouse=="D" or r.keyboard=="D" or r.cpu=="D":
-                    if r.pc.room.room_name not in count_room_m_h:
-                        count_room_m_h[r.pc.room.room_name] = 0
-                    count_room_m_h[r.pc.room.room_name] +=1
-                    total_m.append(j)
-                if r.software == "F" or r.software == "N":
+                    
+                if r.software != "O":
                     if r.pc.room.room_name not in count_room_m_s:
                         count_room_m_s[r.pc.room.room_name] = 0
                     count_room_m_s[r.pc.room.room_name] +=1 
-                    total_m.append(j)
-                if r.SO == "F" or r.SO == "N":
+                    
+                if r.SO != "O":
                     if r.pc.room.room_name not in count_room_m_so:
                         count_room_m_so[r.pc.room.room_name] = 0
                     count_room_m_so[r.pc.room.room_name] +=1
-                    total_m.append(j)                      
+                    
+                if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P" or r.software != "O" or r.SO !="O":
+                   total_m.append(j)                         
             reports = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))     
             for r in reports:
                 if r.category=="Hardware":
@@ -342,14 +390,10 @@ def chart_maintenance_lab(request):
     end = year+'-12-31'
     review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in review:
-        if r.monitor == "NP" or r.mouse=="NP" or r.keyboard=="NP" or r.cpu=="NP":
+        if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P":
             if r.pc.room.room_name not in count_room:
-               count_room[r.pc.room.room_name] = 0
+                count_room[r.pc.room.room_name] = 0
             count_room[r.pc.room.room_name] +=1
-        elif r.monitor == "D" or r.mouse == "D" or r.keyboard=="D" or r.cpu=="D":
-            if r.pc.room.room_name not in count_room:
-               count_room[r.pc.room.room_name] = 0
-            count_room[r.pc.room.room_name] +=1    
         elif r.SO == "F" or r.software == "F":
             if r.pc.room.room_name not in count_room:
                count_room[r.pc.room.room_name] = 0

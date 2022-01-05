@@ -98,7 +98,7 @@
         {% for rp in roompetition %}
         {% if rm == rp.room_petition %}
         {% for me in modulevent %}
-        {% if me.module.start_module == rp.time_start_petition and me.roompetition == rp %}
+        {% if me.module.start_module == rp.time_start_petition and me.petition == rp.id %}
         data_event.push({
             name: '{{ rp.event_petition }}',
             data: [

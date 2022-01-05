@@ -57,12 +57,12 @@ class Module(models.Model):
         return "{} : {} - {}".format(self.name_module, self.start_module, self.finish_module)
 
 class ModuleEvent(models.Model):
-    roompetition = models.ForeignKey(RoomPetition, on_delete=models.SET_NULL, null=True, blank=True)
+    petition = models.ForeignKey(RoomPetition, on_delete=models.SET_NULL, null=True, blank=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     day = models.DateField(auto_now=False)
     
     def __str__(self):
-        return "{} - {} - {}".format(self.roompetition, self.module, self.day)
+        return "{} - {} - {}".format(self.petition, self.module, self.day)
     
 #class Event(models.Model):
 #    name_event = models.CharField(max_length=20, default="", blank=True)

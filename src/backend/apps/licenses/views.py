@@ -1,9 +1,12 @@
 
 """from Labs.backend.apps.licenses.models import form_software"""
+
+from datetime import datetime, timedelta
 from apps.licenses.forms import SoftwareRequestForm, EnterLicensesForm
 from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.db.models import Q
+from django.utils import timezone
 from .models import LicensesList, SoftwareForm
 
 
@@ -17,13 +20,16 @@ def home(request):
 def form_index(request):
         form = SoftwareRequestForm()
         return render(request, "formulario.html", {"form":form})
+        
 
 def forms_view(request):
     context={}
+    
     if request.GET:
         if 'id_user' in request.GET:
             data_forms = SoftwareForm.objects.get(id_request=int(request.GET['id_user']))
             context['formulario'] = data_forms
+    
 
     return render(request, "solicitudes_software.html", context)
 
@@ -34,7 +40,9 @@ def form_info1(request):
             data_forms = SoftwareForm.objects.get(id_request=int(request.GET['id_user']))
             context['formulario'] = data_forms
     return render(request, "info_formulario1.html", context)   
-    
+
+
+
 def form_list(request):
     software_forms = SoftwareForm.objects.all()
     data = {
@@ -52,6 +60,10 @@ def form_info(request):
 def software_request_done(request):
     return render(request,'formulario_listo.html')
 
+def prueba(request):
+    form = SoftwareRequestForm()
+    return render(request,'formulario_copy.html', {"form":form})
+
 class SoftwareRequestView(HttpRequest):
 
     def form_create(request):
@@ -65,6 +77,62 @@ class SoftwareRequestView(HttpRequest):
                 
         return render(request, 'formulario_listo.html', context)
 
+def search_form(request):
+    search = request.GET["buscar"]
+    software_forms = SoftwareForm.objects.filter(name_user__icontains=search)
+    context={
+        'solicitudes':software_forms
+    }
+    # if search:
+    #     licenses = LicensesList.objects.filter(
+    #         Q(license_name__icontains = search),
+    #         Q(license_type__icontains = search)
+    #     ).distinct()
+
+    return render(request,'listado_formularios.html', context)
+
+
+    
+
+
+# def status_form(request, id):
+    
+    
+#     software_forms = get_object_or_404(SoftwareForm, id_request=id)
+#     data={
+#         'solicitudes': SoftwareForm.objects.all()
+#     }
+#     i = software_forms.status
+
+#     if request.method == 'POST':
+#         if i == 2:
+#             SoftwareForm.objects.filter(id_request=id).update(status=1)
+            
+#             return render(request,'listado_formularios.html', data) 
+#         else: 
+#             SoftwareForm.objects.filter(id_request=id).update(status=2)
+            
+#             return render(request,'listado_formularios.html', data)     
+
+#     return render(request, 'listado_formularios.html', data)
+
+def status_form(request, id):
+
+    status = request.POST["status"]
+
+   
+
+    SoftwareForm.objects.filter(id_request=id).update(status=status)
+
+    software_forms = SoftwareForm.objects.all()
+    data = {
+        'solicitudes': software_forms
+    }
+
+  
+    return render(request, "listado_formularios.html", data)    
+
+
 
 #------LICENCIAS------#
 
@@ -73,6 +141,7 @@ def adm_licencias(request):
     data = {
         'listado_de_licencias': licenses_lista
     }
+    
     return render(request,'listado_licencias.html', data)
 
 def enter_licenses(request):
@@ -94,15 +163,15 @@ class EnterLicensesView(HttpRequest):
 
 
 
-def info_license(request):
-    context={}
-    if request.GET:
-        if 'id_serch' in request.GET:
-            data_forms = LicensesList.objects.get(id_license=int(request.GET['id_serch']))
-            context['licencia'] = data_forms
+# def info_license(request):
+#     context={}
+#     if request.GET:
+#         if 'id_serch' in request.GET:
+#             data_forms = LicensesList.objects.get(id_license=int(request.GET['id_serch']))
+#             context['licencia'] = data_forms
     
 
-    return render(request, "info_licencia.html", context)
+#     return render(request, "info_licencia.html", context)
 
 
 def edit_license(request, id):
@@ -129,7 +198,112 @@ def delete_license(request, id):
      license_form = get_object_or_404(LicensesList, id_license=id)   
      license_form.delete()
      return redirect(to='licenses:adm_licencias')
-   
+
+def search_license(request):
+    search = request.GET["buscar"]
+    listado_de_licencias = LicensesList.objects.filter(license_name__icontains=search)
+    print(listado_de_licencias)
+    context={
+        'listado_de_licencias':listado_de_licencias
+    }
+    # if search:
+    #     licenses = LicensesList.objects.filter(
+    #         Q(license_name__icontains = search),
+    #         Q(license_type__icontains = search)
+    #     ).distinct()
+
+    return render(request,'listado_licencias.html', context)
+
+
+#------REPORTES------#
+
+def reportes(request):
+    context = {}
+    #-----------Licencias-----------#
+    all_licenses = LicensesList.objects.all()
+    total_licenses = len(all_licenses)
+    context['total_licenses'] = total_licenses
+    today = datetime.now()
+    due_date = today + timedelta(weeks=8)
+    licenses_near_due_date = all_licenses.filter(license_due_date__range=(today,due_date))
+    total_licenses_near_due_date = len(licenses_near_due_date)
+    context['total_licenses_near_due_date'] = total_licenses_near_due_date
+
+
+    #-----------Formularios-----------#
+
+    all_forms_request = SoftwareForm.objects.all()
+    total_forms_requested = len(all_forms_request)
+    context['total_forms_requested'] = total_forms_requested
+    this_year = today.year
+    all_forms_request.filter(creation_date__year=this_year)
+    context['yearly_software_request'] = {
+        "January": 10,
+        "February": len(all_forms_request.filter(creation_date__month=2)),
+        "March":  len(all_forms_request.filter(creation_date__month=3)),
+        "April":  len(all_forms_request.filter(creation_date__month=4)),
+        "May":  len(all_forms_request.filter(creation_date__month=5)),
+        "June":  len(all_forms_request.filter(creation_date__month=6)),
+        "July":  len(all_forms_request.filter(creation_date__month=7)),
+        "August":  len(all_forms_request.filter(creation_date__month=8)),
+        "September":  len(all_forms_request.filter(creation_date__month=9)),
+        "October":  len(all_forms_request.filter(creation_date__month=10)),
+        "November":  len(all_forms_request.filter(creation_date__month=11)),
+        "December":  len(all_forms_request.filter(creation_date__month=12))
+    }
+
+
+
+
+
+    # count_forms_request = []
+    # count_instalations_done = []
+    # count_licenses = []
+    # count_licenses_in_use = []
+    # count_licenses_in_use2 = []
+    # count_licenses_in_due = []
+    # date = datetime.today()
+    # year = date.strftime("%Y")
+    # begin = year+'-01-01'
+    # end = year+'-12-31'
+    # ------formularios------#
+    # form_reports = SoftwareForm.objects.filter(creation_date__range=(begin,end))     
+    # for r in form_reports:
+    #     if r.id_request is not None:
+    #         count_forms_request.append(1)
+    # form_reports1 = SoftwareForm.objects.filter(status=1)     
+    # for r in form_reports1:
+    #     if r.id_request is not None:
+    #         count_instalations_done.append(1)        
+    # c_formularios=sum(count_forms_request)   
+    # c_instalations=sum(count_instalations_done) 
+    # ------licencias------#
+    # licenses_reports = LicensesList.objects.all()     
+    # for r in licenses_reports:
+    #     if r.id_license is not None:
+    #         count_licenses.append(1)
+    # print('-----------------------------------------------------------------------------------------------------------------------')  
+
+    # print(licenses_reports)  
+    # c_licenses = licenses_reports.__len__
+    # licenses_reports1 = LicensesList.objects.all() 
+    # total_stock = 0
+    # for stock in licenses_reports1:
+    #     total_stock += stock.license_stock
+    
+    # c_licenses=sum(count_licenses)
+
+
+
+
+       
+    return render(request,'reportes.html', context)
+
+
+
+
+
+    
 
 
 
