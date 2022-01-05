@@ -14,14 +14,26 @@ def calendar_day(request):
     template_name = "calendar_day.html"
     context = {}
     selectdate = datetime.today().strftime("%d/%m/%Y")
+    selectcampus = "all"
+    campus_all = Campus.objects.all()
     if request.POST:
         selectdate = datetime.strptime(request.POST['selecteddate'], "%d/%m/%Y").date()
+        selectcampus = request.POST['selectedcampus']
     else:
         selectdate = datetime.strptime(selectdate, "%d/%m/%Y").date()
-    modulevent = ModuleEvent.objects.filter(day=selectdate)
-    room_list = Room.objects.all()
-    roompetition = RoomPetition.objects.filter(status_petition="A")
+    if selectcampus == "all":
+        campus_list = Campus.objects.all()
+        roompetition = RoomPetition.objects.filter(status_petition="A")
+        room_list = Room.objects.all().order_by( 'campus', 'room_name')
+        modulevent = ModuleEvent.objects.filter(day=selectdate)
+    else:
+        campus_list = Campus.objects.filter(id=selectcampus)
+        roompetition = RoomPetition.objects.filter(room_petition__campus__id=selectcampus, status_petition="A")
+        room_list = Room.objects.filter(campus__id=selectcampus).order_by( 'campus', 'room_name')
+        modulevent = ModuleEvent.objects.filter(petition__room_petition__campus__id=selectcampus, day=selectdate)
     context['roompetition'] = roompetition
+    context['campus_list'] = campus_list
+    context['campus_all'] = campus_all
     context['room_list'] = room_list
     context['modulevent'] = modulevent
     context['selectdate'] = selectdate
@@ -31,8 +43,8 @@ def calendar_week(request, id):
     template_name="calendar_week.html"
     context={}
     roomobj = Room.objects.get(id = id)
-    roompetition = RoomPetition.objects.filter(room_petition = roomobj, status_petition="A")
-    modulevent = ModuleEvent.objects.filter(petition__room_petition = roomobj)
+    roompetition = RoomPetition.objects.filter(room_petition = roomobj, status_petition="A").order_by('date_start_petition')
+    modulevent = ModuleEvent.objects.filter(petition__room_petition = roomobj).order_by('day')
     context['roompetition']=roompetition
     context['modulevent']=modulevent
     context['room']=roomobj
@@ -41,8 +53,8 @@ def calendar_week(request, id):
 def manage_module(request):
     template_name = "manage_module.html"
     context = {}
-    context['moduledata'] = Module.objects.all().order_by('resume_module')
-    moduleform= ModuleForm(request.POST or None)
+    context['moduledata'] = Module.objects.all().order_by('start_module')
+    moduleform = ModuleForm(request.POST or None)
     if request.method == 'POST':
         if moduleform.is_valid():
             moduleform.save()
@@ -52,24 +64,19 @@ def manage_module(request):
 
 def manage_module_id(request, id):
     template_name = "manage_module_id.html"
-    modid = Module.objects.get(id = id)
     context = {}
-    if request.method == 'GET':
-        form_module = ModuleForm(instance = modid)
-        context['formmodule'] = form_module
-    else:
-        form_module = ModuleForm(request.POST, instance = modid)
-        if form_module.is_valid():
-            form_module.save()
+    modid = Module.objects.get(id = id)
+    moduleform = ModuleForm(request.POST or None, instance = modid)
+    if request.method == 'POST':
+        if moduleform.is_valid():
+            moduleform.save()
             return HttpResponseRedirect(reverse('manage_module'))
-    context['formmodule'] = form_module
+    context['moduleform'] = moduleform
     return render(request, template_name, context)
 
 def deletemodule(request, id):
-    template_name = "manage_module.html"
-    context = {}
     Module.objects.filter(id=id).delete()
-    return render(request, template_name, context)
+    return HttpResponseRedirect(reverse('manage_module'))
 
 def manage_request(request):
     template_name="manage_request.html"
@@ -101,8 +108,7 @@ def manage_request_id(request, id):
     return render(request, template_name, context)
 
 def request_delete_id(request, id):
-    object = RoomPetition.objects.filter(id=id)
-    object.delete()
+    RoomPetition.objects.filter(id=id).delete()
     return HttpResponseRedirect(reverse('manage_request'))
 
 def reserve_event(petition):

@@ -42,7 +42,7 @@ class RoomPetition(models.Model):
     memo_petition = models.CharField(max_length=100, default="", null=True)
     type_petition = models.CharField(max_length=1, choices=TYPE, default="N")
     status_petition = models.CharField(max_length=1, choices=STATUS, default="P", null=True)
-    datetime_petition = models.DateTimeField(null=True, blank=True)
+    datetime_petition = models.DateTimeField(default=datetime.now, null=True, blank=True)
 
     def __str__(self):
         return "{} - {}".format(self.name_petition, self.room_petition)

@@ -96,17 +96,10 @@
 					{{ formroom.memo_petition }}
 				</div>
 			</div>
-			<div class="card-footer">
-				<div class="form-group row">
-					<div class="col-lg-2">
-						<p hidden>{{ formroom.datetime_petition }} {{ formroom.status_petition }}</p>
-					</div>
-					<div class="col-lg-10">
-						<div class="login-actions text-right">
-							<button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
-							<button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
-						</div>
-					</div>
+			<div class="card-footer text-right">
+				<div class="login-actions">
+					<button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
+					<button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
 				</div>
 			</div>
 			{% if formroom.errors %} 
