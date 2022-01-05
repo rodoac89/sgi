@@ -129,6 +129,13 @@ def updateticketstate(request,id):
     context = {'report':report}
     return render(request,template_name,context)
 
+def searchreport(request):
+    result = request.GET.get('search')
+    report = TicketReport.objects.filter(pk = result).first()
+    context = {'report':report }
+    template_name = "searchreport.html"
+    return render(request,template_name,context)
+
 @login_required
 def computer_management(request):
     if request.POST:
@@ -377,10 +384,6 @@ def generalreports(request):
 
 def chart_report_lab(request):
     count_room = {}
-    date = datetime.today()
-    year = date.strftime("%Y")
-    begin = year+'-01-01'
-    end = year+'-12-31'
     reports = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in reports:
         if r.pc.room.room_name not in count_room:
@@ -396,10 +399,6 @@ def chart_report_lab(request):
 
 def chart_maintenance_lab(request):
     count_room = {}
-    date = datetime.today()
-    year = date.strftime("%Y")
-    begin = year+'-01-01'
-    end = year+'-12-31'
     review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
     for r in review:
         if r.monitor != "P" or r.mouse !="P" or r.keyboard !="P" or r.cpu !="P":
