@@ -6,127 +6,136 @@
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <link rel="shortcut icon" href="{% static 'media/logos/favicon.ico' %}" />
 
-{% block content %}  
-  <div class="d-flex flex-column-fluid">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-10">
+{% block content %}
+<div class="d-flex flex-column-fluid">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10">
 
-                <div class="card card-custom gutter-b example example-compact">
-                    <div class="card-header">
-                        <h1 class="card-title" style="text-align: center;">Seguimiento de un reporte</h1>
-                    </div>
-                    
-                    <div class="col-12" style="margin-top: 2%;">
-                      <div class="form-group mb-8">
-                        <div class="alert alert-custom alert-default" role="alert">
-                  
-                          <div class="alert-text">
-                            <p ALIGN="justify">Ingresa el ID, para hacer seguimiento al estado del reporte en cuestión.</p>
-                          </div>
-                        </div>
-                      </div>
-                        <div class="card-body row justify-content-center">
-                            <form method="GET" action="{% url 'searchreport' %}" onsubmit="return validate();">
-                              <div class="input-group col-14" style="text-align: center;">
-                                <input style="text-align: center;" type="text" id="id_search" class="form-control rounded" placeholder="Ingrese ID del reporte" aria-label="Search" name="search"
-                                aria-describedby="search-addon" />
-                                <button type="submit" class="btn btn-outline-primary">Buscar</button>
-                              </div>
-                            </form>
-                            
-                            <table class="table">
-                            <thead class="thead-dark">
-                              <tr>
-                                <th>ID</th>
-                                <th>PC</th>
-                                <th>Email</th>
-                                <th>Fecha</th>
-                                <th>Descripcion</th>
-                                <th>Estado</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                  <td>{{report.id}}</td>
-                                  <td>{{report.pc.name}}</td>
-                                  <td>{{report.email}}</td>
-                                  <td>{{report.date_created}}</td>
-                                  <td>{{report.description}}</td>
-                                  {% if report.state == "A" %}
-                                  <td class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{report.get_state_display}}</td>
-                                  {% elif report.state == "R" %}
-                                  <td class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{report.get_state_display}}</td>
-                                  {% elif report.state == "C" %}
-                                  <td class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{report.get_state_display}}</td>
-                                  {% endif %}
-                                </tr>
-                              
-                            </tbody>
-                            </table>
-                            
-                    </div>
+        <div class="card card-custom gutter-b example example-compact">
+          <div class="card-header">
+            <h1 class="card-title" style="text-align: center;">Seguimiento de un reporte</h1>
+          </div>
+
+          <div class="col-12" style="margin-top: 2%;">
+            <div class="form-group mb-8">
+              <div class="alert alert-custom alert-default" role="alert">
+
+                <div class="alert-text">
+                  <p ALIGN="justify">Ingresa el ID, para hacer seguimiento al estado del reporte en cuestión.</p>
                 </div>
-                <h3 style="text-align: center;">Historico de cambios</h3>
-                {% for rh in report.history.all %}
-                <div class="card card-custom">
-                    <div class="card-header">
-                        <div class="card-title">
-                          {% if rh.state == "A" %}
-                          <h3 class="card-label">{{ rh.date_created }}</h3>
-                          {% else %}
-                        <h3 class="card-label">{{ rh.date_comment }}</h3>
-                        {% endif %}
-                        </div>
-                        <div class="card-toolbar">
-                             {% if rh.state == "R" %}
-                             <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px" > 
-                            <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
-                            </span>
-                            {% elif rh.state == "C" %}
-                            <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px" > 
-                              <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
-                              </span>
-                            {% elif rh.state == "A" %}
-                            <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px" > 
-                              <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
-                              </span>
-                            {% endif %}
-                        </div>
-                    </div> 
-                    <div class="card-body">
-      
-                        {% if rh.state == "A" %}
-                        <h4>Descripción error</h4>
-                        <p>{{ rh.description }}</p>
-                        {% else %}
-                        <h4>Comentario</h4>
-                        <p>{{ rh.comment }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %} 
+              </div>
             </div>
+            <div class="card-body row justify-content-center">
+              <form method="GET" action="{% url 'searchreport' %}" onsubmit="return validate();">
+                <div class="input-group col-14" style="text-align: center;">
+                  <input style="text-align: center;" type="number" id="id_search" class="form-control rounded"
+                    placeholder="Ingrese ID del reporte" aria-label="Search" name="search"
+                    aria-describedby="search-addon" />
+                  <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                </div>
+              </form>
+              {% if report != None %}
+              <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th>ID</th>
+                    <th>PC</th>
+                    <th>Email</th>
+                    <th>Fecha</th>
+                    <th>Descripcion</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{report.id}}</td>
+                    <td>{{report.pc.name}}</td>
+                    <td>{{report.email}}</td>
+                    <td>{{report.date_created}}</td>
+                    <td>{{report.description}}</td>
+                    {% if report.state == "A" %}
+                    <td class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">
+                      {{report.get_state_display}}</td>
+                    {% elif report.state == "R" %}
+                    <td class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">
+                      {{report.get_state_display}}</td>
+                    {% elif report.state == "C" %}
+                    <td class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">
+                      {{report.get_state_display}}</td>
+                    {% endif %}
+                  </tr>
+
+                </tbody>
+              </table>
+
+
+            </div>
+          </div>
+          <h3 style="text-align: center;">Historial de cambios</h3>
+          {% for rh in report.history.all %}
+          <div class="card card-custom">
+            <div class="card-header">
+              <div class="card-title">
+                {% if rh.state == "A" %}
+                <h3 class="card-label">{{ rh.date_created }}</h3>
+                {% else %}
+                <h3 class="card-label">{{ rh.date_comment }}</h3>
+                {% endif %}
+              </div>
+              <div class="card-toolbar">
+                {% if rh.state == "R" %}
+                <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">
+                  <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
+                </span>
+                {% elif rh.state == "C" %}
+                <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">
+                  <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
+                </span>
+                {% elif rh.state == "A" %}
+                <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">
+                  <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
+                </span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card-body">
+
+              {% if rh.state == "A" %}
+              <h4>Descripción error</h4>
+              <p>{{ rh.description }}</p>
+              {% else %}
+              <h4>Comentario</h4>
+              <p>{{ rh.comment }}</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+          
+          <br>
+
         </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 
-                                       
 
-{% endblock %}
 
-{% block scripts %}
+  {% endblock %}
 
-<script type="text/javascript">
+  {% block scripts %}
 
-  function validate(){
-    var id = document.getElementById('id_search').value;
-    if (id == ""){
-      alert ("Debe ingresar un ID");
-      return false;
+  <script type="text/javascript">
+
+    function validate() {
+      var id = document.getElementById('id_search').value;
+
+      if (id == "") {
+        alert("Debe ingresar un ID");
+        return false;
+      }
+
     }
-
-  }
-</script>
-
-{% endblock %}
+  </script>
+  {% endblock %}
