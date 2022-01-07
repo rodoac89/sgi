@@ -14,11 +14,8 @@ from datetime import datetime, timedelta, date
 import time
 
 def notificationreport(pc):
-    userlist = [] 
+    userlist = dj_user.objects.all().values_list('id',flat=True).distinct() 
     notiflist = [] 
-    users = dj_user.objects.all()
-    for i in users:
-        userlist.append(i.id)    
     for j in userlist:    
         notifi = Notif()
         notifi.user = dj_user.objects.get(pk = j)
@@ -29,15 +26,12 @@ def notificationreport(pc):
     Notif.objects.bulk_create(notiflist)
     return True
 
-def existuser(email):
-    aux = 0
-    useremail = Externuser.objects.all()
-    for i in useremail:
-        if i.email == email:
-            aux=1
-    if aux==0:        
+def existuser(useremail):
+    if Externuser.objects.filter(email=useremail).exists():
+        return False
+    else:
         user = Externuser()
-        user.email = email
+        user.email = useremail
         user.save()
     return True    
 
@@ -157,14 +151,19 @@ def equipment_maintenance(request):
         date_now = date.today()
         pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')
         s = ScheduledReview.objects.get(date_scheduled__date=date_now,room=request.session['Room'])
-        lrev = []
+        '''if Revision.objects.filter(scheduled_review=s,pc__in=pc).exists():
+            r = Revision.objects.filter(scheduled_review=s,pc__in=pc).values_list('pc',flat=True).distinct()
+        else:
+            nr = Workstation.objects.filter(pc__in=pc).values_list('pc',flat=True).distinct()
+            print (nr)'''                    
         lnotrev = []
         for i in pc:
             if Revision.objects.filter(scheduled_review=s,pc__id=i.id).exists():
-                lrev.append(i.id)
+                r = Revision.objects.filter(scheduled_review=s,pc__in=pc).values_list('pc',flat=True).distinct()
             else:
-                lnotrev.append(i.id)           
-        prev = Workstation.objects.all().filter(pk__in=lrev).order_by('name')
+                lnotrev.append(i.id)
+                #notrev = Workstation.objects.filter(pc__in=i.id).values_list('id',flat=True).distinct()        
+        prev = Workstation.objects.all().filter(pk__in=r).order_by('name')
         pnotrev = Workstation.objects.all().filter(pk__in=lnotrev).order_by('name')             
         context={
             'Room': room_obtenido, 'pcnotrev':pnotrev, 'pcrev':prev
@@ -173,7 +172,6 @@ def equipment_maintenance(request):
         return render(request,template_name,context)
     else:
         return redirect('computer_management')
-
 
 def gratitude(request):
     template_name="gratitude.html"
@@ -207,7 +205,6 @@ def create_schedule_review(title, date_review, room):
 def ShowScheduledReview(request):
     schedule = ScheduledReview.objects.all()
     room = Room.objects.all()
-    i = 0
     if request.POST: 
         if 'recurrent' in request.POST:
             create_bulk_schedule_review(request.POST['title'], request.POST['date'], request.POST['dateend'], request.POST['room'])
@@ -225,7 +222,7 @@ def pcreview(request, id_pc):
     idr = room_pc.room.id
     id_pc = room_pc.id
     date_now = date.today()
-    Schedule = ScheduledReview.objects.get(date_scheduled__date=date_now,room=idr)            
+    Schedule = ScheduledReview.objects.get(date_scheduled__date=date_now,room=idr)           
     if request.method=='POST':
         rev = Revision()
         if Schedule != "":        
@@ -297,6 +294,7 @@ def updatepcreview(request, id):
     }
     template_name="updatepcreview.html"
     return render(request,template_name,context)
+@login_required
 def selectdate(request):
     if request.POST:
         request.session['datestart'] = request.POST['datestart']

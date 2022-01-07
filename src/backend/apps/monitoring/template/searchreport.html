@@ -35,75 +35,65 @@
                   <button type="submit" class="btn btn-outline-primary">Buscar</button>
                 </div>
               </form>
-              {% if report != None %}
-              <table class="table">
-                <thead class="thead-dark">
-                  <tr>
-                    <th>ID</th>
-                    <th>PC</th>
-                    <th>Email</th>
-                    <th>Fecha</th>
-                    <th>Descripcion</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{{report.id}}</td>
-                    <td>{{report.pc.name}}</td>
-                    <td>{{report.email}}</td>
-                    <td>{{report.date_created}}</td>
-                    <td>{{report.description}}</td>
-                    {% if report.state == "A" %}
-                    <td class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">
-                      {{report.get_state_display}}</td>
-                    {% elif report.state == "R" %}
-                    <td class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">
-                      {{report.get_state_display}}</td>
-                    {% elif report.state == "C" %}
-                    <td class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">
-                      {{report.get_state_display}}</td>
-                    {% endif %}
-                  </tr>
-
-                </tbody>
-              </table>
-
-
             </div>
-          </div>
+              {% if report != None %}
+              <h3 style="text-align: center;">Información del reporte</h3>
+              
+              <div class="form-group row col-12">
+                <label class="col-2 col-form-label text-secondary" style="text-align: center;">ID:</label>
+                <div class="col-4">
+                  <label name="email" class="col-form-label ">{{report.id}}</label>
+                </div>
+              <label class="col-2 col-form-label" style="text-align: center;">Email:</label>
+                <div class="col-4">
+                  <label name="email" class="col-form-label">{{report.email}}</label>
+                </div>
+            
+              <label class="col-2 col-form-label" style="text-align: center;">PC:</label>
+                <div class="col-4">
+                  <label name="email" class="col-form-label">{{report.pc.name}}</label>
+                </div>
+                <label class="col-2 col-form-label" style="text-align: center;">Fecha del Reporte:</label>
+                <div class="col-4">
+                  <label name="email" class="col-form-label">{{report.date_created}}</label>
+                </div>
+                
+              </div>
+              <h6 style="text-align: center;">Descripción del error</h6>
+                  <div class="col-12">
+                    <textarea id="description" disabled name="description" class="form-control"rows="3">{{report.description}}</textarea>
+                  </div>
           <h3 style="text-align: center;">Historial de cambios</h3>
           {% for rh in report.history.all %}
           <div class="card card-custom">
             <div class="card-header">
               <div class="card-title">
                 {% if rh.state == "A" %}
-                <h3 class="card-label">{{ rh.date_created }}</h3>
+                <h3 style="display: none;"></h3>
                 {% else %}
                 <h3 class="card-label">{{ rh.date_comment }}</h3>
                 {% endif %}
               </div>
               <div class="card-toolbar">
                 {% if rh.state == "R" %}
+                <h4 style="text-align: right;">Estado:</h4>
                 <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">
                   <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
                 </span>
                 {% elif rh.state == "C" %}
+                <h4 style="text-align: right;">Estado:</h4>
                 <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">
                   <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
                 </span>
                 {% elif rh.state == "A" %}
-                <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">
-                  <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
-                </span>
+                <div style="display: none;"></div>
                 {% endif %}
               </div>
             </div>
             <div class="card-body">
 
               {% if rh.state == "A" %}
-              <h4>Descripción error</h4>
-              <p>{{ rh.description }}</p>
+              <p style="display: none;"></p>
               {% else %}
               <h4>Comentario</h4>
               <p>{{ rh.comment }}</p>
@@ -119,6 +109,7 @@
       </div>
     </div>
   </div>
+</div>
 
 
 

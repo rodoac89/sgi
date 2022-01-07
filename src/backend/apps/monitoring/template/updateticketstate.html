@@ -34,7 +34,7 @@
                         <div class="card-body row justify-content-center">
                             <form method="POST" onsubmit="return validate_Form();">
                                 {% csrf_token %}
-                                <input type="hidden" name="user" value="{{ request.user.username }}">
+                                
                                 <div class="form-group row col-12">
                                     <label class="col-2 col-form-label">ID</label>
                                     <div class="col-4">
@@ -168,7 +168,7 @@
                     <div class="card-header">
                         <div class="card-title">
                             {% if rh.state == "A" %}
-                            <h3 class="card-label">{{ rh.date_created }}</h3>
+                            <h3 class="card-label" style="display: none;"></h3>
                             {% else %}
                           <h3 class="card-label">{{ rh.date_comment }}</h3>
                           {% endif %}
@@ -183,17 +183,14 @@
                               <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
                               </span>
                             {% elif rh.state == "A" %}
-                            <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px" > 
-                              <i class="ki ki-outline-info icon-nm"></i> {{ rh.get_state_display }}
-                              </span>
+                              <div style="display: none;"></div>
                             {% endif %}
                             
                         </div>
                     </div> 
                     <div class="card-body">
                         {% if rh.state == "A" %}
-                        <h4>Descripción error</h4>
-                        <p>{{ rh.description }}</p>
+                        <h4 style="display: none;"></h4>
                         {% else %}
                         <h4>Comentario</h4>
                         <p>{{ rh.comment }}</p>
@@ -203,6 +200,8 @@
                 {% endfor %}   
             </div>
         </div>
+    </div>
+</div>
 
     </div>
 </div>

@@ -22,7 +22,7 @@
   <div class="card-header">
     <blockquote class="blockquote text-center">
       <br>
-      <div class="h1">Reporta un equipo que no funciona correctamante.</div>
+      <div class="h1">Reporta un equipo que no funciona correctamante</div>
     </blockquote>
     <img src="{% static 'media/monitoring/error.png' %}" ALIGN="RIGHT" width="120" height="100">
   </div>
@@ -129,9 +129,14 @@
     var pc = document.getElementById("pc_select").value;
     var room = document.getElementById("room_select").value;
     var description = document.getElementById("description").value;
+    var campus = document.getElementById('campus_select').value;
 
     if (!expresion.test(email)) {
       alert("Ingrese un correo valido");
+      return false;
+    }
+    else if (campus == ""){
+      alert("Favor de seleccionar un campus de la lista");
       return false;
     }
     else if (room == "") {

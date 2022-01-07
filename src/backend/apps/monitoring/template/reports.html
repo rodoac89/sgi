@@ -79,7 +79,7 @@
 {% if reports.has_other_pages %}
     <ul class="pagination">
         {% if reports.has_previus %}
-         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="ki ki-bold-double-arrow-back icon-xs" href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
         {% else %}
          <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&laquo;</span></li>
         {% endif %}
@@ -91,7 +91,7 @@
         {% endif %}
         {% endfor %}
         {% if reports.has_next %}
-         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reports.next_page_number }}">&raquo;</a></li>
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="ki ki-bold-double-arrow-back icon-xs" href="?page={{ reports.next_page_number }}">&raquo;</a></li>
         {% else %}
             <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&raquo;</span></li>
         {% endif %}
