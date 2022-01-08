@@ -53,7 +53,7 @@
 			  <div class="card-body">
           <div class="d-flex align-items-center">
             <h4 class="card-label font-weight-bolder text-dark">Total Reportes:</h4></p>
-            <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{reports_total}}</span> 
+            <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{reports}}</span> 
         </div>
 				</div>
       </div>
@@ -65,7 +65,7 @@
 			  <div class="card-body">
             <div class="d-flex align-items-center">
 					      <h4 class="card-label font-weight-bolder text-dark">Total PC con Problemas:</h4></p>
-                <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{maintenance_total}}</span> 
+                <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{reviewmaintenancetotal}}</span> 
             </div>
       </div>
       </div>
@@ -86,7 +86,7 @@
           <!--begin::Body-->
           
           <div class="card-body pt-8">
-            {% for i,j in count_room_hardware.items %}
+            {% for i in countroomh %}
             <div class="pt-1">
               <!--begin::Item-->
               <div class="d-flex align-items-center pb-9">
@@ -105,11 +105,11 @@
                 <!--end::Symbol-->
                 <!--begin::Text-->
                 <div class="d-flex flex-column flex-grow-1">
-                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i.room__room_name}}</label>
                 </div>
                 <!--end::Text-->
                 <!--begin::label-->
-                <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{i.cantidad}}</span>
                 <!--end::label-->
                 
               </div>
@@ -133,7 +133,7 @@
           <!--begin::Body-->
           
           <div class="card-body pt-8">
-            {% for i,j in count_room_software.items %}
+            {% for i in countrooms %}
             <div class="pt-1">
               <!--begin::Item-->
               <div class="d-flex align-items-center pb-9">
@@ -152,11 +152,11 @@
                 <!--end::Symbol-->
                 <!--begin::Text-->
                 <div class="d-flex flex-column flex-grow-1">
-                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i.room__room_name}}</label>
                 </div>
                 <!--end::Text-->
                 <!--begin::label-->
-                <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{i.cantidad}}</span>
                 <!--end::label-->
                 
               </div>
@@ -180,7 +180,7 @@
           <!--begin::Body-->
           
           <div class="card-body pt-8">
-            {% for i,j in count_room_so.items %}
+            {% for i in countroomso %}
             <div class="pt-1">
               <!--begin::Item-->
               <div class="d-flex align-items-center pb-9">
@@ -199,11 +199,11 @@
                 <!--end::Symbol-->
                 <!--begin::Text-->
                 <div class="d-flex flex-column flex-grow-1">
-                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i.room__room_name}}</label>
                 </div>
                 <!--end::Text-->
                 <!--begin::label-->
-                <span class="font-weight-bolder label label-xl label-light-primary label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <span class="font-weight-bolder label label-xl label-light-primary label-inline px-3 py-5 min-w-45px">{{i.cantidad}}</span>
                 <!--end::label-->
                 
               </div>
@@ -228,7 +228,7 @@
           <!--begin::Body-->
           
           <div class="card-body pt-8">
-            {% for i,j in count_room_m_h.items %}
+            {% for i in countroommh %}
             <div class="pt-1">
               <!--begin::Item-->
               <div class="d-flex align-items-center pb-9">
@@ -247,11 +247,11 @@
                 <!--end::Symbol-->
                 <!--begin::Text-->
                 <div class="d-flex flex-column flex-grow-1">
-                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i.room__room_name}}</label>
                 </div>
                 <!--end::Text-->
                 <!--begin::label-->
-                <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{i.cantidad}}</span>
                 <!--end::label-->
                 
               </div>
@@ -275,7 +275,7 @@
           <!--begin::Body-->
           
           <div class="card-body pt-8">
-            {% for i,j in count_room_m_s.items %}
+            {% for i in countroomms %}
             <div class="pt-1">
               <!--begin::Item-->
               <div class="d-flex align-items-center pb-9">
@@ -294,11 +294,11 @@
                 <!--end::Symbol-->
                 <!--begin::Text-->
                 <div class="d-flex flex-column flex-grow-1">
-                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i.room__room_name}}</label>
                 </div>
                 <!--end::Text-->
                 <!--begin::label-->
-                <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{i.cantidad}}</span>
                 <!--end::label-->
                 
               </div>
@@ -322,7 +322,7 @@
           <!--begin::Body-->
           
           <div class="card-body pt-8">
-            {% for i,j in count_room_m_so.items %}
+            {% for i in countroommso %}
             <div class="pt-1">
               <!--begin::Item-->
               <div class="d-flex align-items-center pb-9">
@@ -341,11 +341,11 @@
                 <!--end::Symbol-->
                 <!--begin::Text-->
                 <div class="d-flex flex-column flex-grow-1">
-                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i}}</label>
+                  <label class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">{{i.room__room_name}}</label>
                 </div>
                 <!--end::Text-->
                 <!--begin::label-->
-                <span class="font-weight-bolder label label-xl label-light-primary label-inline px-3 py-5 min-w-45px">{{j}}</span>
+                <span class="font-weight-bolder label label-xl label-light-primary label-inline px-3 py-5 min-w-45px">{{i.cantidad}}</span>
                 <!--end::label-->
                 
               </div>

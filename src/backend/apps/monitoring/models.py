@@ -5,6 +5,7 @@ import os
 from django.utils import tree
 from apps.core.models import Workstation, Room
 from django.contrib.auth.models import User as dj_user 
+from simple_history.models import HistoricalRecords
 
 class Externuser (models.Model):
     email = models.EmailField(unique=True,max_length=60,blank=False,null=False)
@@ -15,6 +16,7 @@ class Externuser (models.Model):
 class TicketReport(models.Model):
     STATE_TICKET = [
         ('A', 'Abierto'),
+        ('R', 'Revisando'),
         ('C', 'Cerrado')
         
     ]
@@ -27,6 +29,7 @@ class TicketReport(models.Model):
     comment = models.CharField(max_length=200,blank=True,null=True)
     date_comment = models.DateTimeField(blank=True, null=True)
     user = user = models.ForeignKey(dj_user, on_delete=models.SET_NULL,blank=True,null=True)
+    history = HistoricalRecords()
     def __str__(self):
         return "{} - {} - {}".format(self.pc,self.category,self.description)
     class Meta:
@@ -54,6 +57,7 @@ class Revision (models.Model):
         ('F', 'Falla'),
         ('N', 'No Tiene')
     ]
+    
     scheduled_review = models.ForeignKey(ScheduledReview,on_delete=models.SET_NULL,blank=True,null=True)
     pc = models.ForeignKey(Workstation,on_delete=models.SET_NULL,blank=True,null=True)
     monitor = models.CharField(max_length=2,null=False,blank=False,choices=Hardware_Revision,default="")
