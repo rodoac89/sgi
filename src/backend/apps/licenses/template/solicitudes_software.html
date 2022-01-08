@@ -159,6 +159,39 @@
 														</table>
 													</div>
 
+													<div class="form-group row fv-plugins-icon-container col-2 offset-1">
+
+														<table class="table table-bordered">
+																
+															<thead class="table-dark">
+																<tr>
+																	<th>Estado</th>
+																	
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	{% if formulario.status == 1 %}
+																	<th ><span class="badge badge-info">Ingresada</span></th>
+																	{% elif formulario.status == 2 %}
+																	<th ><span class="badge badge-warning">En proceso</span></th>
+																	{% elif formulario.status == 3 %}
+																	<th ><span class="badge badge-success">Aprobada</span></th>
+																	{% elif formulario.status == 4 %}
+																	<th ><span class="badge badge-danger">Rechazada</span></th>
+																	{% endif %}
+																</tr>
+
+															</tbody>
+
+														
+															
+
+														</table>
+													</div>
+
 													<div class="form-group row " style="width: 90%;">
 														<label for="exampleFormControlTextarea1">Detalles: </label>
 														<input class="form-control" id="details" type="text" rows="3" value="{{ formulario.details }}"></input>
