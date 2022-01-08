@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<!--begin::Head-->
+	<head>
+		<meta charset="utf-8" />
+		<title>{% block pagetitle %}Pagina Base{% endblock %} | Labsadmin</title>
+		<meta name="description" content="{% block meta_description %} Descripcion base {% endblock %}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<!--begin::Fonts-->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+		<!--end::Fonts-->
+		<!--begin::Global Theme Styles(used by all pages)-->
+		<link href="{% static 'plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'plugins/custom/prismjs/prismjs.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<!--end::Global Theme Styles-->
+		<!--begin::Layout Themes(used by all pages)-->
+		<link href="{% static 'css/themes/layout/header/base/light.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'css/themes/layout/header/menu/light.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'css/themes/layout/brand/dark.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'css/themes/layout/aside/dark.css' %}" rel="stylesheet" type="text/css" />
+		<!--end::Layout Themes-->
+		<link rel="shortcut icon" href="{% static 'media/logos/favicon.ico' %}" />
+		{% block css %}
+		{% endblock css %}
+	</head>
+	<!--end::Head-->
+	<!--begin::Body-->
+	<body id="kt_body" class="header-fixed page-loading">
+		{% block content %}{% endblock %}
+		<script src="{% static 'plugins/global/plugins.bundle.js' %}"></>
+		<script src="{% static 'plugins/custom/prismjs/prismjs.bundle.js' %}"></script>
+		<script src="{% static 'js/scripts.bundle.js' %}"></script>
+		{% block scripts %}
+		{% endblock %}
+		<!--end::Global Theme Bundle-->
+	</body>
+	<!--end::Body-->
+</html>

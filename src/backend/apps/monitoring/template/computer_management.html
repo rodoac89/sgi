@@ -41,16 +41,14 @@
        </div>
         <br>
         <br>
-        <br>
-        <br>
         <div class="form-group">
             
             <form action="{% url 'computer_management' %}" method="POST">
                {% csrf_token %}
                {% if count_lab != 0 %}
                 <select name="Room" class="form-control" id="room_select">
-                    {% for l in lab %}
-                    <option value="{{ l.room_name }}">{{l.room_name}}</option>
+                    {% for l in schedule_room %}
+                    <option value="{{ l.room.id }}">{{l.room.room_name}}</option>
                     {{request.session.Room}}
                     {% endfor %}
                 </select>
@@ -71,18 +69,7 @@
                {% endif %}   
             </form>
             
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
+           <div class="card-footer"></div>
     </div>
 
 </div>

@@ -48,7 +48,25 @@
                         <label id="dateerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione una fecha</span></label> 
                     </div>
                 </div>
-                
+                <div class="form-group">
+                    <div class="checkbox-inline">
+                        <label class="checkbox checkbox-rounded">
+                            <input type="checkbox" onclick="showdate()" id="daterecurrent" name="recurrent"/>
+                            <span></span>
+                            Recurrente
+                        </label>
+                    </div>      
+                </div>
+                <div id="recurrent" style="display: none;">
+                <div class="form-group row" >
+                    <span class="text-muted pt-2 font-size-sm d-block">Nota: Debe seleccionar el mismo día de semana que seleccionó en la primera fecha.</span>
+                    <label for="example-datetime-local-input" class="col-2 col-form-label">Fecha Fin</label>
+                    <div class="col-10">
+                        <input id="dateend" class="form-control" name="dateend" type="datetime-local" id="example-datetime-local-input" />
+                        <label id="dateenderror" style="display: none;" for="exampleTextarea"><span class="text-danger">Debe seleccionar una fecha final</span></label> 
+                    </div>
+                </div>      
+            </div>        
                    <div class="form-group">
                     <label for="exampleSelect1">Seleccionar un laboratorio<span class="text-danger">*</span></label>
                     <select class="form-control" name="room" id="room">
@@ -104,7 +122,6 @@
                 window.location.href = "{% url 'computer_management' %}";
             },    
             eventColor: '#CA0909',
-            
             events: [
                 {% for revision in schedule %}
                     {
@@ -135,14 +152,21 @@
         var room = document.getElementById("room").value;
         var date = document.getElementById("date").value;
         var title = document.getElementById("title").value;
-        if (date == ""){
-            dateerror.style.display = "block";
-            return false;
-        }
-        else if (title == ""){
+        var dateend = document.getElementById("dateend").value;
+        if (title == ""){
             titleerror.style.display = "block";
             return false;
         }
+        else if (date == ""){
+            dateerror.style.display = "block";
+            return false;
+        }
+        else if (document.getElementById('daterecurrent').checked){
+            if (dateend == ""){
+                dateenderror.style.display = "block";
+                return false;
+            }
+       }
         else if (room == ""){
             roomerror.style.display = "block";
             return false;
@@ -150,5 +174,16 @@
     }
 </script>  
 
-   
+ <script>
+     function showdate(){
+        var recurrent = document.getElementById("recurrent");
+        if (document.getElementById('daterecurrent').checked){
+         recurrent.style.display = "block";
+        }
+        else {
+            recurrent.style.display = "none";
+        }
+
+    }
+</script>  
 {% endblock %}
