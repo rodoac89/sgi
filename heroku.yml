@@ -1,9 +1,9 @@
 setup:
   config:
-    DEV_CHANNEL: heroku
+    CHANNEL: heroku
 build:
   docker:
-    web: backend/Dockerfile
+    web: src/backend/Dockerfile
 run:
   web: python manage.py runserver 0:$PORT
 release:

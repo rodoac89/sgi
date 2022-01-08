@@ -1,0 +1,29 @@
+<!-- Modal create campus-->
+<div class="modal fade" id="modalAddCampus" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdrop" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form action="{% url 'add_campus' %}" method="post" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar campus</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Ingrese el nombre del campus</label>
+                    <div class="input-group">
+                        <div class="input-group-append"><span class="input-group-text"><i
+                                    class="la la-group icon-lg"></i></span></div>
+                        <input type="text" name="campusname" class="form-control" placeholder="Nombre campus"
+                            aria-describedby="basic-addon2" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -2,19 +2,18 @@ version: "3"
 services:
   db:
     image: postgres
-    environment:
-      POSTGRES_DB: laboratorios
-      POSTGRES_USER: labuser
-      POSTGRES_PASSWORD: labs2021
+    env-file:
+      - config/database/postgres.env
+      
   
   backend:
-    build: ./backend
+    build: ./src/backend
     image: backend_labsadmin
     command: gunicorn labsadmin.wsgi:application --bind 0.0.0.0:8080
     volumes:
-      - ./backend:/labs/
+      - .src/backend:/app/
     ports:
        - "8080:8080"
-    environment:
-      DEV_CHANNEL: false
-
+    env-file:
+      - config/backend.env
+      

@@ -1,0 +1,35 @@
+
+{% load static %}
+
+<title>Agradecimiento</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+<link href="{% static 'plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'plugins/custom/prismjs/prismjs.bundle.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+{% block content %}
+
+<div class="col-12">
+<div style="margin-left: auto; margin-right: auto;" class="card col-9  card-custom gutter-b example example-compact" ></div>
+    <div class="card-header">
+        <blockquote class="blockquote text-center">
+        <div class="h1">¡Gracias por reportar el mal funcionamiento de un equipo!</div>
+        
+            <p class="mb-0">Los encargados de los laboratorios trabajarán en 
+                el problema lo antes posible.
+                <br>
+                <img src="{% static 'media/logos/corregir.png' %}" ALIGN="CENTER">   
+            </p>
+            
+        </blockquote>    
+         
+    </div>
+</div>    
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
