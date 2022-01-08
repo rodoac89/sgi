@@ -13,7 +13,7 @@ urlpatterns = [
     path('pcreview/<id_pc>',views.pcreview,name="pcreview"),
     path('showreviewpc/',views.showpcreview,name="showreviewpc"),
     path('email_autocomplete/',views.email_autocomplete,name="email_autocomplete"),
-    path('updatepcreview_<int:id>/',views.updatepcreview,name="updatepcreview"),
+    path('updatepcreview/<int:id>/',views.updatepcreview,name="updatepcreview"),
     path('getpc/',views.getpc,name="getpc"),
     path('getroom/',views.getroom,name="getroom"),
     path('generalreports/',views.generalreports,name="generalreports"),
@@ -22,5 +22,5 @@ urlpatterns = [
     path('chart_maintenance_lab/',views.chart_maintenance_lab,name="chart_maintenance_lab"),
     path('selectdate/',views.selectdate,name="selectdate"),
     path('updateticketstate/<int:id>/',views.updateticketstate,name="updateticketstate"),
-
+    path('searchreport/',views.searchreport,name="searchreport"),
 ]

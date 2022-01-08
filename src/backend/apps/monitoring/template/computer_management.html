@@ -47,8 +47,8 @@
                {% csrf_token %}
                {% if count_lab != 0 %}
                 <select name="Room" class="form-control" id="room_select">
-                    {% for l in lab %}
-                    <option value="{{ l.id }}">{{l.room_name}}</option>
+                    {% for l in schedule_room %}
+                    <option value="{{ l.room.id }}">{{l.room.room_name}}</option>
                     {{request.session.Room}}
                     {% endfor %}
                 </select>

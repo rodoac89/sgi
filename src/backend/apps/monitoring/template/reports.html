@@ -61,6 +61,8 @@
                     <td>{{reporte.date_created}}</td>
                     {% if reporte.state == "A" %}
                     <td><span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
+                    {% elif reporte.state == "R" %}
+                    <td><span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
                     {% elif reporte.state == "C" %}
                     <td><span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
                     {% endif %}
@@ -71,12 +73,13 @@
                 {% endfor %}
                 
             </tbody>
+            
         </table>
-      
+        
 {% if reports.has_other_pages %}
     <ul class="pagination">
         {% if reports.has_previus %}
-         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="ki ki-bold-double-arrow-back icon-xs" href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
         {% else %}
          <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&laquo;</span></li>
         {% endif %}
@@ -88,7 +91,7 @@
         {% endif %}
         {% endfor %}
         {% if reports.has_next %}
-         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ reports.next_page_number }}">&raquo;</a></li>
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="ki ki-bold-double-arrow-back icon-xs" href="?page={{ reports.next_page_number }}">&raquo;</a></li>
         {% else %}
             <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&raquo;</span></li>
         {% endif %}
