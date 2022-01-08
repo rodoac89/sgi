@@ -43,4 +43,4 @@ typed-ast==1.4.3
 uritemplate==3.0.1
 urllib3==1.26.4
 wrapt==1.12.1
-
+django_cryptography
