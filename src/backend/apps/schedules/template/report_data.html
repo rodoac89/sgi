@@ -1,270 +1,197 @@
-{% extends '_partials/_base.html' %}
-{% load static %}
-{% block pagetitle %}Pagina en blanco{% endblock %}
-{% block breadcumbs %}
+{% extends '_partials/_base.html' %} {% load static %} {% block pagetitle %}Pagina en blanco{% endblock %} {% block breadcumbs %}
 
 <li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">Horarios</a>
+	<a href="" class="text-muted">Horarios</a>
 </li>
 <li class="breadcrumb-item text-muted">
-    <a href="" class="text-muted">Salas</a>
+	<a href="" class="text-muted">Salas</a>
 </li>
 
-{% endblock %}
-{% block content %}
-
+{% endblock %} {% block content %}
 <div class="card card-custom gutter-b">
-    <div class="card-header">
-        <div class="card-title">
-            <h3>CALENDARIO</h3>
-        </div>
-        <div class="card-toolbar">
-            <a href="{% url 'reserve_room' %}" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
-                <i class="ki ki-plus icon-md mr-2"></i>Crear solicitud</a>
-        </div>
-    </div>
-    <div class="card-body">
-        <form action="{% url 'calendar_day' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group row">
-                <div class="col-lg-2">
-					<select class="form-control selectpicker" name="selectedcampus" id="selectedcampus">
-                        <option value="all">Todos</option>
-						{% for c in campus_all %}
-						<option value="{{c.id}}">{{c.name}}</option>
-						{% endfor %}
-					</select>
-                </div>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control datatable-input" id="name_lab" onkeyup="Name()"
-                        placeholder="Ej: COM123">
-                </div>
-                <div class="col-lg-2">
-                    <input type="number" class="form-control datatable-input" id="n_pc" onkeyup="PC()"
-                        placeholder="Ej: 46">
-                </div>
-                <div class="col-lg-2">
-                    <div class="input-group date">
-                        <input type="text" name="selecteddate" class="form-control" id="kt_datepicker_9" data-date-format="dd/mm/yyyy" readonly="readonly" value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}">
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <i class="la la-calendar"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <button type="submit" class="btn btn-light-primary font-weight-bold mb-0" name="date_filter">Submit</button>
-                </div>
-            </div>
-        </form>
-        <table class="table dataTable dtr-inline text-center" id="kt_datatable" style="width: 1235px;">
-            <thead>
-                <tr role="row">
-                    <th data-field="LabName" class="datatable-cell datatable-cell-sort">
-                        <span>Laboratorio</span>
-                    </th>
-                    <th data-field="PC" class="datatable-cell datatable-cell-sort">
-                        <span>PC</span>
-                    </th>
-                    <th data-field="Schedule" class="datatable-cell-center datatable-cell datatable-cell-sort" style="width: 1000px;">
-                        <span>Horario</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cl in campus_list %}
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>
-                        <h4>{{cl.name}}</h4>
-                    </th>
-                </tr>
-                {% for rm in cl.room_set.all %}
-                <tr data-row="lab{{ rm.id }}" class="datatable-row">
-                    <td data-field="LabName" class="datatable-cell pt-6">
-                        <a type="button" href="{% url 'calendar_week' rm.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ rm.room_name }}</a>
-                    </td>
-                    <td data-field="PC" class="datatable-cell pt-12">
-                        <span>{{rm.workstation_set.all.count}}</span>
-                    </td>
-                    <td data-field="Schedule" class="datatable-cell-center datatable-cell pt-1"
-                        id="schedule-{{rm.id}}"></td>
-                </tr>
-                {% endfor %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+	<div class="card-header">
+		<div class="card-title">
+			<h1>Gráficos de las reservas en el año {{selectdate}}</h1>
+		</div>
+		<div class="card-toolbar pt-4">
+			<form action="{% url 'report_data' %}" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="form-group row">
+					<div class="col-lg-9">
+						<div class="input-group">
+							<input
+								type="text"
+								name="selecteddate"
+								class="form-control"
+								id="datepicker_report"
+								data-date-format="yyyy"
+								value="{{selectdate}}"
+							/>
+							<div class="input-group-append">
+								<span class="input-group-text">
+									<i class="la la-calendar"></i>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<button type="submit" class="btn btn-light-primary font-weight-bold mb-0" name="date_filter">Submit</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-7">
+		<div class="card card-custom gutter-b">
+			<div class="card-header">
+				<div class="card-title">
+					<h2>Información</h2>
+				</div>
+			</div>
+			<div class="card-body">
+				
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-5">
+		<div class="card card-custom gutter-b">
+			<div class="card-header">
+				<div class="card-title">
+					<h2>Módulos reservados al mes</h2>
+				</div>
+			</div>
+			<div class="card-body" id="chart_donut_year"></div>
+		</div>
+	</div>
 </div>
 
-{% endblock %}
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script>
-    $(document).ready(function () {
-        {% for rm in room_list %}
-        var color_list = [];
-        var data_event = [];
-        {% for rp in roompetition %}
-        {% if rm == rp.room_petition %}
-        {% for me in modulevent %}
-        {% if me.module.start_module == rp.time_start_petition and me.petition == rp %}
-        data_event.push({
-            name: '{{ rp.event_petition }}',
-            data: [
-                {
-                    x: '{{ rm.room_name }}',
-                    y: [
-                        new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_start_petition.hour}}, {{rp.time_start_petition.minute}}).getTime(),
-                        new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_finish_petition.hour}}, {{rp.time_finish_petition.minute}}).getTime()
-                    ],
-                },
-            ]
-        },)
-        {% if rp.type_petition == 'E' %}
-        color_list.push('#E91E63');
-        {% else %}
-        color_list.push('#3F51B5');
-        {% endif %}
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-        {% endfor %}
-        var options = {
-            series: data_event,
-            colors: color_list,
-            chart: {
-                id: '{{rm.id}}',
-                type: 'rangeBar',
-                height: 100,
-                zoom: {
-                    enabled: false
-                },
-                toolbar: {
-                    show: false,
-                }
-            },
-            tooltip: {
-                enabled: true,
-                followCursor: true,
-                marker: {
-                    show: true,
-                },
-                x: {
-                    show: true,
-                    format: 'HH:mm',
-                },
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
-                    barHeight: '100%',
-                    rangeBarGroupRows: true,
-                    enableShades: true
-                },
-            },
-            xaxis: {
-                type: 'datetime',
-                min: new Date({{selectdate.year}}, {{selectdate.month}}, {{selectdate.day}}, 7, 0).getTime(),
-                max: new Date({{selectdate.year}}, {{selectdate.month}}, {{selectdate.day}}, 23, 59).getTime(),
-                labels: {
-                    datetimeUTC: false,
-                }
-            },
-            yaxis: {
-                show: false,
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function(val,obj) {
-                    return obj.w.config.series[obj.seriesIndex].name;
-                },
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shade: 'light',
-                    type: 'vertical',
-                    shadeIntensity: 0.25,
-                    gradientToColors: undefined,
-                    inverseColors: true,
-                    opacityFrom: 1,
-                    opacityTo: 1,
-                }
-            },
-            animations: {
-                enabled: true,
-                easing: 'easeinout',
-                speed: 800,
-                animateGradually: {
-                    enabled: true,
-                    delay: 150
-                },
-                dynamicAnimation: {
-                    enabled: true,
-                    speed: 350
-                }
-            },
-            responsive: [{
-                options: {},
-            }],
-            legend: {
-                show: false,
-            },
-        };
-        var chart = new ApexCharts(document.querySelector("#schedule-{{rm.id}}"), options);
-        chart.render();
-        {% endfor %}
-    });
+	var KTBootstrapDatepicker = function () {
+		var arrows;
+		if (KTUtil.isRTL()) {
+			arrows = {
+				leftArrow: '<i class="la la-angle-right"></i>',
+				rightArrow: '<i class="la la-angle-left"></i>'
+			}
+		} else {
+			arrows = {
+				leftArrow: '<i class="la la-angle-left"></i>',
+				rightArrow: '<i class="la la-angle-right"></i>'
+			}
+		}
+		
+		var picker = function () {
+			$('#datepicker_report').datepicker({
+				rtl: KTUtil.isRTL(),
+				lenguage: "es",
+				format: "yyyy",
+    			minViewMode: 2,
+				autoclose: true,
+				orientation: "bottom left",
+				templates: arrows
+			});
+		}
+		return {
+			init: function() {
+				picker(); 
+			}
+		};
+	}();
+	jQuery(document).ready(function() {    
+		KTBootstrapDatepicker.init();
+	});
 </script>
 <script>
-    $(function() {
-        if (localStorage.getItem('selectedcampus')) {
-            $("#selectedcampus option").eq(localStorage.getItem('selectedcampus')).prop('selected', true);
-        }
-    
-        $("#selectedcampus").on('change', function() {
-            localStorage.setItem('selectedcampus', $('option:selected', this).index());
-        });
-        
-    });
-    function Name() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("name_lab");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("kt_datatable");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-    function PC() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("n_pc");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("kt_datatable");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
+	const color = ["#6495ED", "#FF1493", "#1BA39C", "#228B22", "#8B008B", "#B22222", "#1E90FF", "#DAA520", "#2F4F4F", "#FF8C00", "#A52A2A", "#000080"];
+	const primary = '#000080';
+	const label = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+	const series_list = [0,0,0,0,0,0,0,0,0,0,0,0];
+	generateData();
+	function generateData() {
+		{% for me in modulevent %}
+		if({{me.day.month}} == '01'){
+			series_list[0]++;
+		} else if({{me.day.month}} == '02'){
+			series_list[1]++;
+		} else if({{me.day.month}} == '03'){
+			series_list[2]++;
+		} else if({{me.day.month}} == '04'){
+			series_list[3]++;
+		} else if({{me.day.month}} == '05'){
+			series_list[4]++;
+		} else if({{me.day.month}} == '06'){
+			series_list[5]++;
+		} else if({{me.day.month}} == '07'){
+			series_list[6]++;
+		} else if({{me.day.month}} == '08'){
+			series_list[7]++;
+		} else if({{me.day.month}} == '09'){
+			series_list[8]++;
+		} else if({{me.day.month}} == '10'){
+			series_list[9]++;
+		} else if({{me.day.month}} == '11'){
+			series_list[10]++;
+		} else if({{me.day.month}} == '12'){
+			series_list[11]++;
+		}
+		{% endfor %}
+		return series_list;
+	}
+	var KTApexChartsDemo = (function () {
+		var _chartpie_year = function () {
+			const apexChart = "#chart_donut_year";
+			var options = {
+				series: series_list,
+				chart: {
+					width: 480,
+					type: "donut",
+				},
+				labels: label,
+				responsive: [
+					{
+						breakpoint: 480,
+						options: {
+							chart: {
+								width: 200,
+							},
+							legend: {
+								position: "bottom",
+							},
+						},
+					},
+				],
+				plotOptions: {
+					pie: {
+						donut: {
+							labels: {
+								show: true,
+								name: {
+								},
+								value: {
+								}
+							}
+						}
+					}
+				},
+				colors: color,
+			};
+
+			var chart = new ApexCharts(document.querySelector(apexChart), options);
+			chart.render();
+		};
+		return {
+			// public functions
+			init: function () {
+				_chartpie_year();
+			},
+		};
+	})();
+	jQuery(document).ready(function () {
+		KTApexChartsDemo.init();
+	});
 </script>
 <script src="{%static 'js/pages/features/charts/apexcharts.js'%}"></script>
 <script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>

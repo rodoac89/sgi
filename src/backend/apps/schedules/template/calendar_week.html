@@ -96,10 +96,11 @@ return {
                 {% if me.module.start_module == rp.time_start_petition %}
                 {
                     title: '{{me.petition.event_petition}}',
-                    start: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{rp.time_start_petition}}',
-                    end: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{rp.time_finish_petition}}',
-                    description: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{rp.time_finish_petition}}',
+                    start: '{{me.day|date:"Y-m-d"}} {{rp.time_start_petition}}',
+                    end: '{{me.day|date:"Y-m-d"}} {{rp.time_finish_petition}}',
+                    description: '',
                     className: "fc-event-solid-primary fc-event-light",
+                    resourceId:{}
                 },
                 {% endif %}
                 {% endfor %}
@@ -127,9 +128,8 @@ return {
     }
 };
 }();
-
 jQuery(document).ready(function() {
-KTCalendarBasic.init();
+    KTCalendarBasic.init();
 });
 </script>
 {% endblock %}

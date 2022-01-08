@@ -43,7 +43,7 @@ def calendar_week(request, id):
     template_name="calendar_week.html"
     context={}
     roomobj = Room.objects.get(id = id)
-    roompetition = RoomPetition.objects.filter(room_petition = roomobj, status_petition="A").order_by('date_start_petition')
+    roompetition = RoomPetition.objects.filter(room_petition = roomobj, status_petition="A").order_by('date_finish_petition')
     modulevent = ModuleEvent.objects.filter(petition__room_petition = roomobj).order_by('day')
     context['roompetition']=roompetition
     context['modulevent']=modulevent
@@ -135,25 +135,35 @@ def reserve_event(petition):
 def delete_event(petition):
     ModuleEvent.objects.filter(petition=petition).delete()
 
-
 def report_data(request):
     template_name = "report_data.html"
     context = {}
+    selectdate = datetime.today().year
+    if request.POST:
+        selectdate = request.POST['selecteddate']
     campusobj = Campus.objects.all().order_by('name')
-    modulevent = ModuleEvent.objects.all().order_by('day')
-    context['modulevent']=modulevent
-    context['campusobj']=campusobj
+    modulevent = ModuleEvent.objects.filter(day__year=selectdate).order_by('day')
+    totalevent = modulevent.count()
+    context['totalevent'] = totalevent
+    context['selectdate'] = selectdate
+    context['modulevent'] = modulevent
+    context['campusobj'] = campusobj
     return render(request, template_name, context)
 
 def reserve_room(request):
     template_name = "reserve_room.html"
     context = {}
     campusobj = Campus.objects.all()
-    formroom = RoomPetitionForm(request.POST or None, initial={'status_petition':'P'})
-    context['formroom'] = formroom
+    modulestart_choice = []
+    modulefinish_choice = []
+    for o in Module.objects.all().order_by('start_module'):
+        modulestart_choice.append((o.start_module, str(o)))
+        modulefinish_choice.append((o.finish_module, str(o)))
+
+    formroom = RoomPetitionForm(modulestart_choice, modulefinish_choice,request.POST or None, initial={'status_petition':'P'})
     context['campusobj'] = campusobj
+    context['formroom'] = formroom
     if request.method == 'POST':
-        print(formroom.errors)
         if formroom.is_valid():
             formroom.save()
             return HttpResponseRedirect(reverse('calendar_day'))

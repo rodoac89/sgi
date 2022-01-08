@@ -30,8 +30,9 @@ def get_room_by_filter():
     for me in module_events:
         selectroom = Room.objects.exclude(RoomPetition_set=me).order_by('campus')
     return selectroom
-
+    
 class RoomPetitionForm(forms.ModelForm):
+    
     class Meta:
         model = RoomPetition
         fields = [
@@ -59,8 +60,6 @@ class RoomPetitionForm(forms.ModelForm):
             'computer_petition':'Computadores:',
             'date_start_petition':'Fecha inicio y final:',
             'date_finish_petition':'Fecha inicio y final:',
-            'time_start_petition':'Hora inicio:',
-            'time_finish_petition':'Hora termino:',
             'day_petition':'Día:',
             'recurrence_petition':'Recurrencia:',
             'memo_petition':'Mensaje:',
@@ -72,12 +71,10 @@ class RoomPetitionForm(forms.ModelForm):
             'event_petition':TextInput(attrs={'class':'form-control', 'id':'kt_maxlength_8', 'placeholder':'Ej: NRC7777'}),
             'name_petition':TextInput(attrs={'class':'form-control', 'id':'kt_maxlength_9', 'placeholder':'Ej: Juan Antonio Silva'}),
             'email_petition':EmailInput(attrs={'class':'form-control', 'id':'kt_maxlength_10', 'placeholder':'Ej: Juan@uandresbello.edu'}),
-            'room_petition':Select(choices=([(o, str(o)) for o in Room.objects.all().order_by('campus')]), attrs={'class':'form-control selectpicker'}),
+            'room_petition':Select(attrs={'class':'form-control selectpicker'}),
             'computer_petition':NumberInput(attrs={'class':'form-control', 'id':'kt_touchspin_1', 'placeholder':'Ej: 15'}),
             'date_start_petition':DateInput(attrs={'class':'form-control datetimepicker-input', 'id':'kt_datepicker_7', 'data-date-format':'dd/mm/yyyy', 'readonly':'readonly', 'placeholder':'01/01/2022'}),
             'date_finish_petition':DateInput(attrs={'class':'form-control datetimepicker-input', 'id':'kt_datepicker_7', 'data-date-format':'dd/mm/yyyy', 'readonly':'readonly', 'placeholder':'02/01/2022'}),
-            'time_start_petition':Select(choices=([(o.start_module, str(o)) for o in Module.objects.all().order_by('start_module')]), attrs={'class':'form-control selectpicker'}),
-            'time_finish_petition':Select(choices=([(o.finish_module, str(o)) for o in Module.objects.all().order_by('start_module')]), attrs={'class':'form-control selectpicker'}),
             'day_petition':Select(attrs={'class':'form-control selectpicker'}),
             'recurrence_petition':Select(attrs={'class':'form-control selectpicker'}),
             'memo_petition':Textarea(attrs={'class':'form-control', 'cols':30, 'rows':3, 'id':'kt_maxlength_11', 'maxlength':'100', 'placeholder':'Ej: Necesario para hacer una prueba'}),
@@ -85,12 +82,14 @@ class RoomPetitionForm(forms.ModelForm):
             #'status_petition':Select(attrs={'class':'form-control selectpicker'}),
             #'datetime_petition':DateTimeInput(attrs={'class':'form-control datetimepicker-input'}),
         }
-    def __init__(self,*args, **kwargs):
+    def __init__(self, modulestart_choice, modulefinish_choice, *args, **kwargs):
         super(RoomPetitionForm, self).__init__(*args,**kwargs)
         self.initial['day_petition'] = '3'
         #self.initial['status_petition'] = 'P'
         self.fields['date_start_petition'].input_formats=[ '%d/%m/%Y' ]
         self.fields['date_finish_petition'].input_formats=[ '%d/%m/%Y' ]
+        self.fields['time_start_petition'] = forms.ChoiceField(choices=modulestart_choice, label='Hora inicio:', widget=forms.Select(attrs={'class':'form-control selectpicker'}))
+        self.fields['time_finish_petition'] = forms.ChoiceField(choices=modulefinish_choice, label='Hora termino:', widget=forms.Select(attrs={'class':'form-control selectpicker'}))
         #self.fields['room_petition'].widget.choices(get_room_by_filter())
     
     def clean(self):

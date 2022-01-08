@@ -83,7 +83,7 @@
                 </tr>
                 {% for rm in cl.room_set.all %}
                 <tr data-row="lab{{ rm.id }}" class="datatable-row">
-                    <td data-field="LabName" class="datatable-cell pt-6">
+                    <td data-field="LabName" class="datatable-cell pt-8">
                         <a type="button" href="{% url 'calendar_week' rm.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ rm.room_name }}</a>
                     </td>
                     <td data-field="PC" class="datatable-cell pt-12">
