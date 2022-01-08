@@ -1,0 +1,73 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Modulo de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+{% block notificaciones %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex flex-column-fluid">
+							<!--begin::Container-->
+							<div class="container">
+								<div class="row justify-content-center">
+									<div class="col-8">	
+										<!--begin::Card-->
+										<div class="card card-custom gutter-b example example-compact ">
+											<div class="card-header">
+												<h3 class="card-title" >Formulario creado correctamente <i class="fas fa-check-circle" style="color:rgb(93, 177, 10)"></i></h3>
+												
+											</div>
+											<!--begin::Form-->
+											<div class="card-toolbar text-center">
+												<!--AQUI LOGO UNAB-->
+												<img src="{% static 'media/licencias/almacenar.png' %}" style="width: 70%; margin:auto; margin-top: 5%;">
+												
+											</div>
+
+											<div class="text-center" style="margin-top: 5%; margin-bottom: 5%;">
+												<a href= "{%url 'licenses:form_index' %}" type="button" class="btn btn-success mr-2">Crear otro</a>
+											</div>
+											
+										</div>
+										<!--end::Card-->
+										</div>
+									
+								</div>
+							</div>
+							<!--end::Container-->
+						</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
