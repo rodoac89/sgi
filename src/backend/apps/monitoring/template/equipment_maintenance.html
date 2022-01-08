@@ -31,7 +31,7 @@
             {% for i in pcrev %}
             <div class="dflex flex-colum flex-center bd-highlight ">
                 <div class="p-4 bd-highlight d-flex flex-column flex-center">
-                    <a href="#" class="btn btn-light-warning d-inline-flex align-items-center btn-lg">
+                    <a href="{% url 'updatepcreview' i.id %}" class="btn btn-light-warning d-inline-flex align-items-center btn-lg">
                         <div class="d-flex flex-column text-right pr-3">
                             <span class="text-dark-75 font-weight-bold font-size-sm">Revisado</span>
                             <span class="font-weight-bolder font-size-sm">{{i.name}}</span>

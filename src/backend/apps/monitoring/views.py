@@ -148,8 +148,8 @@ def computer_management(request):
 def equipment_maintenance(request):
     if request.session['Room'] is not None or 'Room' not in request.session:
         room_obtenido = Room.objects.get(pk =request.session['Room'])
-        date_now = date.today()
-        review = Revision.objects.filter(scheduled_review=ScheduledReview.objects.get(date_scheduled__date=date_now,room=room_obtenido),pc__in=Workstation.objects.all().filter(room=room_obtenido)).values_list('pc',flat=True).distinct()
+        schedule_today = ScheduledReview.objects.filter(date_scheduled__date=date.today(),room=room_obtenido).first()
+        review = Revision.objects.filter(scheduled_review=schedule_today).values_list('pc',flat=True).distinct()
         prev = Workstation.objects.filter(room=room_obtenido,id__in=review).order_by('name')
         notrev = Workstation.objects.all().filter(room=room_obtenido).exclude(id__in=review).order_by('name') 
         context={
@@ -261,7 +261,12 @@ def showpcreview(request):
         return('selectreviewpc')
         
 def updatepcreview(request, id):
-    edit_review = get_object_or_404(Revision, id=id)
+    pc = Workstation.objects.filter(pk=id).first()
+    revi = Revision.objects.filter(date_created__date=date.today(),pc=pc.id).first()
+    if revi is not None:
+        edit_review = revi
+    else:
+        edit_review = get_object_or_404(Revision, id=id)
     if request.method=='POST':
         rev = Revision.objects.get(pk = edit_review.id)
         rev.pc = Workstation.objects.get( pk = edit_review.pc.id)
@@ -275,7 +280,10 @@ def updatepcreview(request, id):
         rev.date_created = datetime.now()
         rev.user = dj_user.objects.get(pk = request.user.id)
         rev.save()
-        return redirect ('showreviewpc')
+        if revi is not None:
+            return redirect('equipment_maintenance')
+        else:    
+            return redirect ('showreviewpc')
     context = {
         'edit_review':edit_review
     }
@@ -296,76 +304,41 @@ def selectdate(request):
 def generalreports(request): 
     if request.session['datestart'] is not None or 'datestart' not in request.session:
         if request.session['dateending'] is not None or 'dateending' not in request.session:
-            count_room_hardware = {}
-            count_room_software = {}
-            count_room_so = {}
-            count_room_m_h = {}
-            count_room_m_s = {}
-            count_room_m_so = {}
+            #querys pc con problemas en revisión
             reviewmaintenancetotal = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(monitor="P",mouse="P",keyboard="P",cpu="P",software="O",SO="O").count()
-            reviewh = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(monitor="P",mouse="P",keyboard="P",cpu="P")
-            reviews = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(software="O")
-            reviewso = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(SO="O")
-            for rvh in reviewh:
-                if rvh.pc.room.room_name not in count_room_m_h:
-                    count_room_m_h[rvh.pc.room.room_name] = 0
-                count_room_m_h[rvh.pc.room.room_name] +=1
-            for rvs in reviews:
-                if rvs.pc.room.room_name not in count_room_m_s:
-                    count_room_m_s[rvs.pc.room.room_name] = 0
-                count_room_m_s[rvs.pc.room.room_name] +=1         
-            for rvso in reviewso:
-                if rvso.pc.room.room_name not in count_room_m_so:
-                    count_room_m_so[rvso.pc.room.room_name] = 0
-                count_room_m_so[rvso.pc.room.room_name] +=1                             
+            reviewh = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(monitor="P",mouse="P",keyboard="P",cpu="P").values_list('pc',flat=True)
+            countroommh = Workstation.objects.filter(pk__in=reviewh).values('room__room_name').annotate(cantidad = Count('room'))
+            reviews = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(software="O").values_list('pc',flat=True)
+            countroomms = Workstation.objects.filter(pk__in=reviews).values('room__room_name').annotate(cantidad = Count('room'))
+            reviewso = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(SO="O").values_list('pc',flat=True)
+            countroommso = Workstation.objects.filter(pk__in=reviewso).values('room__room_name').annotate(cantidad = Count('room'))                           
+            #querys reportes
             reports = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).count()
-            report_h = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']),category="Hardware")
-            report_s = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']),category="Software")
-            report_so = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']),category="Sistema Operativo")
-            for rh in report_h:
-                if rh.pc.room.room_name not in count_room_hardware:
-                    count_room_hardware[rh.pc.room.room_name] = 0
-                count_room_hardware[rh.pc.room.room_name] +=1 
-            for rs in report_s:
-                if rs.pc.room.room_name not in count_room_software:
-                    count_room_software[rs.pc.room.room_name] = 0
-                count_room_software[rs.pc.room.room_name] +=1  
-            for rso in report_so:
-                if rso.pc.room.room_name not in count_room_so:
-                    count_room_so[rso.pc.room.room_name] = 0
-                count_room_so[rso.pc.room.room_name] +=1                  
-            context= {'count_room_hardware':count_room_hardware,
-            'count_room_software':count_room_software,'count_room_so':count_room_so, 'count_room_m_h': count_room_m_h,
-            'count_room_m_s':count_room_m_s, 'count_room_m_so':count_room_m_so, 'reports':reports, 'reviewmaintenancetotal':reviewmaintenancetotal}
+            report_s = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']),category="Software").values_list('pc',flat=True)
+            countrooms = Workstation.objects.filter(pk__in=report_s).values('room__room_name').annotate(cantidad = Count('room'))
+            report_so = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']),category="Sistema Operativo").values_list('pc',flat=True)
+            countroomso = Workstation.objects.filter(pk__in=report_so).values('room__room_name').annotate(cantidad = Count('room'))      
+            reh = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']),category="Hardware").values_list('pc',flat=True)
+            coutnroomh = Workstation.objects.filter(pk__in=reh).values('room__room_name').annotate(cantidad = Count('room'))                
+            context= {'reports':reports, 'reviewmaintenancetotal':reviewmaintenancetotal,'countroomh':coutnroomh, 'countrooms':countrooms,'countroomso':countroomso,'countroommh':countroommh,
+                      'countroomms':countroomms, 'countroommso':countroommso}
             template_name = "generalreports.html"
             return render(request,template_name,context)
 
 def chart_report_lab(request):
-    count_room = {}
-    reports = TicketReport.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending']))
-    for r in reports:
-        if r.pc.room.room_name not in count_room:
-            count_room[r.pc.room.room_name] = 0
-        count_room[r.pc.room.room_name] +=1
-    label = count_room.keys()
-    label = list(label)
-    data = count_room.values()
-    data = list(data)
+    report = TicketReport.objects.all().filter(date_created__range=(request.session['datestart'],request.session['dateending'])).values_list('pc',flat=True)
+    countroom = Workstation.objects.filter(pk__in=report).values('room__room_name').annotate(cantidad = Count('room'))
+    label = list(countroom.values_list('room__room_name',flat=True))
+    data = list(countroom.values_list('cantidad',flat=True))
     label.append("")
     data.append(0)
     return JsonResponse(data={'label': label, 'data': data,})
 
 def chart_maintenance_lab(request):
-    count_room = {}
-    review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(monitor="P",mouse="P",keyboard="P",cpu="P",software="O",SO="O")
-    for r in review:
-        if r.pc.room.room_name not in count_room:
-            count_room[r.pc.room.room_name] = 0
-        count_room[r.pc.room.room_name] +=1            
-    label = count_room.keys()
-    label = list(label)
-    data = count_room.values()
-    data = list(data)
+    review = Revision.objects.filter(date_created__range=(request.session['datestart'],request.session['dateending'])).exclude(monitor="P",mouse="P",keyboard="P",cpu="P",software="O",SO="O").values_list('pc',flat=True)
+    countroom = Workstation.objects.filter(pk__in=review).values('room__room_name').annotate(cantidad = Count('room'))
+    label = list(countroom.values_list('room__room_name',flat=True))
+    data = list(countroom.values_list('cantidad',flat=True))
     label.append("")
     data.append(0)
     return JsonResponse(data={'label': label, 'data': data,})
