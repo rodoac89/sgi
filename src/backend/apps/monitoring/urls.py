@@ -23,6 +23,4 @@ urlpatterns = [
     path('selectdate/',views.selectdate,name="selectdate"),
     path('updateticketstate/<int:id>/',views.updateticketstate,name="updateticketstate"),
     path('searchreport/',views.searchreport,name="searchreport"),
-    
-    
 ]

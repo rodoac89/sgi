@@ -23,7 +23,7 @@
                 <h3 class="card-label">{{ room.campus }} - {{ room.room_name }}</h3>
             </div>
             <div class="card-toolbar">
-                <a href="#" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
+                <a href="{% url 'reserve_room' %}" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
                     <i class="ki ki-plus icon-md mr-2"></i>Crear solicitud</a>
             </div>
         </div>
@@ -36,8 +36,8 @@
 </body>
 {% endblock %}
 {% block scripts %}
-<link href="{%static 'plugins/custom/fullcalendar/fullcalendar.bundle.css'%}" rel="stylesheet" type="text/css" />
-<script src="{%static 'plugins/custom/fullcalendar/fullcalendar.bundle.js'%}"></script>
+<link href="{%static 'plugins/custom/fullcalendar/fullcalendar2.bundle.css'%}" rel="stylesheet" type="text/css" />
+<script src="{%static 'plugins/custom/fullcalendar/fullcalendar2.bundle.js'%}"></script>
 <script>
     var KTCalendarBasic = function() {
 
@@ -50,52 +50,62 @@ return {
             themeSystem: 'bootstrap',
 
             isRTL: KTUtil.isRTL(),
-
+            
+            locale: 'es',
+            height: 'auto',
+            contentHeight: 'auto',
+            aspectRatio: 'auto',
+            minTime: '7:00',
+            maxTime: '23:59',
+            expandRows: true,
+            defaultView: 'timeGridWeek',
+            firstDay:1,
+            editable: false,
+            eventLimit: false,
+            navLinks: true,
+            displayEventTime: true,
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'timeGridWeek,timeGridDay'
+                right: 'timeGridWeek,timeGridDay',
             },
-
-            height: 1800,
-            contentHeight: 'auto',
-            aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
-
-            views: {
+            validRange: {
+                start: '2021-01-01',
+                end: '2022-12-28'
             },
-            minTime: '7:00',
-            maxTime: '23:59',
-            expandRows: 'true',
-            defaultView: 'timeGridWeek',
             titleFormat: {
                 month: 'long',
                 year: 'numeric',
                 day: 'numeric',
-                locale: 'es',
                 timeZone: 'locale',
             },
-
-            firstDay:1,
-            editable: false,
-            eventLimit: true, // allow "more" link when too many events
-            navLinks: true,
+            slotLabelFormat: [{ 
+                hour: 'numeric',
+                minute: '2-digit',
+                meridiem: false,
+                hour12: false, 
+            },],
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+            },
             events: [
                 {% for rp in roompetition %}
                 {% for me in modulevent %}
                 {% if me.module.start_module == rp.time_start_petition %}
                 {
-                    title: '{{me.event.name_event}}',
-                    start: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{rp.time_start_petition}}',
-                    end: '{{me.day.year}}-{{me.day.month}}-{{me.day.day}} {{rp.time_finish_petition}}',
-                    description: '{{ rp.email_petition }} {{ rp.memo_petition }} Computadores: {{ rp.computer_petition }}',
-                    className: "fc-event-solid-info fc-event-light",
-                    
+                    title: '{{me.petition.event_petition}}',
+                    start: '{{me.day|date:"Y-m-d"}} {{rp.time_start_petition}}',
+                    end: '{{me.day|date:"Y-m-d"}} {{rp.time_finish_petition}}',
+                    description: '',
+                    className: "fc-event-solid-primary fc-event-light",
+                    resourceId:{}
                 },
                 {% endif %}
                 {% endfor %}
                 {% endfor %}
             ],
-            displayEventTime: false,
 
             eventRender: function(info) {
                 var element = $(info.el);
@@ -118,9 +128,8 @@ return {
     }
 };
 }();
-
 jQuery(document).ready(function() {
-KTCalendarBasic.init();
+    KTCalendarBasic.init();
 });
 </script>
 {% endblock %}
