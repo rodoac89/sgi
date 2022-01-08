@@ -149,24 +149,11 @@ def equipment_maintenance(request):
     if request.session['Room'] is not None or 'Room' not in request.session:
         room_obtenido = Room.objects.get(pk =request.session['Room'])
         date_now = date.today()
-        pc = Workstation.objects.all().filter(room=room_obtenido).order_by('name')
-        s = ScheduledReview.objects.get(date_scheduled__date=date_now,room=request.session['Room'])
-        '''if Revision.objects.filter(scheduled_review=s,pc__in=pc).exists():
-            r = Revision.objects.filter(scheduled_review=s,pc__in=pc).values_list('pc',flat=True).distinct()
-        else:
-            nr = Workstation.objects.filter(pc__in=pc).values_list('pc',flat=True).distinct()
-            print (nr)'''                    
-        lnotrev = []
-        for i in pc:
-            if Revision.objects.filter(scheduled_review=s,pc__id=i.id).exists():
-                r = Revision.objects.filter(scheduled_review=s,pc__in=pc).values_list('pc',flat=True).distinct()
-            else:
-                lnotrev.append(i.id)
-                #notrev = Workstation.objects.filter(pc__in=i.id).values_list('id',flat=True).distinct()        
-        prev = Workstation.objects.all().filter(pk__in=r).order_by('name')
-        pnotrev = Workstation.objects.all().filter(pk__in=lnotrev).order_by('name')             
+        review = Revision.objects.filter(scheduled_review=ScheduledReview.objects.get(date_scheduled__date=date_now,room=room_obtenido),pc__in=Workstation.objects.all().filter(room=room_obtenido)).values_list('pc',flat=True).distinct()
+        prev = Workstation.objects.filter(room=room_obtenido,id__in=review).order_by('name')
+        notrev = Workstation.objects.all().filter(room=room_obtenido).exclude(id__in=review).order_by('name') 
         context={
-            'Room': room_obtenido, 'pcnotrev':pnotrev, 'pcrev':prev
+            'Room': room_obtenido, 'pcnotrev':notrev, 'pcrev':prev
         }
         template_name="equipment_maintenance.html"
         return render(request,template_name,context)
