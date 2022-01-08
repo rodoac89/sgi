@@ -18,41 +18,43 @@
         <div class="card-title">
             <h3>CALENDARIO</h3>
         </div>
+        <div class="card-toolbar">
+            <a href="{% url 'reserve_room' %}" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
+                <i class="ki ki-plus icon-md mr-2"></i>Crear solicitud</a>
+        </div>
     </div>
     <div class="card-body">
         <form action="{% url 'calendar_day' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group row">
                 <div class="col-lg-2">
-                    <label>Campus</label>
-                    <select class="form-control datatable-input">
-                        <option type="text" id="Campus"></option>
-                        {% for campus in campus %}
-                        <option type="text" id="Campus">{{ campus.name }}</option>
-                        {% endfor %}
-                    </select>
+					<select class="form-control selectpicker" name="selectedcampus" id="selectedcampus">
+                        <option value="all">Todos</option>
+						{% for c in campus_all %}
+						<option value="{{c.id}}">{{c.name}}</option>
+						{% endfor %}
+					</select>
                 </div>
                 <div class="col-lg-2">
-                    <label>N° Laboratorio</label>
                     <input type="text" class="form-control datatable-input" id="name_lab" onkeyup="Name()"
                         placeholder="Ej: COM123">
                 </div>
                 <div class="col-lg-2">
-                    <label>Computadores</label>
                     <input type="number" class="form-control datatable-input" id="n_pc" onkeyup="PC()"
                         placeholder="Ej: 46">
                 </div>
-                <div class="col-lg-4">
-                    <label>Fecha</label>
+                <div class="col-lg-2">
                     <div class="input-group date">
-                        <input type="text" name="selecteddate" class="form-control" id="kt_datepicker_7" data-date-format="dd/mm/yyyy" readonly="readonly" value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}">
+                        <input type="text" name="selecteddate" class="form-control" id="kt_datepicker_9" data-date-format="dd/mm/yyyy" readonly="readonly" value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}">
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 <i class="la la-calendar"></i>
                             </span>
                         </div>
-                        <button type="submit" name="date_filter">Submit</button>
                     </div>
+                </div>
+                <div class="col-lg-4">
+                    <button type="submit" class="btn btn-light-primary font-weight-bold mb-0" name="date_filter">Submit</button>
                 </div>
             </div>
         </form>
@@ -71,10 +73,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for rm in room_list %}
+                {% for cl in campus_list %}
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>
+                        <h4>{{cl.name}}</h4>
+                    </th>
+                </tr>
+                {% for rm in cl.room_set.all %}
                 <tr data-row="lab{{ rm.id }}" class="datatable-row">
-                    <td data-field="LabName" class="datatable-cell pt-6">
-                        <a type="button" href="{% url 'calendar_week' rm.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ rm }}</a>
+                    <td data-field="LabName" class="datatable-cell pt-8">
+                        <a type="button" href="{% url 'calendar_week' rm.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ rm.room_name }}</a>
                     </td>
                     <td data-field="PC" class="datatable-cell pt-12">
                         <span>{{rm.workstation_set.all.count}}</span>
@@ -82,6 +92,7 @@
                     <td data-field="Schedule" class="datatable-cell-center datatable-cell pt-1"
                         id="schedule-{{rm.id}}"></td>
                 </tr>
+                {% endfor %}
                 {% endfor %}
             </tbody>
         </table>
@@ -94,32 +105,34 @@
     $(document).ready(function () {
         {% for rm in room_list %}
         var color_list = [];
-        color_list.push('#546E7A');
+        var data_event = [];
+        {% for rp in roompetition %}
+        {% if rm == rp.room_petition %}
+        {% for me in modulevent %}
+        {% if me.module.start_module == rp.time_start_petition and me.petition == rp %}
+        data_event.push({
+            name: '{{ rp.event_petition }}',
+            data: [
+                {
+                    x: '{{ rm.room_name }}',
+                    y: [
+                        new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_start_petition.hour}}, {{rp.time_start_petition.minute}}).getTime(),
+                        new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_finish_petition.hour}}, {{rp.time_finish_petition.minute}}).getTime()
+                    ],
+                },
+            ]
+        },)
+        {% if rp.type_petition == 'E' %}
         color_list.push('#E91E63');
+        {% else %}
+        color_list.push('#3F51B5');
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
         var options = {
-            series: [
-            {% for rp in roompetition %}
-            {% if rm == rp.room_petition %}
-            {% for me in modulevent %}
-            {% if me.module.start_module == rp.time_start_petition and me.event.roompetition_event == rp %}
-            {
-                name: '{{ rp.name_petition }}',
-                data: [
-                    {
-                        x: '{{ rm }}',
-                        y: [
-                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_start_petition.hour}}, {{rp.time_start_petition.minute}}).getTime(),
-                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_finish_petition.hour}}, {{rp.time_finish_petition.minute}}).getTime()
-                        ],
-                        
-                    },
-                ]
-            },
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-            {% endfor %}
-            ],
+            series: data_event,
             colors: color_list,
             chart: {
                 id: '{{rm.id}}',
@@ -164,13 +177,8 @@
             },
             dataLabels: {
                 enabled: true,
-                formatter: function (val) {
-                    {% for ev in eventinfo %}
-                    {% if ev.roompetition_event.room_petition == rm %}
-                    var label = '{{ ev.name_event }}'
-                    {% endif %}
-                    {% endfor %}
-                    return label
+                formatter: function(val,obj) {
+                    return obj.w.config.series[obj.seriesIndex].name;
                 },
             },
             fill: {
@@ -211,6 +219,16 @@
     });
 </script>
 <script>
+    $(function() {
+        if (localStorage.getItem('selectedcampus')) {
+            $("#selectedcampus option").eq(localStorage.getItem('selectedcampus')).prop('selected', true);
+        }
+    
+        $("#selectedcampus").on('change', function() {
+            localStorage.setItem('selectedcampus', $('option:selected', this).index());
+        });
+        
+    });
     function Name() {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("name_lab");

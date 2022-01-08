@@ -19,129 +19,64 @@
 <div class="card card-custom gutter-b">
     <div class="card-header">
         <div class="card-title">
-            <a href="/schedules/administrar" class="btn btn-icon btn-light mb-0">
+            <a href="{% url 'manage_request' %}" class="btn btn-icon btn-light mb-0">
                 <i class="flaticon2-back"></i>
             </a>
             <h1 class="mb-0">Administrar petición</h1>
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-xl-4">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b" style="background-position: right top; background-size: 30% auto;">
+            <div class="card-body">
+                <p><a href="#" class="card-title font-weight-bolder font-size-h3">Petición de reserva N°{{ roompetition.id }}</a></p>
+                <p><div class="card-title font-weight-bolder text-info font-size-h4 mb-2">Usuario: {{roompetition.name_petition}}</div></p>
+                <p><div class="card-title font-weight-bolder text-dark-75 text-muted font-size-h5 mb-2">Email: {{roompetition.email_petition}}</div></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div class="card card-custom card-stretch gutter-b">
+            <div class="card-body">
+                <p><div class="card-title font-weight-bolder font-size-h3">Evento: {{ roompetition.event_petition }} - {{ roompetition.get_type_petition_display }}</div></p>
+                <p><div class="card-title font-weight-bolder text-info font-size-h4 mb-2">{{roompetition.memo_petition}}</div></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-4">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b" style="background-position: right top; background-size: 30% auto;">
+            {% if roompetition.recurrence_petition == '01' %}
+            <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Todos los días de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
+            {% elif roompetition.recurrence_petition == '07' %}
+            <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Semanalmente los días {{ roompetition.get_day_petition_display }} de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
+            {% elif roompetition.recurrence_petition == '28' %}
+            <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Mensualmente los días {{ roompetition.get_day_petition_display }} de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="card card-custom gutter-b">
     <div class="card-body">
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group row">
-                <div class="col-lg-4">
-                    <label>{{ formlab.name_petition.label }}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text"><i
-                                    class="la la-user"></i></span>
-                        </div>
-                        {{ formlab.name_petition }}
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <label>{{ formlab.email_petition.label }}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">@</span>
-                        </div>
-                        {{ formlab.email_petition }}
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <label>{{ formlab.nrc_petition.label }}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text"><i
-                                    class="flaticon2-browser"></i></span>
-                        </div>
-                        {{ formlab.nrc_petition }}
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <label for="pc">{{ formlab.computer_petition.label }}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="flaticon2-browser"></i>
-                            </span>
-                        </div>
-                        {{ formlab.computer_petition }}
-                    </div>
-                </div>
+            <div class="col-lg-2">
+                {{ formlab }}
             </div>
-
-            <div class="form-group row">
-                <div class="col-lg-3">
-                    <label>{{ formlab.campus_petition.label }}</label>
-                    {{ formlab.campus_petition }}
-                </div>
-                <div class="col-lg-3">
-                    <label>{{ formlab.room_petition.label }}</label>
-                    {{ formlab.room_petition }}
-                </div>
-                <div class="col-lg-3">
-                    <label>{{ formlab.date_start_petition.label }}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="ki ki-calendar"></i>
-                            </span>
-                        </div>
-                        {{ formlab.date_start_petition }}
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <label>{{ formlab.date_finish_petition.label }}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="ki ki-calendar"></i>
-                            </span>
-                        </div>
-                            {{ formlab.date_finish_petition }}
-                    </div>
-                </div>
+            <div class="login-actions text-right pb-4">
+                <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
             </div>
-            <div class="form-group row">
-                <div class="col-lg-2">
-                    <label>{{ formlab.recurrence.label }}</label>
-                    {{ formlab.recurrence }}
-                </div>
-                <div class="col-lg-2">
-                    <label>{{ formlab.day_petition.label }}</label>
-                    {{ formlab.day_petition }}
-                </div>
-                <div class="col-lg-4">
-                    <label>{{ formlab.time_start_petition.label }}</label>
-                    {{ formlab.time_start_petition }}
-                </div>
-                <div class="col-lg-4">
-                    <label>{{ formlab.time_finish_petition.label }}</label>
-                    {{ formlab.time_finish_petition }}
-                </div>
-
-            </div>
-            <div class="form-group row">
-                <div class="col-lg-12">
-                    <label>{{ formlab.memo_petition.label }}</label>
-                    {{ formlab.memo_petition }}
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="form-group row">
-                    <div class="col-lg-2">
-                        <label>{{ formlab.status_petition.label }}</label>
-                        {{ formlab.status_petition }}
-                    </div>
-                    <div class="col-lg-10">
-                        <div class="login-actions text-right">
-                            <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
-                            <button type="reset" class="btn btn-light-danger btn-lg font-weight-bold">Cancelar</button>
-                        </div>
-                    </div>
-                </div>
+        </form>
+        <form action="" method="get">
+            <div class="login-actions text-right">
+                <button name="DeleteButton" value="{{ roompetition.id }}" class="btn btn-light-danger btn-lg font-weight-bold">Eliminar</button>
             </div>
         </form>
     </div>
 </div>
+
 
 {% endblock %}
 {% block scripts %}
