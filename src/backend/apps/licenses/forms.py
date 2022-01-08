@@ -48,5 +48,5 @@ class EnterLicensesForm(forms.ModelForm):
             "license_stock": "Cantidad de licencias",
             #'license_in_use' : 'Cantidad en uso',
             "license_due_date": "Fecha de caducidad",
-            "license_key": "Key",
+            "license_key": "Instrucciones o claves de licencias",
         }
