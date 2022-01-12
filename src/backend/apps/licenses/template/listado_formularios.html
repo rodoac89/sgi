@@ -1,0 +1,174 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Modulo de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+{% block notificaciones %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+
+
+
+<div class="container">
+	<!--begin::Card-->
+	<div class="card card-custom gutter-b">
+		<div class="card-body">
+
+			<form class=" col-12 navbar-search" method="GET" action="{% url 'licenses:search_form' %}" > 
+				<div class="input-group col-4 justify-content-end" style="float:right; margin-bottom: 2%; ">
+				  <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..." aria-label="Search" aria-describedby="basic-addon2" type="search" name="buscar">
+				  <div class="input-group-append">
+					<button class="btn btn-primary" type="submit">
+					  <i class="fas fa-search fa-sm"></i>
+					</button>
+				  </div>
+				</div>
+			  </form>
+
+
+
+			<!--begin: Datatable-->
+			<table id="example" class="table table-striped table-bordered" style="width:100%">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Estado</th>
+						<th>Fecha de creación</th>
+						<th>Nombre</th>
+						<th>Rut</th>
+						<th>Email</th>
+						<th>Laboratorio</th>
+						<th>Asignatura</th>
+						<th>Nrc</th>
+						<th>Nombre del software</th>
+						<!--<th>Aprobar</th>!-->
+						<th>Detalles</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in solicitudes %}
+					<tr>
+						<td>{{ p.id_request }}</td>
+						<td>{% if p.status == 1 %}
+							<span class="badge badge-info">Ingresada</span>
+							{% elif p.status == 2 %}
+							<span class="badge badge-warning">En proceso</span>
+							{% elif p.status == 3 %}
+							<span class="badge badge-success">Aprobada</span>
+							{% elif p.status == 4 %}
+							<span class="badge badge-danger">Rechazada</span>
+							{% endif %}
+						</td>
+						<td>{{ p.creation_date }}</td>
+						<td>{{ p.name_user }} {{ p.last_name }}</td>
+						<td>{{ p.rut }}</td>
+						<td>{{ p.email }}</td>
+						<td>{{ p.room_name }}</td>
+						<td>{{ p.subject }}</td>
+						<td>{{ p.nrc }}</td>
+						<td>{{ p.software_name }}</td>
+						<!--<td class="text-center">
+							{% if p.status == 2 %}
+							<form method="POST" action="{% url 'licenses:status_form' p.id_request %}">
+								{% csrf_token %}
+								
+							<button href="{% url 'licenses:status_form' p.id_request %}" name="status_request" class="justify-content-center btn btn-success" style="width: 80%;"><i class="fas fa-check"></i></button>
+							</form>
+							{% else %}
+							<form method="POST" action="{% url 'licenses:status_form' p.id_request %}">
+								{% csrf_token %}
+							<button href="{% url 'licenses:status_form' p.id_request %}" name="status_request" class="btn btn-danger" style="width: 80%;"><i class="fas fa-times"></i></button>
+							</form>
+							{% endif %}
+						</td>!-->
+						<td>
+							<form method="get" action="{% url 'licenses:form_info1' %}">
+								{% csrf_token %}
+							<button href="{% url 'licenses:form_info1' %}" value="{{ p.id_request }}" name="id_user" class="btn btn-primary"> Info </button>
+							</form>
+					</tr>
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+			<div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
+			<!--end: Datatable-->
+		</div>
+	</div>
+	<!--end::Card-->
+	<!--begin::Modal-->
+	<div class="modal fade" id="kt_datatable_records_fetch_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Selected Records</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"></span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="kt-scroll" data-scroll="true" data-height="200">
+						<ul id="kt_apps_user_fetch_records_selected"></ul>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--end::Modal-->
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+<script type="text/javascript">
+	function changeIt() {
+		var i = 1;
+		var j = 1;
+		document.get("my_div").innerHTML = "<br><br><input type='text' name='mytext" + i + "' value='pleaseEnter malzeme'><input type='text' name='mytet2" + j + "' value='please quantity'>"
+	}
+	</script>
+	
+{% endblock %}

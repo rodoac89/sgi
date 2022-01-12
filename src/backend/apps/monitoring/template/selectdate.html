@@ -1,0 +1,89 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+
+{% block pagetitle %}Ingresar fechas{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="col-12">
+    <div style="margin-left: auto; margin-right: auto;" class="card col-9  card-custom gutter-b example example-compact">
+    
+        <div class="card-header">
+            <blockquote class="blockquote text-center">
+                <br>
+                <br>
+                <br>
+                <div class="h1">Generar Informes de Reportes</div>    
+                </blockquote>  
+        </div>
+        <div class="form-group mb-8">
+        <div class="alert alert-custom alert-default" role="alert">
+         
+         <div class="alert-text">
+          <p ALIGN="justify">Selecciones el rango de fecha, para mostrar todos los reportes.</p>
+         </div>
+        </div>
+       </div>
+        <div class="form-group">
+            <form action="{% url 'selectdate' %}" method="POST" onsubmit="return validate_form();">
+               {% csrf_token %}
+               <div class="form-group row">
+                <label for="example-date-input" class="col-2 col-form-label">Fecha de Inicio</label>
+                <div class="col-10">
+                    <input class="form-control" {{request.session.start}} name="datestart" type="date" id="datestart" />
+                    <label id="dateestartrror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione una fecha de inicio</span></label> 
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-date-input" class="col-2 col-form-label">Fecha Fin</label>
+                <div class="col-10">
+                    <input class="form-control" {{request.session.dateending}} name="dateending" type="date" id="dateending" />
+                    <label id="dateendingerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione una fecha final</span></label> 
+                </div>
+            </div>
+               <div ALIGN="CENTER"> 
+                
+                <input  type="submit" class="btn btn-primary mr-2" value="Generar informe">
+               </div>
+               
+            </form>
+        </div>    
+    </div>
+
+</div>
+ 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+    function validate_form(){
+
+        var datestart = document.getElementById("datestart").value;
+        var dateending = document.getElementById("dateending").value;
+        if (datestart == ""){
+            dateestartrror.style.display = "block";
+            return false;
+        }
+        else if (dateending == ""){
+            dateendingerror.style.display = "block";
+            return false;
+        }
+    }
+</script>
+{% endblock %}

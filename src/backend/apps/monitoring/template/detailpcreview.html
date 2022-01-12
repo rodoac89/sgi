@@ -1,0 +1,79 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+{% block pagetitle %}Observación de Equipos{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+  display: flex;
+  justify-content: center;
+  
+}
+
+</style>
+<div class="card card-custom" style="border-radius: 5%;">
+    </br>
+    <div class="container">
+         <div class="card-title"> <div class="h3" ALIGN="CENTER">Detalles de la revisión</div>
+    </br>     
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Categoria</th>
+                <th scope="col">Observación</th>
+            </tr>
+         </thead>
+        <tbody>
+            <tr>
+                <td>Monitor</td>
+                <td>{{detail_review.get_monitor_display}}</td>
+            </tr>
+            <tr>
+                <td>Mouse</td>
+                <td>{{detail_review.get_mouse_display}}</td>
+            </tr>
+            <tr>
+                <td>Teclado</td>
+                <td>{{detail_review.get_keyboard_display}}</td>
+            </tr>
+            <tr>
+                <td>CPU</td>
+                <td>{{detail_review.get_cpu_display}}</td>
+            </tr>
+            <tr>
+            
+                <td>Sistema Operativo</td>
+                <td>{{detail_review.get_SO_display}}</td>
+            
+            </tr>
+            <tr>
+                <td>Software</td>
+                <td>{{detail_review.get_software_display}}</td>
+            </tr>
+        </tbody> 
+    </table>
+    
+    </div>
+   
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

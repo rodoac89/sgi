@@ -1,0 +1,255 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Horarios</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Salas</a>
+</li>
+
+{% endblock %}
+{% block content %}
+
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3>CALENDARIO</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="{% url 'calendar_day' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-lg-2">
+                    <label>Campus</label>
+                    <select class="form-control datatable-input">
+                        <option type="text" id="Campus"></option>
+                        {% for campus in campus %}
+                        <option type="text" id="Campus">{{ campus.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                    <label>N° Laboratorio</label>
+                    <input type="text" class="form-control datatable-input" id="name_lab" onkeyup="Name()"
+                        placeholder="Ej: COM123">
+                </div>
+                <div class="col-lg-2">
+                    <label>Computadores</label>
+                    <input type="number" class="form-control datatable-input" id="n_pc" onkeyup="PC()"
+                        placeholder="Ej: 46">
+                </div>
+                <div class="col-lg-4">
+                    <label>Fecha</label>
+                    <div class="input-group date">
+                        <input type="text" name="selecteddate" class="form-control" id="kt_datepicker_7" data-date-format="dd/mm/yyyy" readonly="readonly" value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="la la-calendar"></i>
+                            </span>
+                        </div>
+                        <button type="submit" name="date_filter">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table class="table dataTable dtr-inline text-center" id="kt_datatable" style="width: 1235px;">
+            <thead>
+                <tr role="row">
+                    <th data-field="LabName" class="datatable-cell datatable-cell-sort">
+                        <span>Laboratorio</span>
+                    </th>
+                    <th data-field="PC" class="datatable-cell datatable-cell-sort">
+                        <span>PC</span>
+                    </th>
+                    <th data-field="Schedule" class="datatable-cell-center datatable-cell datatable-cell-sort" style="width: 1000px;">
+                        <span>Horario</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rm in room_list %}
+                <tr data-row="lab{{ rm.id }}" class="datatable-row">
+                    <td data-field="LabName" class="datatable-cell pt-6">
+                        <a type="button" href="{% url 'calendar_week' rm.id %}" class="btn btn-transparent-success font-weight-bold font-size-h4 px-4 py-2">{{ rm }}</a>
+                    </td>
+                    <td data-field="PC" class="datatable-cell pt-12">
+                        <span>{{rm.workstation_set.all.count}}</span>
+                    </td>
+                    <td data-field="Schedule" class="datatable-cell-center datatable-cell pt-1"
+                        id="schedule-{{rm.id}}"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        {% for rm in room_list %}
+        var color_list = [];
+        color_list.push('#546E7A');
+        color_list.push('#E91E63');
+        var options = {
+            series: [
+            {% for rp in roompetition %}
+            {% if rm == rp.room_petition %}
+            {% for me in modulevent %}
+            {% if me.module.start_module == rp.time_start_petition and me.event.roompetition_event == rp %}
+            {
+                name: '{{ rp.name_petition }}',
+                data: [
+                    {
+                        x: '{{ rm }}',
+                        y: [
+                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_start_petition.hour}}, {{rp.time_start_petition.minute}}).getTime(),
+                            new Date({{me.day.year}}, {{me.day.month}}, {{me.day.day}}, {{rp.time_finish_petition.hour}}, {{rp.time_finish_petition.minute}}).getTime()
+                        ],
+                        
+                    },
+                ]
+            },
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+            ],
+            colors: color_list,
+            chart: {
+                id: '{{rm.id}}',
+                type: 'rangeBar',
+                height: 100,
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false,
+                }
+            },
+            tooltip: {
+                enabled: true,
+                followCursor: true,
+                marker: {
+                    show: true,
+                },
+                x: {
+                    show: true,
+                    format: 'HH:mm',
+                },
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    barHeight: '100%',
+                    rangeBarGroupRows: true,
+                    enableShades: true
+                },
+            },
+            xaxis: {
+                type: 'datetime',
+                min: new Date({{selectdate.year}}, {{selectdate.month}}, {{selectdate.day}}, 7, 0).getTime(),
+                max: new Date({{selectdate.year}}, {{selectdate.month}}, {{selectdate.day}}, 23, 59).getTime(),
+                labels: {
+                    datetimeUTC: false,
+                }
+            },
+            yaxis: {
+                show: false,
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    {% for ev in eventinfo %}
+                    {% if ev.roompetition_event.room_petition == rm %}
+                    var label = '{{ ev.name_event }}'
+                    {% endif %}
+                    {% endfor %}
+                    return label
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: 'light',
+                    type: 'vertical',
+                    shadeIntensity: 0.25,
+                    gradientToColors: undefined,
+                    inverseColors: true,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                }
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            responsive: [{
+                options: {},
+            }],
+            legend: {
+                show: false,
+            },
+        };
+        var chart = new ApexCharts(document.querySelector("#schedule-{{rm.id}}"), options);
+        chart.render();
+        {% endfor %}
+    });
+</script>
+<script>
+    function Name() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("name_lab");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("kt_datatable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function PC() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("n_pc");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("kt_datatable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script src="{%static 'js/pages/features/charts/apexcharts.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>
+<script src="{%static 'js/pages/crud/datatables/advanced/column-rendering.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
+{% endblock %}

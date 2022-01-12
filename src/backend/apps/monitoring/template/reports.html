@@ -1,0 +1,125 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+{% block pagetitle %}Reportes Emitidos{% endblock %}
+{% block css %}
+
+{% endblock css %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+<div class="card card-custom">
+    
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title">
+            <h3 class="card-label">Reportes Recibidos
+            <span class="text-muted pt-2 font-size-sm d-block">Se mostrarán todos los reportes emitidos por los usuarios.</span></h3>
+        </div>
+        <div class="col-lg-9 col-xl-8">
+            <div class="row align-items-center">
+            <div class="col-md-4 my-2 my-md-0">
+            <div class="input-icon">
+			<input type="text" class="form-control" placeholder="Buscar" id="search" />
+			<span>
+			<i class="flaticon2-search-1 text-muted"></i>
+			</span>
+			</div>
+			</div>
+            </div>
+        </div>
+        <table  id="table" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">PC</th>
+                    <th scope="col">Lab</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Fecha de Reporte</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reporte in reports %}
+                <tr>
+                    <td>{{reporte.id}}</td>
+                    <td>{{reporte.pc.name}}</td>
+                    <td>{{reporte.pc.room.room_name}}</td>
+                    <td>{{reporte.category}}</td>
+                    <td>{{reporte.date_created}}</td>
+                    {% if reporte.state == "A" %}
+                    <td><span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
+                    {% elif reporte.state == "R" %}
+                    <td><span class="font-weight-bolder label label-xl label-light-warning label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
+                    {% elif reporte.state == "C" %}
+                    <td><span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{reporte.get_state_display}}</span></td>
+                    {% endif %}
+                    <td>
+                        <a href="{% url 'updateticketstate' reporte.id %}" class="btn btn-light-primary font-weight-bold mr-2">Ver</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+            
+        </table>
+        
+{% if reports.has_other_pages %}
+    <ul class="pagination">
+        {% if reports.has_previus %}
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="ki ki-bold-double-arrow-back icon-xs" href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+         <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in reports.paginator.page_range %}
+        {% if reports.number == i %}
+            <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+            <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if reports.has_next %}
+         <li><a class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="ki ki-bold-double-arrow-back icon-xs" href="?page={{ reports.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1" class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+    </div>  
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+    $("#search").keyup(function(){
+    _this = this;
+    $.each($("#table tbody tr"), function() {
+    if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
+    $(this).hide();
+    else
+    $(this).show();
+    });
+    });
+   });
+</script>
+
+
+
+
+
+{% endblock %}
