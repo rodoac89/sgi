@@ -50,7 +50,16 @@
           </div>
         </div>
       </div>
-      {% if rooms %}
+      {% if pc %}
+      <div class="form-group">
+        <div class="h4" style="text-align: left;">Estás reportando el pc: </div>
+        <br>
+        <select id="pc_select" class="form-control-sm custom-select" name="Pc">
+          <option selected value="{{ pc.id }}">{{pc.name}}</option>
+        </select>
+      </div>
+      
+      {% elif campus %}
       <div class="form-group">
         <div class="h4" style="text-align: left;">Selecciona el Campus</div>
         <br>
@@ -79,14 +88,6 @@
         <br>
         <select id="pc_select" class="form-control-sm custom-select" name="Pc">
           <option selected disabled="true"></option>
-        </select>
-      </div>
-      {% else %}
-      <div class="form-group">
-        <div class="h4" style="text-align: left;">Estás reportando el pc: </div>
-        <br>
-        <select id="pc_select" class="form-control-sm custom-select" name="Pc">
-          <option selected value="{{ pc.id }}">{{pc.name}}</option>
         </select>
       </div>
       {% endif %}
@@ -127,22 +128,22 @@
     var expresion = /^[^\s@]+@uandresbello+\.edu+$/;
     var email = document.getElementById("email").value;
     var pc = document.getElementById("pc_select").value;
-    var room = document.getElementById("room_select").value;
+    //var room = document.getElementById("room_select").value;
     var description = document.getElementById("description").value;
-    var campus = document.getElementById('campus_select').value;
+    //var campus = document.getElementById('campus_select').value;
 
     if (!expresion.test(email)) {
       alert("Ingrese un correo valido");
       return false;
     }
-    else if (campus == ""){
+    /*else if (campus == ""){
       alert("Favor de seleccionar un campus de la lista");
       return false;
     }
     else if (room == "") {
       alert("Favor de seleccionar un laboratorio de la lista");
       return false;
-    }
+    }*/
     else if (pc == "") {
       alert("Favor de seleccionar un PC de la lista");
       return false;

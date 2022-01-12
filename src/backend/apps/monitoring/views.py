@@ -7,7 +7,6 @@ from apps.notification.models import Notif
 from django.contrib.auth.models import User as dj_user
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
-from collections import Counter
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta, date
@@ -50,7 +49,6 @@ def form_reports(request, pc = 0):
     if pc != 0:
         context['pc'] = Workstation.objects.get(pk=pc)        
     else:
-        context['rooms'] = Room.objects.all().order_by('room_name')
         context['campus'] = Campus.objects.all().order_by('name')
     template_name = "form_reports.html"
     return render(request,template_name,context)
@@ -297,6 +295,8 @@ def selectdate(request):
         return redirect('generalreports')
     request.session['datestart'] = None
     request.session['dateending'] = None
+    r = TicketReport.objects.all().values_list('pc')
+    w = Workstation.objects.all().filter(id__in=r).values('room__room_name').annotate(count = Count('room'))
     context={}
     template_name = "selectdate.html"
     return render(request,template_name,context)
