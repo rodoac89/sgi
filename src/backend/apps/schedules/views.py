@@ -100,9 +100,9 @@ def manage_request_id(request, id):
         elif status=='A' and roompetition.status_petition!='A':
             delete_event(roompetition)
         return HttpResponseRedirect(reverse('manage_request'))
-    elif request.GET.get('DeleteButton'):
-        RoomPetition.objects.filter(id = request.GET.get('DeleteButton')).delete()
-        return HttpResponseRedirect(reverse('manage_request'))
+    #elif request.GET.get('DeleteButton'):
+        #RoomPetition.objects.filter(id = request.GET.get('DeleteButton')).delete()
+        #return HttpResponseRedirect(reverse('manage_request'))
     context['formlab'] = formroom
     context['roompetition'] = roompetition
     return render(request, template_name, context)
@@ -138,17 +138,54 @@ def delete_event(petition):
 def report_data(request):
     template_name = "report_data.html"
     context = {}
-    selectdate = datetime.today().year
+    event_count = {}
+    taza = {}
+    totalmodule = 0
+    selectdate = datetime.today().strftime("%d/%m/%Y")
+    selectdate2 = datetime.today().strftime("%d/%m/%Y")
+    campus_list = Campus.objects.all().order_by('name')
+    campus_select = Campus.objects.all().order_by('name')
     if request.POST:
-        selectdate = request.POST['selecteddate']
-    campusobj = Campus.objects.all().order_by('name')
-    modulevent = ModuleEvent.objects.filter(day__year=selectdate).order_by('day')
+        selectedcampus = request.POST['selectedcampus']
+        selectdate = datetime.strptime(request.POST['selecteddate'], "%d/%m/%Y").date()
+        selectdate2 = datetime.strptime(request.POST['selecteddate2'], "%d/%m/%Y").date()
+        modulevent = ModuleEvent.objects.filter(day__range=[selectdate, selectdate2]).order_by('day')
+        if selectedcampus != 'all':
+            campus_select = Campus.objects.filter(id=selectedcampus).order_by('name')
+            modulevent = ModuleEvent.objects.filter(day__range=[selectdate, selectdate2], petition__room_petition__campus=selectedcampus).order_by('day')
+    else:
+        selectdate = datetime.strptime(selectdate, "%d/%m/%Y").date()
+        selectdate2 = datetime.strptime(selectdate2, "%d/%m/%Y").date()
+        modulevent = ModuleEvent.objects.filter(day__range=[selectdate, selectdate2]).order_by('day')
     totalevent = modulevent.count()
+    for dt in daterange(selectdate, selectdate2):
+        if dt.weekday() != 6:
+            totalmodule=totalmodule+1
+    totalmodule_range = totalmodule * Module.objects.all().count()
+    room_list = Room.objects.all().order_by('campus', 'room_name')
+    for r in room_list:
+        num = ModuleEvent.objects.filter(day__range=[selectdate, selectdate2], petition__room_petition=r).count()
+        if num == 0:
+            result = 0
+        else:
+            result =  round(Module.objects.all().count() / num,3)
+        taza[r.id] = result
+        event_count[r.id] = ModuleEvent.objects.filter(day__range=[selectdate, selectdate2], petition__room_petition=r).count()
+    context['taza'] = taza
+    context['event_count'] = event_count
     context['totalevent'] = totalevent
+    context['totalmodule_range'] = totalmodule_range
+    context['selectdate2'] = selectdate2
     context['selectdate'] = selectdate
+    context['campus_list'] = campus_list
+    context['campus_select'] = campus_select
+    context['room_list'] = room_list
     context['modulevent'] = modulevent
-    context['campusobj'] = campusobj
     return render(request, template_name, context)
+
+def daterange(date1, date2):
+    for n in range(int ((date2 - date1).days)+1):
+        yield date1 + timedelta(n)
 
 def reserve_room(request):
     template_name = "reserve_room.html"
