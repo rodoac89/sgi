@@ -12,6 +12,9 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta, date
 import time
+from django.conf import settings
+from django.core.mail import send_mail
+from django.urls import reverse
 
 def notificationreport(pc):
     userlist = dj_user.objects.all().values_list('id',flat=True).distinct() 
@@ -45,6 +48,12 @@ def form_reports(request, pc = 0):
         reportes.category = request.POST['category']
         reportes.description = request.POST['description']
         reportes.save()
+        subject = f'[Reporte Generado] Comprobante de ticket generado N°{reportes.id}'
+        message = f"Hola,\nGracias por contactarnos, tu reporte ha sido resivido exitosamente.\nEl número de reporte es: {reportes.id}\nSi deseas ver el estado actual de este ticket, ingresa al siguiente enlace {request.build_absolute_uri(reverse('searchreport', kwargs={}))} y en el campo de búsqueda ingresa el numero correspondiente.\n\n--\nEquipos de Laboratorios"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [reportes.email, ]
+        send_mail( subject, message, email_from, recipient_list )
+        
         notificationreport(reportes.pc)
         return redirect ('gratitude')   
     if pc != 0:
@@ -118,6 +127,11 @@ def updateticketstate(request,id):
         ticket.date_comment = datetime.now()
         ticket.user = dj_user.objects.get(pk = request.user.id)
         ticket.save()
+        subject = f'[Reporte Actualizado] Ticket actualizado N°{ticket.id}'
+        message = f"Hola,\nTe contamos que tu reporte ha recibido una actualización.\nEl número de reporte es: {ticket.id}\nEstado ticket: {ticket.state}\nMensaje publicado el {ticket.date_comment}: {ticket.comment}\nSi deseas ver el estado actual de este ticket, ingresa al siguiente enlace {request.build_absolute_uri(reverse('searchreport', kwargs={}))} y en el campo de búsqueda ingresa el numero correspondiente.\n\n--\nEquipos de Laboratorios"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [ticket.email, ]
+        send_mail( subject, message, email_from, recipient_list )
         return redirect ('reports')
     template_name="updateticketstate.html"
     context = {'report':report}
