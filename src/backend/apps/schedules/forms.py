@@ -8,29 +8,6 @@ from django.forms import ModelForm, Textarea
 from datetime import date, timedelta, datetime
 import time 
 
-def get_room_by_filter():
-    date_current = RoomPetitionForm.date_start_petition
-    date_finish = RoomPetitionForm.date_finish_petition
-    weekDay = RoomPetitionForm.day_petition
-    recurrence_petition = int(RoomPetitionForm.recurrence_petition)
-    modules = Module.objects.filter(start_module__range=(RoomPetitionForm.time_start_petition,RoomPetitionForm.time_finish_petition)).order_by('start_module')
-    #event_dates = [date_start + timedelta(days=x) for x in range((date_finish-date_start).days + 1) if (date_start + timedelta(days=x)).weekday() == time.strptime(weekDay, '%w').tm_wday]
-    event_dates = []
-    while date_current < date_finish:
-        if date_current.weekday() == time.strptime(weekDay, '%w').tm_wday or recurrence_petition == 1:
-            event_dates.append(date_current)
-            date_current = date_current + timedelta(days=recurrence_petition)
-        else:
-            date_current = date_current + timedelta(days=1)
-    module_events = []
-    for ed in event_dates:
-        for m in modules:
-            p = ModuleEvent.objects.filter(module=m, day=ed)
-            module_events.append(p)
-    for me in module_events:
-        selectroom = Room.objects.exclude(RoomPetition_set=me).order_by('campus')
-    return selectroom
-    
 class RoomPetitionForm(forms.ModelForm):
     
     class Meta:

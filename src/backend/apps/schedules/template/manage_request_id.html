@@ -39,22 +39,16 @@
     <div class="col-xl-8">
         <div class="card card-custom card-stretch gutter-b">
             <div class="card-body">
-                <p><div class="card-title font-weight-bolder font-size-h3">Evento: {{ roompetition.event_petition }} - {{ roompetition.get_type_petition_display }}</div></p>
-                <p><div class="card-title font-weight-bolder text-info font-size-h4 mb-2">{{roompetition.memo_petition}}</div></p>
+                <div class="card-title font-weight-bolder font-size-h3">Evento: {{ roompetition.event_petition }} - {{ roompetition.get_type_petition_display }}</div>
+                <p><div class="card-title font-weight-bolder text-info font-size-h4 mb-2">Mensaje: {{roompetition.memo_petition}}</div></p>
+                {% if roompetition.recurrence_petition == '01' %}
+                <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Todos los días de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
+                {% elif roompetition.recurrence_petition == '07' %}
+                <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Semanalmente los días {{ roompetition.get_day_petition_display }} de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
+                {% elif roompetition.recurrence_petition == '28' %}
+                <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Mensualmente los días {{ roompetition.get_day_petition_display }} de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
+                {% endif %}
             </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xl-4">
-        <div class="card card-custom bgi-no-repeat card-stretch gutter-b" style="background-position: right top; background-size: 30% auto;">
-            {% if roompetition.recurrence_petition == '01' %}
-            <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Todos los días de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
-            {% elif roompetition.recurrence_petition == '07' %}
-            <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Semanalmente los días {{ roompetition.get_day_petition_display }} de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
-            {% elif roompetition.recurrence_petition == '28' %}
-            <span class="font-weight-bold text-success font-size-h5 mt-4 mb-2">Mensualmente los días {{ roompetition.get_day_petition_display }} de {{ roompetition.time_start_petition }} a {{ roompetition.time_finish_petition }}</span>
-            {% endif %}
         </div>
     </div>
 </div>
@@ -66,12 +60,7 @@
                 {{ formlab }}
             </div>
             <div class="login-actions text-right pb-4">
-                <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
-            </div>
-        </form>
-        <form action="" method="get">
-            <div class="login-actions text-right">
-                <button name="DeleteButton" value="{{ roompetition.id }}" class="btn btn-light-danger btn-lg font-weight-bold">Eliminar</button>
+                <button type="submit" class="btn btn-light-success btn-lg font-weight-bold" id="kt_sweetalert_demo_3_3">Modificar</button>
             </div>
         </form>
     </div>
