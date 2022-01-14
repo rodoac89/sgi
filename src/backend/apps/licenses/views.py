@@ -7,6 +7,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.utils import timezone
 from .models import LicensesList, SoftwareForm
+from django.core.mail import send_mail
+from django.urls import reverse
 
 
 def home(request):
@@ -74,7 +76,7 @@ class SoftwareRequestView(HttpRequest):
         if request.method == "POST":
             form = SoftwareRequestForm(request.POST)
             if form.is_valid():
-                form.save()
+                form.save()               
                 form = SoftwareRequestForm()
             context = {"form": form}
 
