@@ -126,7 +126,7 @@ def updateticketstate(request,id):
         ticket.user = dj_user.objects.get(pk = request.user.id)
         ticket.save()
         subject = f'[Reporte Actualizado] Ticket actualizado N°{ticket.id}'
-        message = f"Hola,\nTe contamos que tu reporte ha recibido una actualización.\nEl número de reporte es: {ticket.id}\nEstado ticket: {ticket.state}\nMensaje publicado el {ticket.date_comment}: {ticket.comment}\nSi deseas ver el estado actual de este ticket, ingresa al siguiente enlace {request.build_absolute_uri(reverse('searchreport', kwargs={}))} y en el campo de búsqueda ingresa el numero correspondiente.\n\n--\nEquipos de Laboratorios"
+        message = f"Hola,\nTe contamos que tu reporte ha recibido una actualización.\nEl número de reporte es: {ticket.id}\nEstado ticket: {ticket.get_state_display()}\nMensaje publicado el {ticket.date_comment.strftime('%d-%m-%Y') }: {ticket.comment}\n\nSi deseas ver el estado actual de este ticket, ingresa al siguiente enlace {request.build_absolute_uri(reverse('searchreport', kwargs={}))} y en el campo de búsqueda ingresa el numero correspondiente.\n\n--\nEquipos de Laboratorios"
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [ticket.email, ]
         send_mail( subject, message, email_from, recipient_list )
