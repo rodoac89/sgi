@@ -2,17 +2,13 @@ version: "3"
 services:
   
   backend:
-    build: ./backend
+    build: ./src/backend
     image: backend_labsadmin_dev
-    command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0:8000"
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0:8000"
     volumes:
-      - ./backend:/labs/
+      - ./src/backend:/app/
     ports:
       - "8000:8000"
-    environment:
-      HOST: db
-      NAME: laboratorios
-      USER: labuser
-      PASSWORD: labs2021
-      DEV_CHANNEL: 'local'
+    env_file:
+      - config/backend.env
 

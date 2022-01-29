@@ -1,0 +1,70 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Reservar{% endblock %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+{% block content %}
+
+<body>
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <h1>Modificar módulo</h1>
+            </div>
+        </div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <div class="card-body">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label>{{ moduleform.resume_module.label }}</label>
+                        {{ moduleform.resume_module }}
+                    </div>
+                    <div class="col-lg-6">
+                        <label>{{ moduleform.name_module.label }}</label>
+                        {{ moduleform.name_module }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label>{{ moduleform.start_module.label }}</label>
+                        {{ moduleform.start_module }}
+                    </div>
+                    <div class="col-lg-6">
+                        <label>{{ moduleform.finish_module.label }}</label>
+                        {{ moduleform.finish_module }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="login-actions">
+                    <button type="submit" class="btn btn-light-success font-weight-bold" id="kt_sweetalert_demo_3_3">Enviar</button>
+                    <a type="button" href="{% url 'manage_module' %}" class="btn btn-light-danger font-weight-bold">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+{% endblock %}
+{% block scripts %}
+<script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-timepicker.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-sweetalert2.js'%}"></script>
+<script>
+    $("#addmodule").click(function(){
+        
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,287 @@
+{% extends '_partials/_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Modulo de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+{% block notificaciones %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex flex-column-fluid">
+							<!--begin::Container-->
+							<div class="container">
+								<div class="row justify-content-center">
+									<div class="col-8">	
+										<!--begin::Card-->
+										<div class="card card-custom gutter-b example example-compact">
+											<div class="card-header">
+												<h3 class="card-title">Buscador de solicitudes</h3>
+												<div class="card-toolbar">
+													<!--AQUI LOGO UNAB-->
+												</div>
+											</div>
+											<div class="col-12" style="margin-top: 2%;">
+											<!--begin::Form-->
+												
+
+												<div class="card-body row justify-content-center">
+													
+													<div class="form-group row col-12">
+														<label class="col-2 col-form-label">Nombre</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="name_user" value="{{ formulario.name_user }}"  readonly/>
+														</div>
+														<label class="col-2 col-form-label">Apellido</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="last_name" value="{{ formulario.last_name }}" readonly/>
+														</div>
+													</div>
+													<div class="form-group row col-12">
+														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="rut" value="{{ formulario.rut }}" readonly/>
+														</div>
+														<label for="example-search-input" class="col-2 col-form-label">Email</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="email" value="{{ formulario.email }}" readonly/>
+														</div>
+													</div>
+
+													<div class="form-group row fv-plugins-icon-container col-12">
+														<table class="table table-bordered">
+															
+															<thead class="table-dark col-12">
+																<tr>
+																	<th class="" style="width: 70%;">Asignatura</th>
+																	<th class="" style="width: 15%;">Codigo del curso</th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="subject" value="{{ formulario.subject }}" id="example-text-input" readonly/></th>
+																	<th ><input class="form-control" type="text" name="nrc" value="{{ formulario.nrc }}" id="example-text-input"readonly /></th>
+																	
+																</tr>
+
+															</tbody>
+
+															
+
+														</table>
+													</div>
+													<div class="form-group row fv-plugins-icon-container col-12">
+														<label for="">Software a instalar:</label>
+														<table class="table table-bordered">
+															
+															<thead class="table-dark">
+																<tr>
+																	<th class="" style="width: 70%;">Nombre</th>
+																	<th class="" style="width: 20%;">Tipo de licencia</th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" readonly/></th>
+																	<th ><input class="form-control" type="text" name="software_type" value="{{ formulario.software_type }}" id="example-text-input" readonly/></th>
+																</tr>
+
+															</tbody>
+
+														</table>
+													</div>
+
+													<div class="form-group row fv-plugins-icon-container col-8">
+														<table class="table table-bordered">
+															
+															<thead class="table-dark">
+																<tr>
+																	<th>Laboratorio</th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.room_name }}" id="example-text-input" readonly/></th>
+
+																</tr>
+
+															</tbody>
+
+														
+															
+
+														</table>
+
+
+													</div>
+
+													<div class="form-group row fv-plugins-icon-container col-7">
+
+														<table class="table table-bordered">
+																
+															<thead class="table-dark">
+																<tr>
+																	<th>Estado</th>
+																	<th></th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	{% if formulario.status == 1 %}
+																	<th ><span class="badge badge-info">Ingresada</span></th>
+																	{% elif formulario.status == 2 %}
+																	<th ><span class="badge badge-warning">En proceso</span></th>
+																	{% elif formulario.status == 3 %}
+																	<th ><span class="badge badge-success">Aprobada</span></th>
+																	{% elif formulario.status == 4 %}
+																	<th ><span class="badge badge-danger">Rechazada</span></th>
+																	{% endif %}
+																	<th class="text-center">
+																		<form method="POST" action="{% url 'licenses:status_form' formulario.id_request %}">
+																			{% csrf_token %}
+																			<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+																				<button href="" type="button" class="btn btn-success font-weight-bold" data-toggle="modal" data-target="#exampleModal" value="3" name="status">Aprobar</button>
+																				<button href="" type="button" class="btn btn-danger font-weight-bold" data-toggle="modal" data-target="#exampleModal2" value="4" name="status">Rechazar</button>
+																				<button href="" type="button" class="btn btn-warning font-weight-bold" data-toggle="modal" data-target="#exampleModal3" value="2" name="status">En proceso</button>
+																			</div>
+																			<!-- Modals -->
+																			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																				<div class="modal-dialog" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																					<h5 class="modal-title" id="exampleModalLabel">Cambio de estado</h5>
+																					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																						<span aria-hidden="true">&times;</span>
+																					</button>
+																					</div>
+																					<div class="modal-body" style="font-size: 24px;">
+																					¿Esta seguro de aprobar?
+																					</div>
+																					<div class="modal-footer">
+																					<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+																					<button href="" class="btn btn-success font-weight-bold" data-toggle="modal" data-target="#exampleModal" value="3" name="status">Aprobar</button>
+																					</div>
+																				</div>
+																				</div>
+																			</div>
+
+																			<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																				<div class="modal-dialog" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																					<h5 class="modal-title" id="exampleModalLabel">Cambio de estado</h5>
+																					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																						<span aria-hidden="true">&times;</span>
+																					</button>
+																					</div>
+																					<div class="modal-body" style="font-size: 24px;">
+																					¿Esta seguro de rechazar?
+																					</div>
+																					<div class="modal-footer">
+																					<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+																					<button href="" class="btn btn-danger font-weight-bold" data-toggle="modal" data-target="#exampleModal2" value="4" name="status">Rechazar</button>
+																					</div>
+																				</div>
+																				</div>
+																			</div>
+
+																			<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																				<div class="modal-dialog" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																					<h5 class="modal-title" id="exampleModalLabel">Cambio de estado</h5>
+																					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																						<span aria-hidden="true">&times;</span>
+																					</button>
+																					</div>
+																					<div class="modal-body" style="font-size: 24px;">
+																					¿Esta seguro cambiar a en proceso?
+																					</div>
+																					<div class="modal-footer">
+																					<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+																					<button href="" class="btn btn-warning font-weight-bold" data-toggle="modal" data-target="#exampleModal3" value="2" name="status">En proceso</button>
+																					</div>
+																				</div>
+																				</div>
+																			</div>
+																		</form>
+																	</th>
+																</tr>
+
+															</tbody>
+
+														
+															
+
+														</table>
+													</div>	
+
+													<div class="form-group row " style="width: 90%;">
+														<label for="exampleFormControlTextarea1">Detalles: </label>
+														<input class="form-control" id="details" type="text" rows="3" value="{{ formulario.details }}" readonly></input>
+													</div>
+
+													
+													<div class="card-footer">
+													
+														<div class="row justify-content-end">
+															<a href="{% url 'licenses:form_list' %}" class="btn btn-success">Volver</a>
+													
+														</div>
+													</div>
+												
+													
+												</div>
+												
+											
+											</div>
+										</div>
+										<!--end::Card-->
+										</div>
+									
+								</div>
+							</div>
+							<!--end::Container-->
+						</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

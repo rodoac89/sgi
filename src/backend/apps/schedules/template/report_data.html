@@ -1,0 +1,267 @@
+{% extends '_partials/_base.html' %} {% load static %} {% block pagetitle %}Pagina en blanco{% endblock %} {% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+	<a href="" class="text-muted">Horarios</a>
+</li>
+<li class="breadcrumb-item text-muted">
+	<a href="" class="text-muted">Salas</a>
+</li>
+
+{% endblock %} {% block content %}
+<div class="card card-custom gutter-b">
+	<div class="card-body text-center">
+		<h1>Reservas desde el {{selectdate}} hasta el {{selectdate2}}</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-7">
+		<div class="card card-custom gutter-b">
+			<div class="card-header">
+				<div class="card-title">
+					<h2>Información</h2>
+				</div>
+			</div>
+			<div class="card-body">
+				<form action="{% url 'report_data' %}" method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="form-group row">
+						<div class="col-lg-6">
+							<h4>Rango de fecha:</h4>
+							<div class="input-daterange input-group" id="kt_datepicker_8">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											<i class="ki ki-calendar"></i>
+										</span>
+									</div>
+									<input
+										type="text"
+										name="selecteddate"
+										class="form-control"
+										id="kt_datepicker_9"
+										data-date-format="dd/mm/yyyy"
+										value="{{selectdate.day}}/{{selectdate.month}}/{{selectdate.year}}"
+										readonly="readonly"
+									/>
+									<span class="input-group-text"><i class="la la-ellipsis-h"></i></span>
+									<input
+										type="text"
+										name="selecteddate2"
+										class="form-control"
+										id="kt_datepicker_9"
+										data-date-format="dd/mm/yyyy"
+										value="{{selectdate2.day}}/{{selectdate2.month}}/{{selectdate2.year}}"
+										readonly="readonly"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3">
+							<h4>Sala:</h4>
+							<select class="form-control selectpicker" name="selectedcampus" id="selectedcampus">
+								<option value="all">Todos</option>
+								{% for c in campus_list %}
+								<option value="{{c.id}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-lg-3 pt-8">
+							<button type="submit" class="btn btn-light-primary font-weight-bold mb-0" name="date_filter">Buscar</button>
+						</div>
+					</div>
+				</form>
+				<div class="row">
+					<div class="col-lg-6">
+						<h4>Módulos por sala: <span class="font-weight-bolder label label-xl label-outline-primary label-inline py-5 min-w-50px">{{ totalmodule_range }}</span></h4>
+					</div>
+					<div class="col-lg-6">
+						<h4>Módulos reservados: <span class="font-weight-bolder label label-xl label-outline-primary label-inline py-5 min-w-50px">{{ totalevent }}</span></h4>
+					</div>
+				</div>
+				<p><div class="separator separator-solid separator-border-2 separator-success"></div></p>
+				<div class="col-lg-12">
+					<input type="text" class="form-control datatable-input text-center" id="name_lab" onkeyup="Name()"
+						placeholder="Ej: COM123">
+				</div>
+				{% for c in campus_select %}
+				<p><h4 class="text-center pt-8">{{ c.name }}</h4></p>
+				<div id="kt_datatable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+					<div class="row">
+						<div class="col-lg-12">
+							<table class="table table-separate table-head-custom" role="grid" id="table{{c.id}}">
+								<thead>
+									<tr role="row">
+										<th>Nombre de la Sala</th>
+										<th>Modulos reservados</th>
+										<th>Taza</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for r in c.room_set.all %}
+									<tr role="row">
+										<td>
+											{{r.room_name}}
+										</td>
+										{% for key, value in event_count.items %}
+										{% if key == r.id %}
+										<td>{{value}}</td>
+										{% endif %}
+										{% endfor %}
+										{% for key, value in taza.items %}
+										{% if key == r.id %}
+										<td>{{value}}</td>
+										{% endif %}
+										{% endfor %}
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-5">
+		<div class="card card-custom gutter-b">
+			<div class="card-header">
+				<div class="card-title">
+					<h2>Módulos reservados al mes</h2>
+				</div>
+			</div>
+			<div class="card-body" id="chart_donut_year"></div>
+		</div>
+	</div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+	const color = ["#6495ED", "#FF1493", "#1BA39C", "#228B22", "#8B008B", "#B22222", "#1E90FF", "#DAA520", "#2F4F4F", "#FF8C00", "#A52A2A", "#000080"];
+	const primary = '#000080';
+	const label = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+	const series_list = [0,0,0,0,0,0,0,0,0,0,0,0];
+	generateData();
+	function generateData() {
+		{% for me in modulevent %}
+		if({{me.day.month}} == '01'){
+			series_list[0]++;
+		} else if({{me.day.month}} == '02'){
+			series_list[1]++;
+		} else if({{me.day.month}} == '03'){
+			series_list[2]++;
+		} else if({{me.day.month}} == '04'){
+			series_list[3]++;
+		} else if({{me.day.month}} == '05'){
+			series_list[4]++;
+		} else if({{me.day.month}} == '06'){
+			series_list[5]++;
+		} else if({{me.day.month}} == '07'){
+			series_list[6]++;
+		} else if({{me.day.month}} == '08'){
+			series_list[7]++;
+		} else if({{me.day.month}} == '09'){
+			series_list[8]++;
+		} else if({{me.day.month}} == '10'){
+			series_list[9]++;
+		} else if({{me.day.month}} == '11'){
+			series_list[10]++;
+		} else if({{me.day.month}} == '12'){
+			series_list[11]++;
+		}
+		{% endfor %}
+		return series_list;
+	}
+	var KTApexChartsDemo = (function () {
+		var _chartpie_year = function () {
+			const apexChart = "#chart_donut_year";
+			var options = {
+				series: series_list,
+				chart: {
+					width: 480,
+					type: "donut",
+				},
+				labels: label,
+				responsive: [
+					{
+						breakpoint: 480,
+						options: {
+							chart: {
+								width: 200,
+							},
+							legend: {
+								position: "bottom",
+							},
+						},
+					},
+				],
+				plotOptions: {
+					pie: {
+						donut: {
+							labels: {
+								show: true,
+								name: {
+								},
+								value: {
+								}
+							}
+						}
+					}
+				},
+				colors: color,
+			};
+
+			var chart = new ApexCharts(document.querySelector(apexChart), options);
+			chart.render();
+		};
+		return {
+			// public functions
+			init: function () {
+				_chartpie_year();
+			},
+		};
+	})();
+	jQuery(document).ready(function () {
+		KTApexChartsDemo.init();
+	});
+</script>
+<script>
+	$(function() {
+        if (localStorage.getItem('selectedcampus')) {
+            $("#selectedcampus option").eq(localStorage.getItem('selectedcampus')).prop('selected', true);
+        }
+    
+        $("#selectedcampus").on('change', function() {
+            localStorage.setItem('selectedcampus', $('option:selected', this).index());
+        });
+    });
+	function Name() {
+		{% for c in campus_select %}
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("name_lab");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table{{c.id}}");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+		{% endfor %}
+    }
+</script>
+<script src="{%static 'js/pages/features/charts/apexcharts.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>
+<script src="{%static 'js/pages/crud/datatables/advanced/column-rendering.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/select2.js'%}"></script>
+<script src="{%static 'js/pages/crud/datatables/advanced/column-rendering.js'%}"></script>
+<script src="{%static 'plugins/custom/datatables/datatables.bundle.js'%}"></script>
+{% endblock %}
