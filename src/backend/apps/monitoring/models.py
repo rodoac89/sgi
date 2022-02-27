@@ -4,8 +4,10 @@ import os
 
 from django.utils import tree
 from apps.core.models import Workstation, Room
-from django.contrib.auth.models import User as dj_user 
 from simple_history.models import HistoricalRecords
+from django.contrib.auth import get_user_model
+
+dj_user = get_user_model()
 
 class Externuser (models.Model):
     email = models.EmailField(unique=True,max_length=60,blank=False,null=False)
