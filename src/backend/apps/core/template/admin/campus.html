@@ -11,15 +11,17 @@
 {% endblock %}
 
 {% block actions %}
-
+{% if request.user.is_admin %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAddCampus">
 	Agregar campus
 </button>
+{% endif %}
 {% endblock %}
 
 {% block content %}
 {% include "admin/modal_campus.html" %}
 <div class="accordion accordion-solid accordion-panel accordion-svg-toggle" id="accordionCenter">
+	<h2>{{ msg }}</h2>
 	{% for c in camupuses %}
 	<!-- Modal create room-->
 	<div class="modal fade" id="modalAddRoom{{c.id}}" data-backdrop="static" tabindex="-1" role="dialog"
@@ -83,6 +85,7 @@
 		<div id="collapse{{ c.id }}" class="collapse {% if c.id == 1 %}show{% endif %}" data-parent="#accordionCenter">
 			<div class="card-body">
 				<div class="row">
+					{% if request.user.is_chief or request.user.is_admin %}
 					<div class="card primary card-custom col-md-4 text-dark text-hover-primary ">
 						<div class="card-body">
 							<div class="text-center">
@@ -105,6 +108,7 @@
 							</div>
 						</div>
 					</div>
+					{% endif %}
 					{% for r in c.room_set.all %}
 					<!-- Modal create workstation-->
 					<div class="modal fade" id="modalAddWorkstation{{r.id}}" data-backdrop="static" tabindex="-1"
@@ -253,10 +257,12 @@
 											</span>Licencias: {{ r.workstation_set.all.count }}
 										</p>
 										<a href="{% url 'viewroom' r.id %}" class="btn btn-primary">Ver laboratorio</a>
+										{% if request.user.is_admin or request.user.is_chief or request.user.is_staff %}
 										<a href="#" class="btn btn-primary" data-toggle="modal"
 											data-target="#modalAddWorkstation{{r.id}}">
 											Agregar PCs
 										</a>
+										{% endif %}
 									</div>
 								</div>
 							</div>

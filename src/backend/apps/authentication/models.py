@@ -4,8 +4,6 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 class UserManager(BaseUserManager):
     """ User Model Manager """
     def create_user(self, username, email, password=None, is_staff=False, is_admin=False, is_active=True):
-        if not email:
-            raise ValueError('Users must have email Address')
         if not password:
             raise ValueError('User must have Password')
         user_obj = self.model(
@@ -26,7 +24,7 @@ class UserManager(BaseUserManager):
         )
         return user
     
-    def create_superuser(self, username, email, password=None):
+    def create_superuser(self, username, email=None, password=None):
         user = self.create_user(
             username,
             email,
@@ -62,7 +60,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
     
     def __str__(self):
-        return self.username
+        return f'{self.username}'
     
     class Meta:
         ordering = ('-created_at', '-updated_at', )

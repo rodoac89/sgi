@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User as auth_user
-from datetime import datetime
-import os
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Campus(models.Model):
@@ -9,12 +9,10 @@ class Campus(models.Model):
     location_latitude = models.CharField(max_length=50, blank=True, null=True)
     location_longitude = models.CharField(max_length=50, blank=True, null=True)
     active = models.BooleanField(default=True)
-    inactive_by = models.TextField(default="", blank=True, null=True)
+    deleted_by = models.TextField(default="", blank=True, null=True)
+    deleted_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return self.name
-
-    def __unicode__(self):
         return self.name
 
 
@@ -23,14 +21,14 @@ class Room(models.Model):
     campus = models.ForeignKey(
         Campus, on_delete=models.SET_NULL, blank=True, null=True)
     address = models.CharField(max_length=250, blank=True, null=True)
+    chief = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     created_date = models.DateField(auto_now_add=True)
     active = models.BooleanField(default=True)
-    inactive_by = models.TextField(default="")
+    deleted_by = models.TextField(default="")
+    deleted_date = models.DateField(null=True, blank=True)
+    
 
     def __str__(self):
-        return "{} - {}".format(self.campus.name, self.room_name)
-
-    def __unicode__(self):
         return "{} - {}".format(self.campus.name, self.room_name)
 
 
@@ -50,10 +48,8 @@ class Workstation(models.Model):
     room = models.ForeignKey(
         Room, on_delete=models.SET_NULL, blank=True, null=True)
     active = models.BooleanField(default=True)
-    inactive_by = models.TextField(default="")
+    deleted_by = models.TextField(default="")
+    deleted_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return "{}".format(self.name)
-
-    def __unicode__(self):
         return "{}".format(self.name)

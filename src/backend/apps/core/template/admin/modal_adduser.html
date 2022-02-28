@@ -1,0 +1,98 @@
+<!-- Modal create campus-->
+<div class="modal fade" id="modalAddUser" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdrop" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form action="{% url 'add_campus' %}" method="post" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar campus</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Ingrese el nombre del campus</label>
+                    <div class="input-group">
+                        <div class="input-group-append"><span class="input-group-text"><i
+                                    class="la la-group icon-lg"></i></span></div>
+                        <input type="text" name="campusname" class="form-control" placeholder="Nombre campus"
+                            aria-describedby="basic-addon2" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% for u in users %}
+<div class="modal fade" id="modalEditUser{{u.id}}" data-backdrop="static" tabindex="-1" role="dialog"
+                    aria-labelledby="staticBackdrop" aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <form action="#" method="post" class="modal-content">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title">Editar usuario {{ u.get_full_name }}</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>Actualice los datos del usuario</p>
+                                <p>Si desea cambiar la contraseña debe rellenar ambos campos relacionados</p>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <div class="col-lg-4">
+                                            <label>Nombre de usuario:</label>
+                                            <input type="text" class="form-control" name="username" placeholder="username" />
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label>Correo:</label>
+                                            <input type="text" name="email" class="form-control" placeholder="example@example.com" />
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label>Nombre:</label>
+                                            <div class="input-group">
+                                                <input type="text" name="first_name" class="form-control" placeholder="Nombre" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-4">
+                                            <label>Apellidos:</label>
+                                            <div class="input-group">
+                                                <input type="text" name="last_name" value="0" class="form-control" placeholder="Apellidos" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label>Es Colaborador:</label>
+                                            <div class="input-group">
+                                                <input type="checkbox" name="is_staff" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label>Es Jefe de Laboratorio:</label>
+                                            <input type="checkbox" name="is_chief" class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-4">
+                                            <label>Es Administrador:</label>
+                                            <input type="checkbox" name="is_admin" class="form-control"/>
+                                        </div>                                        
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-4">
+                                            <label>Está activo:</label>
+                                            <input type="checkbox" name="is_active" class="form-control"/>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+{% endfor %}

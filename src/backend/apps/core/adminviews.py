@@ -2,7 +2,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from apps.core.models import Campus, Room, Workstation
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 
 @login_required
@@ -11,8 +13,21 @@ def admin_campus(request):
     context={}
     camupuses= Campus.objects.all()
     context['camupuses'] = camupuses
+    context['msg'] = ""
     if camupuses.count() == 0:
-        context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
+        if not request.user.is_admin:
+            context['msg'] = "Solicita al administrador que registre Campus para continuar"
+        else:
+            context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
+    return render(request, template_name, context)
+
+@login_required
+def admin_users(request):
+    template_name = "admin/user_management.html"
+    context={}
+    users= User.objects.all().order_by('id')
+    context['users'] = users
+
     return render(request, template_name, context)
 
 @login_required

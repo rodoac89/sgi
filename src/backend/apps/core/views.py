@@ -24,8 +24,12 @@ def dashboard(request):
     context={}
     camupuses= Campus.objects.all()
     context['camupuses'] = camupuses
+    context['msg'] = ""
     if camupuses.count() == 0:
-        context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
+        if not request.user.is_admin:
+            context['msg'] = "Solicita al administrador que registre Campus para continuar"
+        else:
+            context['msg'] = "Comienza registrando algunos laboratorios desde tu panel de administración"
     return render(request, template_name, context)
 
 
@@ -37,6 +41,7 @@ def viewroom(request, room):
     
         
     return render(request, template_name, context)
+
 
         
 def wizard(request):

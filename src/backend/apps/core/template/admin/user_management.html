@@ -1,0 +1,143 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Usuarios{% endblock %}
+
+{% block title %}Gestión de usuarios{% endblock %}
+
+<!-- TODO: Wat? -->
+
+{% block notificaciones %}
+
+{% endblock %}
+
+{% block actions %}
+{% if request.user.is_admin %}
+<a href="#" class="btn btn-primary font-weight-bolder" data-toggle="modal"
+data-target="#modalAddUser">
+    <span class="svg-icon svg-icon-md">
+        <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <rect x="0" y="0" width="24" height="24" />
+                <circle fill="#000000" cx="9" cy="15" r="6" />
+                <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
+            </g>
+        </svg>
+        <!--end::Svg Icon-->
+    </span>Agregar Usuario</a>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+{% include "admin/modal_adduser.html" %}
+<div class="card card-custom">
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title">
+            <h3 class="card-label">Usuarios registrados
+            <span class="d-block text-muted pt-2 font-size-sm">Gestione los usuarios registrados en el sistema</span></h3>
+        </div>
+        <div class="card-toolbar">
+            <div class="row align-items-center">
+                <div class="col-md-4 my-2 my-md-0">
+                    <div class="input-icon">
+                        <input type="text" class="form-control" placeholder="Filtrar..." id="kt_datatable_search_query" style="width:250px;"/>
+                        <span>
+                            <i class="flaticon2-search-1 text-muted"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>       
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: Datatable-->
+        <table class="datatable datatable-bordered datatable-head-custom" id="kt_datatable">
+            <thead>
+                <tr>
+                    <th title="Field #1">ID</th>
+                    <th title="Field #2">Nombre de usuario</th>
+                    <th title="Field #3">Email</th>
+                    <th title="Field #4">Nombre completo</th>
+                    <th title="Field #5">Permisos</th>
+                    <th title="Field #6">Estado</th>
+                    <th title="Field #7">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                
+                <!-- Modal create campus-->
+                
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.get_full_name }}</td>
+                    <td>{{ u.is_admin }} {{ u.is_staff }} {{ u.is_chief }}</td>
+                    <td>{{ u.is_active }}</td>
+                    <td><a href="#" class="btn btn-warning" data-toggle="modal"
+                        data-target="#modalEditUser{{u.id}}">Editar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var datatable = $('#kt_datatable').KTDatatable({
+        data: {
+          saveState: {cookie: false},
+        },
+        search: {
+          input: $('#kt_datatable_search_query'),
+          key: 'generalSearch',
+        },
+        layout: {
+          class: 'datatable-bordered',
+        },
+        columns: [
+          {
+            field: 'ID',
+            type: 'number',
+          },
+          {
+            field: 'OrderDate',
+            type: 'date',
+            format: 'YYYY-MM-DD',
+          }, {
+            field: 'Estado',
+            title: 'Estado',
+            autoHide: false,
+            // callback function support for column rendering
+            template: function(row) {
+              var status = {
+                True: {
+                  'title': 'Activo',
+                  'class': ' label-light-success',
+                },
+                False: {
+                  'title': 'Eliminado',
+                  'class': ' label-light-danger',
+                },
+              };
+              return '<span class="label font-weight-bold label-lg' + status[row.Estado].class + ' label-inline">' + status[row.Estado].title + '</span>';
+            },
+          },
+        ],
+      });
+  
+      $('#kt_datatable_search_status').on('change', function() {
+        datatable.search($(this).val().toLowerCase(), 'Status');
+      });
+  
+      $('#kt_datatable_search_type').on('change', function() {
+        datatable.search($(this).val().toLowerCase(), 'Type');
+      });
+</script>
+{% endblock %}
