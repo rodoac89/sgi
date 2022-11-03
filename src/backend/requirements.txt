@@ -31,6 +31,7 @@ pylint==2.7.4
 pylint-django==2.4.3
 pylint-plugin-utils==0.6
 pyparsing==2.4.7
+python-dotenv
 pytz==2021.1
 requests==2.25.1
 ruamel.yaml==0.17.4

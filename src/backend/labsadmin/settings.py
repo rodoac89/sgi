@@ -12,10 +12,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATE_FORMAT = 'd/m/Y'
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -191,6 +193,8 @@ sqlite = {
 
 heroku_postgresql = {'default': dj_database_url.config(
     conn_max_age=600, ssl_require=True)}
+
+print(os.getenv('CHANNEL'))
 
 if os.getenv('CHANNEL') == 'local':
     config = sqlite

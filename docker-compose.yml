@@ -4,11 +4,7 @@ services:
   backend:
     build: ./src/backend
     image: backend_labsadmin_dev
-    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0:8000"
     volumes:
       - ./src/backend:/app/
     ports:
       - "8000:8000"
-    env_file:
-      - config/backend.env
-
