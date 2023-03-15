@@ -3,7 +3,7 @@ services:
   
   backend:
     build: ./src/backend
-    image: backend_labsadmin_dev
+    image: backend_labsadmin
     volumes:
       - ./src/backend:/app/
     ports:

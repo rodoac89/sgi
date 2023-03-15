@@ -8,3 +8,4 @@ class Notif(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     url = models.URLField(max_length=200, blank=True)
+

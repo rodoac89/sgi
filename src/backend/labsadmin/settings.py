@@ -12,28 +12,28 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
-from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATE_FORMAT = 'd/m/Y'
-load_dotenv()
+
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qr_5n+&dx%l3-1t)-&m84nw-id707e#@$f9_e*)jdb6*e6ri6+'
+SECRET_KEY = os.getenv('DJANGO_SECRET') if os.getenv('DJANGO_SECRET') is not None else 'django-insecure-qr_5n+&dx%l3-1t)-&m84nw-id707e#@$f9_e*)jdb6*e6ri6+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else True
 
-ALLOWED_HOSTS = ["127.0.0.1", str(os.getenv('URL_HOST'))]
+ALLOWED_HOSTS = ["127.0.0.1" if os.getenv('URL_HOST') is None else os.getenv('URL_HOST')]
 
 
 # Application definition
-9
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -173,35 +173,39 @@ WSGI_APPLICATION = 'labsadmin.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-config = {}
-postgresql = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('NAME'),
-        'USER': os.getenv('USER'),
-        'PASSWORD': os.getenv('PASSWORD'),
-        'HOST': os.getenv('HOST'),
+
+config = {} # This initialize database config
+
+
+HEROKU_DEPLOY = os.getenv('HEROKU_DEPLOY') if os.getenv('HEROKU_DEPLOY') is not None else False
+
+# Depending of "DB_type" this code configure the environment for works with Heroku, Local or Production DB
+# If the environtment it's not configured this project works as "dev mode" that implies works sqlite
+
+if HEROKU_DEPLOY:
+    config = {
+        'default': dj_database_url.config(
+            conn_max_age=600, ssl_require=True)
+        }
+
+elif not DEBUG:
+    config = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('NAME'),
+            'USER': os.getenv('USER'),
+            'PASSWORD': os.getenv('PASSWORD'),
+            'HOST': os.getenv('HOST'),
+        }
     }
-}
-
-sqlite = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-heroku_postgresql = {'default': dj_database_url.config(
-    conn_max_age=600, ssl_require=True)}
-
-print(os.getenv('CHANNEL'))
-
-if os.getenv('CHANNEL') == 'local':
-    config = sqlite
-elif os.getenv('CHANNEL') == 'production':
-    config = postgresql
+    
 else:
-    config = heroku_postgresql
+    config = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
     
 DATABASES = config
 
@@ -261,8 +265,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email settings
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = os.getenv('EMAIL_HOST') if os.getenv('EMAIL_HOST') is not None else ""
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') if os.getenv('EMAIL_USE_TLS') is not None else ""
+EMAIL_PORT = os.getenv('EMAIL_PORT') if os.getenv('EMAIL_PORT') is not None else ""
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') if os.getenv('EMAIL_HOST_USER') is not None else ""
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') if os.getenv('EMAIL_HOST_PASSWORD') is not None else ""
