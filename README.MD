@@ -28,7 +28,7 @@ Dependiendo si usa **Docker**, **CI/CD con Kubernetes** o ejecuta el proyecto de
 
 ``` config
 # Django secret key
-DJANGO_SECRET="secret key" Se debe generar la llave para el backend de Django
+DJANGO_SECRET="secret key" # Se debe generar la llave para el backend de Django
 
 # App name
 APPNAME="Name" # Nombre del servicio
