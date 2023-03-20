@@ -1,0 +1,88 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+
+{% block pagetitle %}Sesiones{% endblock %}
+
+<!-- {% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %} -->
+
+{% block content %}
+
+<div class="col-12">
+    <div style="margin-left: auto; margin-right: auto;" class="card p-5 card-custom gutter-b example example-compact">
+
+        <h1>Sesiones</h1>
+
+        <select id="session-date-select" style="width: 200px" class="form-control ml-auto my-3">
+            <option value="today">Hoy</option>
+            <option value="week">Esta Semana</option>            
+            <option value="month">Este Mes</option>
+        </select>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">PC</th>
+                    <th scope="col">Encendido</th>
+                    <th scope="col">Apagado</th>
+                    <th scope="col">Tiempo</th>
+                </tr>
+            </thead>
+            <tbody id="session-tbody">
+                {% for s in sessions %}
+                <tr>
+                    <td>{{ s.pc }}</td>
+                    <td>{{ s.start }}</td>
+                    <td>{{ s.end }}</td>
+                    <td>{{ s.time }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+    document.getElementById("session-date-select").onchange = (e) => {
+        const { value } = e.target
+        fetch(`{% url "getsessions" %}?option=${value}`)
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById("session-tbody").innerHTML = data.reduce((acc, curr) => {
+                    return acc + 
+                        `<tr>
+                            <td>${curr.pc}</td>
+                            <td>${curr.start}</td>
+                            <td>${curr.end}</td>
+                            <td>${curr.time}</td>
+                        </tr>`
+                }, '')
+            })
+    }
+
+</script>
+
+{% endblock %}

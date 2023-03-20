@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'simple_history',
     'api',
+    'apps.activity',
     'apps.authentication',
     'apps.core',
     'apps.licenses',
@@ -149,6 +150,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             'template',
+            'apps/activity/template',
             'apps/authentication/template',
             'apps/core/template',
             'apps/schedules/template',
