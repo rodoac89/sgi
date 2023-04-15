@@ -27,7 +27,7 @@
 
         <select id="session-date-select" style="width: 200px" class="form-control ml-auto my-3">
             <option value="today">Hoy</option>
-            <option value="week">Esta Semana</option>            
+            <option value="week">Esta Semana</option>
             <option value="month">Este Mes</option>
         </select>
 
@@ -64,15 +64,17 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript" src="https://cdn.rawgit.com/ricmoo/aes-js/e27b99df/index.js"></script>
 
 <script type="text/javascript">
+    // Traer los datos según rango de fecha seleccionado
     document.getElementById("session-date-select").onchange = (e) => {
         const { value } = e.target
         fetch(`{% url "getsessions" %}?option=${value}`)
             .then((response) => response.json())
             .then((data) => {
                 document.getElementById("session-tbody").innerHTML = data.reduce((acc, curr) => {
-                    return acc + 
+                    return acc +
                         `<tr>
                             <td>${curr.pc}</td>
                             <td>${curr.start}</td>
@@ -81,6 +83,83 @@
                         </tr>`
                 }, '')
             })
+    }
+
+
+    const webSocketUrl = "ws://127.0.0.1:8000/ws/activity/enc/" +
+        encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")
+
+    connectWebSocket(webSocketUrl,
+        () => { },
+        () => { },
+        () => { },
+        () => { })
+
+    function connectWebSocket(url, onOpen, onClose, onMessage, onError) {
+        const socket = new WebSocket(url)
+
+        // Función que se ejecuta cuando se establece la conexión con éxito
+        socket.onopen = (event) => {
+            console.log('Conexión WebSocket establecida')
+            if (onOpen) {
+                onOpen(event)
+            }
+        }
+
+        // Función que se ejecuta cuando se cierra la conexión
+        socket.onclose = (event) => {
+            console.log('Conexión WebSocket cerrada')
+            if (onClose) {
+                onClose(event)
+            }
+        }
+
+        // Función que se ejecuta cuando se recibe un mensaje del servidor
+        socket.onmessage = (event) => {
+            console.log('Mensaje recibido:', event.data)
+            if (onMessage) {
+                onMessage(event)
+            }
+        }
+
+        // Función que se ejecuta cuando se produce un error en la conexión
+        socket.onerror = (event) => {
+            console.error('Error de WebSocket:', event)
+            if (onError) {
+                onError(event)
+            }
+        }
+
+        function chat_message() {
+            print("chat-msg")
+        }
+
+        return socket
+    }
+
+    function encryptAES(plaintext, key) {
+        // Agregar padding al texto para que calce con los 16 bits que pide CBC
+        const paddingLength = 16 - (plaintext.length % 16) // Longitud del padding
+        const padding = String.fromCharCode(paddingLength).repeat(paddingLength) // Crea el padding con el byte de relleno
+        plaintext = plaintext + padding
+
+        // Convertimos la clave y el IV a buffers
+        key = new TextEncoder().encode(key)
+        iv = new Uint8Array(16)
+
+        // Convertimos el texto plano a un Uint8Array
+        plaintext = new TextEncoder().encode(plaintext)
+
+        // Creamos una instancia de AES-256-CBC
+        const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
+
+        // Encriptamos el texto plano
+        const encryptedBytes = aesCbc.encrypt(plaintext)
+
+        // Convertimos el resultado en un string Base64
+        const encryptedBase64 = btoa(String.fromCharCode.apply(null, encryptedBytes))
+
+        return encryptedBase64
     }
 
 </script>
