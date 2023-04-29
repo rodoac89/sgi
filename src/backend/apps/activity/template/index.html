@@ -1,0 +1,277 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+
+{% block pagetitle %}Actividad{% endblock %}
+
+{% block content %}
+
+<div class="col-12">
+    <div style="margin-left: auto; margin-right: auto;" class="card p-5 card-custom gutter-b example example-compact">
+
+        <h1>Actividad</h1>
+
+        <form style="gap: 10px" class="my-5 d-flex justify-content-end">
+            <div class="form-group">
+                <label for="campus-select">Campus</label>
+                <select id="campus-select" style="width: 200px" class="form-control">
+                    {% if campuses|length > 1 %}
+                    <option value="">Todos</option>
+                    {% endif %}
+                    {% for campus in campuses %}
+                    <option value="{{ campus.id }}" {% if forloop.first %}selected{% endif %}>{{ campus.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="room-select">Room</label>
+                <select id="room-select" value="{{ rooms.0.id }}" style="width: 200px" class="form-control">
+                    {% if rooms|length > 1 %}
+                    <option value="">Todos</option>
+                    {% endif %}
+                    {% for room in rooms %}
+                    <option value="{{ room.id }}" {% if forloop.first %}selected{% endif %}>{{ room.room_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-0 form-group">
+                <label for="ws-select">Workstation</label>
+                <select id="ws-select" style="width: 200px" class="form-control">
+                    {% if workstations|length > 1 %}
+                    <option value="">Todos</option>
+                    {% endif %}
+                    {% for ws in workstations %}
+                    <option value="{{ ws.id }}" {% if forloop.first %}selected{% endif %}>{{ ws.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="gran-select">Granularidad</label>
+                <select id="gran-select" style="width: 200px" class="form-control">
+                    <option value="hourly">Horaria</option>
+                    <option value="daily" selected>Diaria</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="monthly">Mensual</option>
+                    <option value="yearly">Anual</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="campus-select">Fecha</label>
+                <button id="date-picker" type="button" style="width: 200px" class="form-control">Ultimos 30 Dias</button>
+            </div>            
+
+            <button id="submit-chart" type="button" style="width: 100px; height: 38.5px;" class="ml-5 mt-auto mb-7 btn btn-primary">
+                GRAFICAR
+            </button>
+        </form>
+
+
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">PC</th>
+                    <th scope="col">Encendido</th>
+                    <th scope="col">Apagado</th>
+                    <th scope="col">Tiempo</th>
+                </tr>
+            </thead>
+            <tbody id="session-tbody">
+                {% for s in sessions %}
+                <tr>
+                    <td>{{ s.pc }}</td>
+                    <td>{{ s.start }}</td>
+                    <td>{{ s.end }}</td>
+                    <td>{{ s.time }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<script>
+    const campusSelect = document.getElementById("campus-select")
+    const roomSelect = document.getElementById("room-select")
+    const wsSelect = document.getElementById("ws-select")
+    const granSelect = document.getElementById("gran-select")
+    const datePicker = document.getElementById("date-picker")
+    const submit = document.getElementById("submit-chart")
+
+    const handleSelect = (e) => {
+        const target = e.target.id
+        const { value } = e.target
+        let error = false
+        if (value === "") {
+            if (target === "campus-select") {
+                roomSelect.value = ""
+                roomSelect.innerHTML = ""
+            }
+            if (target === "campus-select" || target === "room-select") {
+                wsSelect.value = ""
+                wsSelect.innerHTML = ""
+            }
+            return
+        }
+
+        const params = campusSelect.value === ""
+            ? ""
+            : `?campus=${campusSelect.value}${roomSelect.value && `&room=${roomSelect.value}`}`
+
+        fetch(`{% url "getoptions" %}${params}`)
+            .then((response) => {
+                if (response.status > 299) {
+                    error = true
+                    if (target === "campus-select") {
+                        roomSelect.value = ""
+                        roomSelect.innerHTML = ""
+                    }
+                    if (target === "campus-select" || target === "room-select") {
+                        wsSelect.value = ""
+                        wsSelect.innerHTML = ""
+                    }
+                    return
+                }
+                return response.json()
+            })
+            .then((data) => {
+                if (error) return
+                if (target === "campus-select") {
+                    roomSelect.innerHTML = (data.rooms.length > 1 ? "<option value=''>Todos</option>" : "") +
+                        data.rooms.reduce((acc, curr) => acc +
+                            `<option value="${curr.id}">${curr.room_name}</option>`,
+                            '')
+                    if (data.rooms.length > 1) roomSelect.value = data.rooms[0].id
+                }
+                if (target === "campus-select" || target === "room-select") {
+                    wsSelect.innerHTML = (data.workstations.length > 1 ? "<option value=''>Todos</option>" : "") +
+                        data.workstations.reduce((acc, curr) => acc +
+                            `<option value="${curr.id}">${curr.name}</option>`,
+                            '')
+                    if (data.workstations.length > 1) wsSelect.value = data.workstations[0].id
+                }
+            })
+    }
+
+    campusSelect.onchange = handleSelect
+    roomSelect.onchange = handleSelect
+
+    $('#date-picker').daterangepicker({
+        alwaysShowCalendars: true,
+        showDropdowns: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,        
+        ranges: {
+            "Hoy": [moment().startOf("day"), moment()],
+            "Ayer": [moment().subtract(1, "days").startOf("day"), moment().subtract(1, "days").endOf("day")],
+            "Ultima Semana": [moment().subtract(6, "days"), moment()],
+            "Ultimos 30 Dias": [moment().subtract(29, "days"), moment()],
+            "Este Mes": [moment().startOf("month"), moment()],
+            "Mes Pasado": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+        },
+        locale: {
+            format: "DD/MM/YYYY",
+            separator: " - ",
+            applyLabel: "Aceptar",
+            cancelLabel: "Cancelar",
+            fromLabel: "Desde",
+            toLabel: "Hasta",
+            customRangeLabel: "Personalizado",
+            weekLabel: "Semana",
+            daysOfWeek: [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            monthNames: [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            firstDay: 1
+        },
+        linkedCalendars: false,
+        startDate: moment().subtract(29, "days"),
+        endDate: moment(),
+        opens: "left"
+    }, (start, end, label) => { datePicker.innerHTML = label });
+
+    const makeChart = (e) => {
+        const { startDate, endDate } = $('#date-picker').data('daterangepicker');
+        const params = {
+            granularity: granSelect.value,
+            start: startDate.valueOf(),
+            end: endDate.valueOf()
+        }
+        if (campusSelect.value !== "") params.campus = campusSelect.value
+        if (roomSelect.value !== "") params.room = roomSelect.value
+        if (wsSelect.value !== "") params.ws = wsSelect.value
+
+        fetch(`{% url "getchart" %}?` + new URLSearchParams(params))
+            .then((response) => {
+                if (response.status > 299) error = true
+                return response.json()
+            })
+            .then((data) => {
+                console.log(data)
+            })
+    }
+
+    submit.onclick = makeChart
+
+
+
+    // Traer los datos según rango de fecha seleccionado
+    // document.getElementById("session-date-select").onchange = (e) => {
+    //     const { value } = e.target
+    //     fetch(`{% url "getsessions" %}?option=${value}`)
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             document.getElementById("session-tbody").innerHTML = data.reduce((acc, curr) => {
+    //                 return acc +
+    //                     `<tr>
+    //                         <td>${curr.pc}</td>
+    //                         <td>${curr.start}</td>
+    //                         <td>${curr.end}</td>
+    //                         <td>${curr.time}</td>
+    //                     </tr>`
+    //             }, '')
+    //         })
+    // }
+
+</script>
+
+{% endblock %}

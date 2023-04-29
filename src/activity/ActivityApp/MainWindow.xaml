@@ -1,0 +1,67 @@
+﻿<Window x:Class="ActivityApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ActivityApp"
+        mc:Ignorable="d"
+        SizeToContent="Width"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen">
+    <Border BorderBrush="Transparent" BorderThickness="25">
+        <Grid Width="800">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock
+                Text="ALERTA DE INACTIVIDAD!"
+                TextAlignment="Center" 
+                VerticalAlignment="Center"
+                FontSize="28"             
+                FontWeight="Bold"/>
+            <Image 
+                Grid.Row="1"
+                Grid.RowSpan="5"
+                Source="C:\Users\fperez\Downloads\undraw_loading.png"/>
+            <TextBlock 
+                Text="El computador se apagará en breves, presiona Cancelar para prevenirlo." 
+                Grid.Row="6"
+                Width="500"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center" 
+                TextWrapping="Wrap"
+                TextAlignment="Justify"
+                FontFamily="Asap"
+                FontSize="20"/>
+            
+            <Grid Grid.Row="8" Width="600">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    x:Name="Btn_Sutdown"
+                    Click="Btn_Shutdown_Click"
+                    Style="{StaticResource ButtonTheme}"
+                    Content="Apagar"/>
+
+                <Button
+                    x:Name="Btn_Cancel"
+                    Click="Btn_Cancel_Click"
+                    Grid.Column="1"
+                    Style="{StaticResource ButtonTheme}"
+                    Content="Cancelar"/>
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>

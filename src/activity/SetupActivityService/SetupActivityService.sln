@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SetupActivityService", "SetupActivityService.wixproj", "{24FA3E3E-57E7-42C6-B003-18302FB32817}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24FA3E3E-57E7-42C6-B003-18302FB32817}.Debug|x86.ActiveCfg = Debug|x86
+		{24FA3E3E-57E7-42C6-B003-18302FB32817}.Debug|x86.Build.0 = Debug|x86
+		{24FA3E3E-57E7-42C6-B003-18302FB32817}.Release|x86.ActiveCfg = Release|x86
+		{24FA3E3E-57E7-42C6-B003-18302FB32817}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {492BA87A-E21B-46E7-906F-E95698B1AA9E}
+	EndGlobalSection
+EndGlobal

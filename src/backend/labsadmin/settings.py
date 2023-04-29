@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ["127.0.0.1" if os.getenv('URL_HOST') is None else os.getenv('UR
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -96,8 +97,19 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-#CORS_ORIGIN_WHITELIST = ['https://example.com']
+# Channels configuration
+ASGI_APPLICATION = 'labsadmin.asgi.application'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(os.getenv('REDIS_URL'), 6379)],
+        },
+    },
+}
+
+#CORS_ORIGIN_WHITELIST = ['https://example.com']
 
 ROOT_URLCONF = 'labsadmin.urls'
 
