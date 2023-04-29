@@ -97,3 +97,6 @@ def decryptAES(ciphertext, key):
 def validateWorkstationByRegex(workStation):
     regex = r"[A-Z][0-9]-[A-Z]{3}[0-9]{3}PC[0-9]{2}"
     return re.fullmatch(regex, workStation)
+
+def formatTimestamp(timestamp):
+    return datetime.fromtimestamp(timestamp / 1000).strftime("%H:%M:%S  %d/%m/%Y")
