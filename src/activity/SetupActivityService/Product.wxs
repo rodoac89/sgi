@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="ActivityService" Language="1033" Version="1.0.0.0" Manufacturer="fperez" UpgradeCode="9f5f9c10-8214-434c-b4df-aa6026e0c198">
+		<Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine" />
+
+		<Media Id='1' Cabinet='ActivityService.cab' EmbedCab='yes' />
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id='ProgramFilesFolder'>
+				<Directory Id='fperez' Name='fperez'>
+					<Directory Id='INSTALLDIR' Name='ActivityService'>
+						<Component Id='ActivityService' Guid='1a277164-5e3b-41eb-bb4b-f0109d938a57'>
+							<File Id="ActivityServiceExe" Name="ActivityService.exe" DiskId="1" Source="C:\Users\fperez\Documentos\proyectos\ActivityService\bin\Debug\"/>
+							<ServiceInstall Id="ServiceInstaller" Name="ActivityService" DisplayName="ActivityService" Description="Servicio para monitorear actividad de computadores" Start="auto" Type="ownProcess" ErrorControl="normal" Account="LocalSystem"/>
+							<ServiceControl Id="StartService" Name="ActivityService" Start="install" Wait="no"/>
+							<ServiceControl Id="StopService" Name="ActivityService" Stop="uninstall" Remove="uninstall" Wait="yes"/>
+							<ServiceConfig ServiceName="ActivityService" OnInstall="yes" DelayedAutoStart="no"/>
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+
+		<Feature Id='ActivityServiceFeature' Title='ActivityServiceFeature' Level='1'>
+			<ComponentRef Id='ActivityService' />
+		</Feature>
+
+	</Product>
+</Wix>
