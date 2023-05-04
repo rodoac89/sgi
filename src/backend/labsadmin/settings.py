@@ -191,18 +191,18 @@ WSGI_APPLICATION = 'labsadmin.wsgi.application'
 config = {} # This initialize database config
 
 
-HEROKU_DEPLOY = os.getenv('HEROKU_DEPLOY') if os.getenv('HEROKU_DEPLOY') is not None else False
+DEFAULT_DEPLOY = os.getenv('DEFAULT_DEPLOY') if os.getenv('DEFAULT_DEPLOY') is not None else ""
 
 # Depending of "DB_type" this code configure the environment for works with Heroku, Local or Production DB
 # If the environtment it's not configured this project works as "dev mode" that implies works sqlite
 
-if HEROKU_DEPLOY:
+if DEFAULT_DEPLOY == "heroku":
     config = {
         'default': dj_database_url.config(
             conn_max_age=600, ssl_require=True)
         }
 
-elif not DEBUG:
+elif DEFAULT_DEPLOY == "production":
     config = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
