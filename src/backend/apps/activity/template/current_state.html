@@ -22,7 +22,7 @@
                 {% for room in rooms %}
                 <option value="{{ room.id }}">{{ room.room_name }}</option>
                 {% endfor %}
-            </select>            
+            </select>
         </div>
 
         <div id="ws-container" class="p-10 d-flex flex-wrap justify-content-center">
@@ -55,8 +55,7 @@
 
 <script type="text/javascript">
     // Conectar WebSocket
-    const webSocketUrl = "ws://127.0.0.1:8000/ws/activity/enc/" +
-        encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")
+    const webSocketUrl = `ws://${window.location.host}/ws/activity/enc/${encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")}`
     connectWebSocket(webSocketUrl,
         () => { },
         () => { },
