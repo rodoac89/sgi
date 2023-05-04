@@ -20,7 +20,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 "type": "workstation.handshake",
-                "pc": dec,
+                "workstation": dec,
                 "channel": self.channel_name
             },
         )
@@ -36,6 +36,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def workstation_handshake(self, event):
         self.send(text_data=json.dumps({
-            "pc": event["pc"],
+            "workstation": event["workstation"],
             "channel": event["channel"]
         }))

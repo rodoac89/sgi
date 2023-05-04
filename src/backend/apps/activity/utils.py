@@ -5,13 +5,16 @@ from datetime import datetime, timedelta
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
+def formatTimestamp(timestamp):
+    return datetime.fromtimestamp(timestamp / 1000).strftime("%H:%M:%S  %d/%m/%Y")
+
 def getSessionsBetweenTimestamps(gte, lte):
     if gte is None or lte is None:
-        sessions = Session.objects.all().order_by("pc", "start").prefetch_related("pc")
+        sessions = Session.objects.all().order_by("workstation", "start").values()
     else:
         if gte > lte:
             return None
-        sessions = Session.objects.filter(start__gte=gte, start__lte=lte).order_by("pc", "start").prefetch_related("pc")
+        sessions = Session.objects.filter(start__gte=gte, start__lte=lte).order_by("workstation", "start").values()
     return sessions
 
 def getTimestamp(dt):
@@ -57,7 +60,6 @@ def getSessionsByOption(option):
     gte, lte = timestamps
     return getSessionsBetweenTimestamps(gte, lte)
 
-
 def formatSessions(sessions):
     for s in sessions:
         if (s.end is not None):
@@ -69,17 +71,6 @@ def formatSessions(sessions):
             s.end = "Activo"
         s.start = datetime.fromtimestamp(s.start / 1000).strftime("%d/%m/%Y - %H:%M:%S")
     return sessions
-
-def sessionsToJson(sessions):
-    def sessionToJson(session):
-        s = {}
-        s["pc"] = session.pc.name
-        s["start"] = session.start
-        s["end"] = session.end
-        s["time"] = session.time
-        return s        
-
-    return list(map(sessionToJson, sessions))
 
 def decryptAES(ciphertext, key):
     key = key.encode("utf-8")
@@ -97,6 +88,3 @@ def decryptAES(ciphertext, key):
 def validateWorkstationByRegex(workStation):
     regex = r"[A-Z][0-9]-[A-Z]{3}[0-9]{3}PC[0-9]{2}"
     return re.fullmatch(regex, workStation)
-
-def formatTimestamp(timestamp):
-    return datetime.fromtimestamp(timestamp / 1000).strftime("%H:%M:%S  %d/%m/%Y")

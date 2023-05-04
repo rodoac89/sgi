@@ -12,7 +12,7 @@
         <h1>Estado Actual</h1>
 
         <div class="d-flex justify-content-end">
-            <select id="campus-select" style="width: 200px" class="form-control mr-4">
+            <select id="campus-select" style="width: 200px;" class="form-control mr-4">
                 {% for campus in campuses %}
                 <option value="{{ campus.id }}">{{ campus.name }}</option>
                 {% endfor %}
@@ -52,6 +52,7 @@
 
 {% block scripts %}
 <script type="text/javascript" src="https://cdn.rawgit.com/ricmoo/aes-js/e27b99df/index.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
 <script type="text/javascript">
     // Conectar WebSocket
@@ -70,7 +71,9 @@
     const handleRoomChange = (e) => {
         const target = e.target.id
         let error = false
-        fetch(`{% url "getstate" %}?campus=${campusSelect.value}${roomSelect.value && `&room=${roomSelect.value}`}`)
+        const params = { campus: campusSelect.value }
+        if (roomSelect.value) params.room = roomSelect.value
+        fetch("{% url 'getstate' %}?" + new URLSearchParams(params))
             .then((response) => {
                 if (response.status > 299) error = true
                 return response.json()
@@ -83,25 +86,25 @@
                     if (target === "campus-select")
                         roomSelect.innerHTML = data.rooms.reduce((acc, curr) => acc +
                             `<option value="${curr.id}">${curr.room_name}</option>`,
-                            '')
+                            "")
                     wsContainer.innerHTML = Object.entries(data.workstations).reduce((acc, curr) => {
-                        const [pc, info] = curr
+                        const [workstation, info] = curr
                         return acc + `
                         <div style="width: 250px; height: 200px;" class="d-flex">
 
                             <div style="width: 200px; height: 150px;"
                                 class="py-5 d-flex flex-column align-items-center border border-5 rounded ${info && !info.end && "border-success"}">
-                                <h6 class="mb-5">${pc}</h6>
+                                <h6 class="mb-5">${workstation}</h6>
                                 ${info
-                                ? ` <p>Inicio: ${info.start}</p>
-                                    <p>Fin: ${info.end || "Encendido"}</p> `
+                                ? ` <p>Inicio: ${moment(info.start).format("HH:mm:ss DD/MM/YYYY")}</p>
+                                    <p>Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY") || "Encendido"}</p> `
                                 : `<p>No hay historial</p>`
-                            }
+                                }
                             </div>
 
                         </div>
                         `
-                    }, '')
+                    }, "")
                 }
             })
     }
@@ -116,7 +119,7 @@
 
         // Función que se ejecuta cuando se establece la conexión con éxito
         socket.onopen = (event) => {
-            console.log('Conexión WebSocket establecida')
+            console.log("Conexión WebSocket establecida")
             if (onOpen) {
                 onOpen(event)
             }
@@ -124,7 +127,7 @@
 
         // Función que se ejecuta cuando se cierra la conexión
         socket.onclose = (event) => {
-            console.log('Conexión WebSocket cerrada')
+            console.log("Conexión WebSocket cerrada")
             if (onClose) {
                 onClose(event)
             }
@@ -132,7 +135,7 @@
 
         // Función que se ejecuta cuando se recibe un mensaje del servidor
         socket.onmessage = (event) => {
-            console.log('Mensaje recibido:', event.data)
+            console.log("Mensaje recibido:", event.data)
             if (onMessage) {
                 onMessage(event)
             }
@@ -140,7 +143,7 @@
 
         // Función que se ejecuta cuando se produce un error en la conexión
         socket.onerror = (event) => {
-            console.error('Error de WebSocket:', event)
+            console.error("Error de WebSocket:", event)
             if (onError) {
                 onError(event)
             }
@@ -159,20 +162,20 @@
         const padding = String.fromCharCode(paddingLength).repeat(paddingLength) // Crea el padding con el byte de relleno
         plaintext = plaintext + padding
 
-        // Convertimos la clave y el IV a buffers
+        // Convertir la clave y el IV a buffers
         key = new TextEncoder().encode(key)
         iv = new Uint8Array(16)
 
-        // Convertimos el texto plano a un Uint8Array
+        // Convertir el texto plano a un Uint8Array
         plaintext = new TextEncoder().encode(plaintext)
 
-        // Creamos una instancia de AES-256-CBC
+        // Crear una instancia de AES-256-CBC
         const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
 
-        // Encriptamos el texto plano
+        // Encriptar el texto plano
         const encryptedBytes = aesCbc.encrypt(plaintext)
 
-        // Convertimos el resultado en un string Base64
+        // Convertir el resultado en un string Base64
         const encryptedBase64 = btoa(String.fromCharCode.apply(null, encryptedBytes))
 
         return encryptedBase64
