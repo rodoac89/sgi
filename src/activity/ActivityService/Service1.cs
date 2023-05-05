@@ -11,6 +11,7 @@ namespace ActivityService
     using System.Text;
     using System.Security.Cryptography;
     using System.Timers;
+    using Microsoft.Win32;
 
     public partial class Service1 : ServiceBase
     {
@@ -18,17 +19,18 @@ namespace ActivityService
         private readonly string LOG_SOURCE = "ActivityLogSource";
         private readonly string LOGGER_NAME = "ActivityLog";
         // private readonly string workstation = Environment.MachineName;
-        private static readonly string HOST = "127.0.0.1:8000";
+        //private static readonly string HOST = "127.0.0.1:8000";
+        private static string HOST = "127.0.0.1:8000";
         //private static readonly string HOST = "labsadmin.vulpinesoft.net";
         private readonly string WORKSTATION = "A1-COM103PC03";        
-        private readonly string API_BASE_URI = $"http://{HOST}/api/";
+        private string API_BASE_URI = $"http://{HOST}/api/";
         private readonly string START_ENDPOINT = "activity/session/start";
-        private readonly string WEBSOCKET_BASE_URI = $"ws://{HOST}/";
+        private readonly string END_ENDPOINT = "activity/session/end";
+        private string WEBSOCKET_BASE_URI = $"ws://{HOST}/";
         private readonly string WEBSOCKET_ENDPOINT = "ws/activity/enc/";
         private readonly string WEBSOCKET_SECRET = "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w";
 
         public static IntPtr WTS_CURRENT_SERVER_HANDLE = IntPtr.Zero;
-
         
         private readonly EventLog eventLog;
         static readonly HttpClient httpClient = new HttpClient();
@@ -36,9 +38,23 @@ namespace ActivityService
         private Timer aliveTimer;
         private long startTimestamp;
 
+
         public Service1()
         {
             InitializeComponent();
+
+            RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\ActivityService\\Values");
+            if (key != null )
+            {
+                object registeredHost = Registry.LocalMachine.GetValue("Host");
+                if ( registeredHost != null )
+                {
+                    HOST = registeredHost.ToString();
+                    API_BASE_URI = $"http://{HOST}/api/";
+                    WEBSOCKET_BASE_URI = $"ws://{HOST}/";
+                }
+                key.Close();
+            }            
 
             startTimestamp = GetCurrentTimestamp();
 
@@ -78,6 +94,7 @@ namespace ActivityService
 
         protected override void OnShutdown()
         {
+            SendEndRequest();
             base.OnShutdown();
         }
 
@@ -89,6 +106,22 @@ namespace ActivityService
             {
                 { "ws", WORKSTATION },
                 { "timestamp", startTimestamp.ToString() }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+
+            httpClient.PostAsync(uri, content);
+        }
+
+        private void SendEndRequest()
+        {
+            string uri = $"{API_BASE_URI}{END_ENDPOINT}";
+
+            var values = new Dictionary<string, string>
+            {
+                { "ws", WORKSTATION },
+                { "start", startTimestamp.ToString() },
+                { "timestamp", GetCurrentTimestamp().ToString() }
             };
 
             var content = new FormUrlEncodedContent(values);
