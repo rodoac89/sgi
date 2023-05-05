@@ -8,6 +8,10 @@ from Crypto.Util.Padding import unpad
 def formatTimestamp(timestamp):
     return datetime.fromtimestamp(timestamp / 1000).strftime("%H:%M:%S  %d/%m/%Y")
 
+def getCurrentTimestamp():
+    now = datetime.now()
+    return getTimestamp(now)
+
 def getSessionsBetweenTimestamps(gte, lte):
     if gte is None or lte is None:
         sessions = Session.objects.all().order_by("workstation", "start").values()

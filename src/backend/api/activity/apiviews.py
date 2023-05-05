@@ -154,8 +154,9 @@ class GetCurrent(APIView):
 
 class StartSession(APIView):
     def post(self, request):
+        print("Hola")
         ws = request.data.get("ws")
-        timestamp = request.data.get("timestamp")      
+        timestamp = request.data.get("timestamp")
 
         if ws is None or timestamp is None:
             return Response({"error": "Debe ingresar workstation y timestamp"},
@@ -165,6 +166,11 @@ class StartSession(APIView):
         except Workstation.DoesNotExist:
             return Response({"error": "No existe el workstation"},
                         status=HTTP_404_NOT_FOUND)
+        
+        lastWsSession = Session.objects.filter(workstation=workstation).order_by("start").last()
+        if lastWsSession is not None and lastWsSession.end is None:
+            lastWsSession.end = lastWsSession.alive
+            lastWsSession.save()
         
         Session.objects.create(workstation=workstation, start=timestamp)
         

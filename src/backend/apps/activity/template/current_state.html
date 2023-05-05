@@ -25,25 +25,7 @@
             </select>
         </div>
 
-        <div id="ws-container" class="p-10 d-flex flex-wrap justify-content-center">
-
-            {% for key, value in workstations.items %}
-            <div style="width: 250px; height: 200px;" class="d-flex">
-
-                <div style="width: 200px; height: 150px;"
-                    class="py-5 d-flex flex-column align-items-center border border-5 rounded {% if value is not None and value.end is None %} border-success {% endif %}">
-                    <h6 class="mb-5">{{ key }}</h6>
-                    {% if value is not None %}
-                    <p>Inicio: {{ value.start }}</p>
-                    <p>Fin: {{ value.end }}</p>
-                    {% else %}
-                    <p>No hay historial</p>
-                    {% endif %}
-                </div>
-
-            </div>
-            {% endfor %}
-        </div>
+        <div id="ws-container" class="p-10 d-flex flex-wrap justify-content-center"></div>
 
     </div>
 </div>
@@ -57,19 +39,49 @@
 <script type="text/javascript">
     // Conectar WebSocket
     const webSocketUrl = `ws://${window.location.host}/ws/activity/enc/${encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")}`
-    connectWebSocket(webSocketUrl,
-        () => { },
-        () => { },
-        () => { },
-        () => { }
-    )
 
     const campusSelect = document.getElementById("campus-select")
     const roomSelect = document.getElementById("room-select")
     const wsContainer = document.getElementById("ws-container")
 
-    const handleRoomChange = (e) => {
-        const target = e.target.id
+    let workstations
+    let disconnectedWorkstations = []
+    let lastUpdate
+
+    const drawWorkstations = () => {
+        wsContainer.innerHTML = Object.entries(workstations).reduce((acc, curr) => {
+            const [workstation, info] = curr
+            const noHistory = !info
+            const hasEnd = info && info.end
+            const oldAlive = info && info.alive && info.alive < moment().valueOf() - 1000 * 60 * 2
+            const disconnected = disconnectedWorkstations.includes(workstation)
+            const color = noHistory || hasEnd ? "border-light" : oldAlive || disconnected ? "border-warning" : "border-success"
+            const message = noHistory ? "No hay historial"
+                : hasEnd ? `Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY")}`
+                    : oldAlive ? "Última señal de vida expirada"
+                        : disconnected ? "El Websocket se ha desconectado"
+                            : "Encendido"
+            return acc + `
+            <div style="width: 250px; height: 200px;" class="d-flex">
+
+                <div style="width: 200px; height: 150px;"
+                    class="py-5 d-flex flex-column align-items-center border border-5 rounded ${color}">
+                    <h6 class="mb-5">${workstation}</h6>
+                    ${info
+                    ? ` <p>Inicio: ${moment(info.start).format("HH:mm:ss DD/MM/YYYY")}</p>
+                        <p class="text-center">${message}`
+                    : `<p>${message}</p>`
+                }
+                </div>
+
+            </div>
+            `
+        }, "")
+    }
+
+    const loadData = (e) => {
+        lastUpdate = moment().valueOf()
+        const target = e && e.target && e.target.id
         let error = false
         const params = { campus: campusSelect.value }
         if (roomSelect.value) params.room = roomSelect.value
@@ -87,70 +99,63 @@
                         roomSelect.innerHTML = data.rooms.reduce((acc, curr) => acc +
                             `<option value="${curr.id}">${curr.room_name}</option>`,
                             "")
-                    wsContainer.innerHTML = Object.entries(data.workstations).reduce((acc, curr) => {
-                        const [workstation, info] = curr
-                        return acc + `
-                        <div style="width: 250px; height: 200px;" class="d-flex">
-
-                            <div style="width: 200px; height: 150px;"
-                                class="py-5 d-flex flex-column align-items-center border border-5 rounded ${info && !info.end && "border-success"}">
-                                <h6 class="mb-5">${workstation}</h6>
-                                ${info
-                                ? ` <p>Inicio: ${moment(info.start).format("HH:mm:ss DD/MM/YYYY")}</p>
-                                    <p>Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY") || "Encendido"}</p> `
-                                : `<p>No hay historial</p>`
-                                }
-                            </div>
-
-                        </div>
-                        `
-                    }, "")
+                    workstations = data.workstations
+                    disconnectedWorkstations = []
+                    console.log("draw")
+                    drawWorkstations()
                 }
             })
     }
 
+    // Primer render
+    loadData()
+    connectWebSocket(webSocketUrl)
+
+    // Actualizar los datos si no se han actualizado en los últimos dos minutos.
+    setInterval(() => {
+        if (lastUpdate < moment().valueOf() - 1000 * 60 * 0.5)
+            loadData()
+        
+    }, 1000 * 60 * 1)
+
     // Al cambiar el campus, cambiar rooms y workstations
-    campusSelect.onchange = handleRoomChange
-    roomSelect.onchange = handleRoomChange
+    campusSelect.onchange = loadData
+    roomSelect.onchange = loadData
 
-
-    function connectWebSocket(url, onOpen, onClose, onMessage, onError) {
+    function connectWebSocket(url) {
         const socket = new WebSocket(url)
 
         // Función que se ejecuta cuando se establece la conexión con éxito
         socket.onopen = (event) => {
             console.log("Conexión WebSocket establecida")
-            if (onOpen) {
-                onOpen(event)
-            }
         }
 
         // Función que se ejecuta cuando se cierra la conexión
         socket.onclose = (event) => {
             console.log("Conexión WebSocket cerrada")
-            if (onClose) {
-                onClose(event)
-            }
         }
 
         // Función que se ejecuta cuando se recibe un mensaje del servidor
         socket.onmessage = (event) => {
-            console.log("Mensaje recibido:", event.data)
-            if (onMessage) {
-                onMessage(event)
+            const data = JSON.parse(event.data)
+            const { workstation, type } = data
+            if (type === "alive") {
+                const ws = workstations[workstation]
+                if (!ws) return
+                const { info } = ws
+                const oldAlive = info && info.alive && info.alive < moment().valueOf() - 1000 * 60 * 2
+                const isNotAlive = !info || oldAlive || disconnectedWorkstations.includes(workstation)
+                if (Object.keys(workstations).includes(workstation) && isNotAlive)
+                    loadData()
+            } else if (type === "disconnect") {
+                disconnectedWorkstations.push(workstation)
+                drawWorkstations()
             }
         }
 
         // Función que se ejecuta cuando se produce un error en la conexión
         socket.onerror = (event) => {
             console.error("Error de WebSocket:", event)
-            if (onError) {
-                onError(event)
-            }
-        }
-
-        function chat_message() {
-            print("chat-msg")
         }
 
         return socket
