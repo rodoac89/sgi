@@ -10,19 +10,20 @@ namespace ActivityService
     using System.Net.WebSockets;  
     using System.Text;
     using System.Security.Cryptography;
-
+    using System.Timers;
 
     public partial class Service1 : ServiceBase
     {
         private readonly string SERVICE_NAME = "ActivityService";
         private readonly string LOG_SOURCE = "ActivityLogSource";
-        private readonly string lOGGER_NAME = "ActivityLog";
+        private readonly string LOGGER_NAME = "ActivityLog";
         // private readonly string workstation = Environment.MachineName;
-        private readonly string WORKSTATION = "A1-COM103PC01";
-        //private readonly string apiBaseUri = "http://127.0.0.1:8000/api/";
-        private readonly string API_BASE_URI = "https://express-example-api-production.up.railway.app/api/";
-        private readonly string SESSION_ENDPOINT = "activity/session";
-        private readonly string WEBSOCKET_BASE_URI = "ws://127.0.0.1:8000/";
+        private static readonly string HOST = "127.0.0.1:8000";
+        //private static readonly string HOST = "labsadmin.vulpinesoft.net";
+        private readonly string WORKSTATION = "A1-COM103PC03";        
+        private readonly string API_BASE_URI = $"http://{HOST}/api/";
+        private readonly string START_ENDPOINT = "activity/session/start";
+        private readonly string WEBSOCKET_BASE_URI = $"ws://{HOST}/";
         private readonly string WEBSOCKET_ENDPOINT = "ws/activity/enc/";
         private readonly string WEBSOCKET_SECRET = "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w";
 
@@ -32,10 +33,14 @@ namespace ActivityService
         private readonly EventLog eventLog;
         static readonly HttpClient httpClient = new HttpClient();
         private readonly ClientWebSocket webSocket = new ClientWebSocket();
+        private Timer aliveTimer;
+        private long startTimestamp;
 
         public Service1()
         {
             InitializeComponent();
+
+            startTimestamp = GetCurrentTimestamp();
 
             ServiceName = SERVICE_NAME;
 
@@ -44,33 +49,51 @@ namespace ActivityService
             if (!EventLog.SourceExists(LOG_SOURCE))
             {
                 EventLog.CreateEventSource(
-                    LOG_SOURCE, lOGGER_NAME);
+                    LOG_SOURCE, LOGGER_NAME);
             }
             eventLog.Source = LOG_SOURCE;
-            eventLog.Log = lOGGER_NAME;
+            eventLog.Log = LOGGER_NAME;
 
             // Configurar Http Client.
             httpClient.BaseAddress = new Uri(API_BASE_URI);
             httpClient.DefaultRequestHeaders
               .Accept
               .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            aliveTimer = new Timer(2000);
+            aliveTimer.Elapsed += SendAliveMessage;
+            aliveTimer.Enabled = true;
         }
 
         protected override void OnStart(string[] args)
         {
+            SendStartRequest();
             // Conectar el web socket.
             ConnectWebSocket();
         }
 
         protected override void OnStop()
         {
-            var payload = new List<(string key, string value)> { ("message", "alive") };
-            SendWSMessage(payload);
         }
 
         protected override void OnShutdown()
         {
             base.OnShutdown();
+        }
+
+        private void SendStartRequest()
+        {
+            string uri = $"{API_BASE_URI}{START_ENDPOINT}";
+
+            var values = new Dictionary<string, string>
+            {
+                { "ws", WORKSTATION },
+                { "timestamp", startTimestamp.ToString() }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+
+            httpClient.PostAsync(uri, content);
         }
 
         private async void ConnectWebSocket()
@@ -80,8 +103,14 @@ namespace ActivityService
             string uri = $"{WEBSOCKET_BASE_URI}{WEBSOCKET_ENDPOINT}{eKey}";
             await webSocket.ConnectAsync(new Uri(uri), System.Threading.CancellationToken.None);
 
-            var payload = new List<(string key, string value)> { ("message", "mensaje de prueba") };
-            SendWSMessage(payload);
+            var keyValueList = new List<(string key, string value)> { ("type", "start") };
+            SendWSMessage(keyValueList);
+        }
+
+        private void SendAliveMessage(Object source, ElapsedEventArgs e)
+        {
+            var keyValueList = new List<(string key, string value)> { ("type", "alive") };
+            SendWSMessage(keyValueList);
         }
 
         private async void SendWSMessage(List<(string key, string value)> keyValueList)
