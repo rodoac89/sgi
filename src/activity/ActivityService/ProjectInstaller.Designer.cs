@@ -23,13 +23,15 @@ namespace ActivityService
         }
 
         public override void Install(IDictionary stateSaver)
-        {
-            string activityHost = Context.Parameters["HOST"];
-            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("Software\\ActivityService\\Values");
-            key.SetValue("Host", activityHost);
-            key.Close();
+        {            
             base.Install(stateSaver);
+            //string activityHost = Context.Parameters["HOST"];
+            //Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("Software\\ActivityService\\Values");
+            //key.SetValue("Host", activityHost);
+            //key.Close();
         }
+
+        public override void Commit(IDictionary savedState) { }
 
         #region Código generado por el Diseñador de componentes
 

@@ -16,23 +16,17 @@ namespace ActivityService
     public partial class Service1 : ServiceBase
     {
         private readonly string SERVICE_NAME = "ActivityService";
-        private readonly string LOG_SOURCE = "ActivityLogSource";
-        private readonly string LOGGER_NAME = "ActivityLog";
-        // private readonly string workstation = Environment.MachineName;
-        //private static readonly string HOST = "127.0.0.1:8000";
         private static string HOST = "127.0.0.1:8000";
-        //private static readonly string HOST = "labsadmin.vulpinesoft.net";
-        private readonly string WORKSTATION = "A1-COM103PC03";        
+        // private static string HOST = "labsadmin.vulpinesoft.net";
+        private readonly string WORKSTATION = "A1-COM101PC02";
+        // private readonly string workstation = Environment.MachineName;
         private string API_BASE_URI = $"http://{HOST}/api/";
         private readonly string START_ENDPOINT = "activity/session/start";
         private readonly string END_ENDPOINT = "activity/session/end";
         private string WEBSOCKET_BASE_URI = $"ws://{HOST}/";
-        private readonly string WEBSOCKET_ENDPOINT = "ws/activity/enc/";
+        private readonly string WEBSOCKET_ENDPOINT = "ws/activity/";
         private readonly string WEBSOCKET_SECRET = "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w";
-
-        public static IntPtr WTS_CURRENT_SERVER_HANDLE = IntPtr.Zero;
         
-        private readonly EventLog eventLog;
         static readonly HttpClient httpClient = new HttpClient();
         private readonly ClientWebSocket webSocket = new ClientWebSocket();
         private Timer aliveTimer;
@@ -41,7 +35,11 @@ namespace ActivityService
 
         public Service1()
         {
+            startTimestamp = GetCurrentTimestamp();
+            
             InitializeComponent();
+
+            ServiceName = SERVICE_NAME;
 
             RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\ActivityService\\Values");
             if (key != null )
@@ -54,21 +52,7 @@ namespace ActivityService
                     WEBSOCKET_BASE_URI = $"ws://{HOST}/";
                 }
                 key.Close();
-            }            
-
-            startTimestamp = GetCurrentTimestamp();
-
-            ServiceName = SERVICE_NAME;
-
-            // Configurar Logs.
-            eventLog = EventLog;
-            if (!EventLog.SourceExists(LOG_SOURCE))
-            {
-                EventLog.CreateEventSource(
-                    LOG_SOURCE, LOGGER_NAME);
             }
-            eventLog.Source = LOG_SOURCE;
-            eventLog.Log = LOGGER_NAME;
 
             // Configurar Http Client.
             httpClient.BaseAddress = new Uri(API_BASE_URI);
@@ -76,7 +60,7 @@ namespace ActivityService
               .Accept
               .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            aliveTimer = new Timer(2000);
+            aliveTimer = new Timer(10000);
             aliveTimer.Elapsed += SendAliveMessage;
             aliveTimer.Enabled = true;
         }
@@ -84,7 +68,6 @@ namespace ActivityService
         protected override void OnStart(string[] args)
         {
             SendStartRequest();
-            // Conectar el web socket.
             ConnectWebSocket();
         }
 
@@ -94,7 +77,17 @@ namespace ActivityService
 
         protected override void OnShutdown()
         {
-            SendEndRequest();
+            // Enviar mensaje de finalizar sesión por Websocket si no hacerlo por HTTP
+            try
+            {
+                var keyValueList = new List<(string key, string value)> { ("type", "end") };
+                SendWSMessage(keyValueList);
+            }
+            catch (Exception)
+            {
+                SendEndRequest();
+            }
+            
             base.OnShutdown();
         }
 
@@ -133,7 +126,8 @@ namespace ActivityService
         {
             string eKey = AESEncrypt(WORKSTATION, WEBSOCKET_SECRET);
             EventLog.WriteEntry(eKey, EventLogEntryType.Error);
-            string uri = $"{WEBSOCKET_BASE_URI}{WEBSOCKET_ENDPOINT}{eKey}";
+            string uri = $"{WEBSOCKET_BASE_URI}{WEBSOCKET_ENDPOINT}{eKey}/";
+            // string uri = $"{WEBSOCKET_BASE_URI}{WEBSOCKET_ENDPOINT}{WORKSTATION}/";
             await webSocket.ConnectAsync(new Uri(uri), System.Threading.CancellationToken.None);
 
             var keyValueList = new List<(string key, string value)> { ("type", "start") };
