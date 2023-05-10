@@ -1,5 +1,12 @@
 FROM python:3.9
 ENV PYTHONUNBUFFERED 1
+ARG HOST
+ARG NAME
+ARG PASSWORD
+ARG PORT
+ARG USER
+ARG REDIS_URL
+ARG URL_HOST
 WORKDIR /app
 ADD ./requirements.txt /app/
 RUN pip3 install --no-cache-dir -r requirements.txt
