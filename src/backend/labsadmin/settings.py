@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET') if os.getenv('DJANGO_SECRET') is not Non
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else True
 
-ALLOWED_HOSTS = ["127.0.0.1" if os.getenv('URL_HOST') is None else os.getenv('URL_HOST')]
+ALLOWED_HOSTS = [os.getenv('URL_HOST') if os.getenv('URL_HOST') is not None else "127.0.0.1"]
 
 
 # Application definition
@@ -104,7 +104,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.getenv('REDIS_URL'), 6379)],
+            "hosts": [(os.getenv('REDIS_URL'))],
         },
     },
 }
@@ -220,6 +220,17 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+config = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('USER'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),
+        'PORT': os.getenv('PORT'),
+    }
+}
     
 DATABASES = config
 
