@@ -47,8 +47,8 @@
 
     const refreshTime = 1000 * 60 * 2 // Se traerán los datos cada dos minutos si no se refrezcan por un mensaje entrante de websocket.
 
-    const webSocketUrl = `wss://${window.location.host}/ws/activity/${encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")}/`
-    //const webSocketUrl = `ws://${window.location.host}/ws/activity/iamadmin/`
+    const webSocketUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}` +
+        `/ws/activity/${encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")}/`
 
     const campusSelect = document.getElementById("campus-select")
     const roomSelect = document.getElementById("room-select")
@@ -58,16 +58,16 @@
     let lastUpdate
 
     const addStatusToWorkstations = (workstations) => {
-        Object.entries(workstations).forEach((workstation) => {          
-            const [name, info] = workstation 
-            if (!info) workstations[name] = { status: STATUS.NO_HISTORY }            
+        Object.entries(workstations).forEach((workstation) => {
+            const [name, info] = workstation
+            if (!info) workstations[name] = { status: STATUS.NO_HISTORY }
             else if (info.end) info.status = STATUS.ENDED
-            else if (info.alive && info.alive < moment().valueOf() - refreshTime)
+            else if (info.alive && info.alive < moment().valueOf() - (refreshTime + 1000))
                 info.status = STATUS.OLD_ALIVE
             // El estado WEBSOCKET_DISCONNECTED se da solamente 
             // si se recibe ese mensaje por websocket.
             else info.status = STATUS.ALIVE
-        })      
+        })
     }
 
     const drawWorkstations = () => {
@@ -82,7 +82,7 @@
                 : status === STATUS.ENDED ? `Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY")}`
                     : status === STATUS.OLD_ALIVE ? "Última señal de vida expirada"
                         : status === STATUS.WEBSOCKET_DISCONNECTED ? "El Websocket se ha desconectado"
-                            : status === STATUS.ALIVE ? "Encendido" 
+                            : status === STATUS.ALIVE ? "Encendido"
                                 : "Error"
             return acc + `
             <div style="width: 250px; height: 200px;" class="d-flex">
@@ -135,7 +135,7 @@
 
     // Actualizar los datos si no se han actualizado en los últimos dos minutos.
     setInterval(() => {
-        if (lastUpdate < moment().valueOf() - refreshTime)
+        if (lastUpdate < moment().valueOf() - refreshTime * 2)
             loadData()
 
     }, refreshTime)
@@ -147,17 +147,14 @@
     function connectWebSocket(url) {
         const socket = new WebSocket(url)
 
-        // Función que se ejecuta cuando se establece la conexión con éxito
         socket.onopen = (event) => {
             console.log("Conexión WebSocket establecida")
         }
 
-        // Función que se ejecuta cuando se cierra la conexión
         socket.onclose = (event) => {
             console.log("Conexión WebSocket cerrada")
         }
 
-        // Función que se ejecuta cuando se recibe un mensaje del servidor
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data)
             const { workstation: name, type } = data
@@ -176,7 +173,6 @@
             }
         }
 
-        // Función que se ejecuta cuando se produce un error en la conexión
         socket.onerror = (event) => {
             console.error("Error de WebSocket:", event)
         }
