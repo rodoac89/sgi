@@ -141,8 +141,7 @@
 
         const params = {}
         if (campusSelect.value) params.campus = campusSelect.value
-        if (roomSelect.value) params.room = roomSelect.value        
-        console.log(params)
+        if (roomSelect.value) params.room = roomSelect.value
 
         fetch("{% url 'getoptions' %}?" + new URLSearchParams(params))
             .then(response => {
