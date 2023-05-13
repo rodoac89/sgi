@@ -15,15 +15,15 @@ namespace ActivityService
 
     public partial class Service1 : ServiceBase
     {
-        private readonly string SERVICE_NAME = "ActivityService";
+        private readonly string SERVICE_NAME = "Activity";
         private static string HOST = "127.0.0.1:8000";
-        // private static string HOST = "labsadmin.vulpinesoft.net";
+        //private static string HOST = "labs-activity.up.railway.app";
         private readonly string WORKSTATION = "A1-COM101PC02";
         // private readonly string workstation = Environment.MachineName;
-        private string API_BASE_URI = $"http://{HOST}/api/";
+        private string API_BASE_URI = $"https://{HOST}/api/";
         private readonly string START_ENDPOINT = "activity/session/start";
         private readonly string END_ENDPOINT = "activity/session/end";
-        private string WEBSOCKET_BASE_URI = $"ws://{HOST}/";
+        private string WEBSOCKET_BASE_URI = $"wss://{HOST}/";
         private readonly string WEBSOCKET_ENDPOINT = "ws/activity/";
         private readonly string WEBSOCKET_SECRET = "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w";
         
@@ -31,7 +31,6 @@ namespace ActivityService
         private readonly ClientWebSocket webSocket = new ClientWebSocket();
         private Timer aliveTimer;
         private long startTimestamp;
-
 
         public Service1()
         {
@@ -44,12 +43,12 @@ namespace ActivityService
             RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\ActivityService\\Values");
             if (key != null )
             {
-                object registeredHost = Registry.LocalMachine.GetValue("Host");
+                object registeredHost = key.GetValue("Host");
                 if ( registeredHost != null )
                 {
                     HOST = registeredHost.ToString();
-                    API_BASE_URI = $"http://{HOST}/api/";
-                    WEBSOCKET_BASE_URI = $"ws://{HOST}/";
+                    API_BASE_URI = $"https://{HOST}/api/";
+                    WEBSOCKET_BASE_URI = $"wss://{HOST}/";
                 }
                 key.Close();
             }
