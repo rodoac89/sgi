@@ -50,12 +50,28 @@ class ChatConsumer(WebsocketConsumer):
                     "workstation": self.workstation
                 },
             )
-        
+        if data["type"] == "end":
+            session = Session.objects.filter(workstation__name=self.workstation).order_by("start").last()
+            session.end = getCurrentTimestamp()
+            session.save()
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "workstation.end",
+                    "workstation": self.workstation
+                },
+            )
 
     def workstation_alive(self, event):
         self.send(text_data=json.dumps({
             "workstation": event["workstation"],
             "type": "alive"
+        }))
+
+    def workstation_end(self, event):
+        self.send(text_data=json.dumps({
+            "workstation": event["workstation"],
+            "type": "end"
         }))
 
     def workstation_disconnect(self, event):

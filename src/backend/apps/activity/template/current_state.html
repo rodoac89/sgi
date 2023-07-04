@@ -167,6 +167,9 @@
                 // Solo se actualiza cuando el estado anterior no era alive.
                 if (prevStatus !== STATUS.ALIVE) loadData()
 
+            } else if (type === "end") {
+                loadData()
+
             } else if (type === "disconnect") {
                 wsInfo.status = STATUS.WEBSOCKET_DISCONNECTED
                 drawWorkstations()
