@@ -23,14 +23,17 @@ class ChatConsumer(WebsocketConsumer):
             self.close()        
 
     def disconnect(self, _):
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                "type": "workstation.disconnect",
-                "workstation": self.workstation
-            },
-        )
-        async_to_sync(self.channel_layer.group_discard)("labs", self.channel_name)
+        if not self.room_group_name:
+            print("Desconectado sin room")
+        else:
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "workstation.disconnect",
+                    "workstation": self.workstation
+                },
+            )
+            async_to_sync(self.channel_layer.group_discard)("labs", self.channel_name)
 
 
     def receive(self, text_data):
