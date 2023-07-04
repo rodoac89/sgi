@@ -9,6 +9,7 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         enc = self.scope["url_route"]["kwargs"]["enc"]
         dec = decryptAES(enc, "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")
+        print("Intento de conexión desde la estación de trabajo " + dec)
         if (dec == "iamadmin"):
             self.room_group_name = "labs"
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)            
