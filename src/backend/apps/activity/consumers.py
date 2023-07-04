@@ -14,13 +14,18 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name = "labs"
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)            
             self.accept()
-        elif (validateWorkstationByRegex(dec)):
+        # elif (validateWorkstationByRegex(dec)):
+        #     self.room_group_name = "labs"
+        #     self.workstation = dec
+        #     async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
+        #     self.accept()
+        # else:            
+        #     self.close()    
+        else: 
             self.room_group_name = "labs"
             self.workstation = dec
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
             self.accept()
-        else:            
-            self.close()        
 
     def disconnect(self, _):
         if not self.room_group_name:
