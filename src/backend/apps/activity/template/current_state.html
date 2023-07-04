@@ -90,7 +90,7 @@
                 <div style="width: 200px; height: 150px;"
                     class="py-5 d-flex flex-column align-items-center border border-5 rounded ${color}">
                     <h6 class="mb-5">${name}</h6>
-                    ${info
+                    ${info && info.start
                     ? ` <p>Inicio: ${moment(info.start).format("HH:mm:ss DD/MM/YYYY")}</p>
                         <p class="text-center">${message}`
                     : `<p>${message}</p>`

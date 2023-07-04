@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace ActivityService
+﻿namespace ActivityService
 {
     partial class ProjectInstaller
     {
@@ -22,17 +20,6 @@ namespace ActivityService
             base.Dispose(disposing);
         }
 
-        public override void Install(IDictionary stateSaver)
-        {
-            string activityHost = Context.Parameters["HOST"];
-            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("Software\\ActivityService\\Values");
-            key.SetValue("Host", activityHost);
-            key.Close();
-            base.Install(stateSaver);            
-        }
-
-        public override void Commit(IDictionary savedState) { }
-
         #region Código generado por el Diseñador de componentes
 
         /// <summary>
@@ -41,32 +28,33 @@ namespace ActivityService
         /// </summary>
         private void InitializeComponent()
         {
-            this.ActivityServiceProcessInstaller = new System.ServiceProcess.ServiceProcessInstaller();
-            this.ActivityServiceInstaller = new System.ServiceProcess.ServiceInstaller();
+            this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
+            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
             // 
-            // ActivityServiceProcessInstaller
+            // serviceProcessInstaller1
             // 
-            this.ActivityServiceProcessInstaller.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
-            this.ActivityServiceProcessInstaller.Password = null;
-            this.ActivityServiceProcessInstaller.Username = null;
+            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
+            this.serviceProcessInstaller1.Password = null;
+            this.serviceProcessInstaller1.Username = null;
             // 
-            // ActivityServiceInstaller
+            // serviceInstaller1
             // 
-            this.ActivityServiceInstaller.ServiceName = "ActivityService";
-            this.ActivityServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            this.ActivityServiceInstaller.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.ActivityServiceInstaller_AfterInstall);
+            this.serviceInstaller1.Description = "Servicio Activity";
+            this.serviceInstaller1.DisplayName = "ActivityService";
+            this.serviceInstaller1.ServiceName = "ActivityService";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
             this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-            this.ActivityServiceProcessInstaller,
-            this.ActivityServiceInstaller});
+            this.serviceProcessInstaller1,
+            this.serviceInstaller1});
 
         }
 
         #endregion
 
-        private System.ServiceProcess.ServiceProcessInstaller ActivityServiceProcessInstaller;
-        private System.ServiceProcess.ServiceInstaller ActivityServiceInstaller;
+        private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
+        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
     }
 }

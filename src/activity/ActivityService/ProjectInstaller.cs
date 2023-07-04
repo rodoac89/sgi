@@ -15,10 +15,5 @@ namespace ActivityService
         {
             InitializeComponent();
         }
-
-        private void ActivityServiceInstaller_AfterInstall(object sender, InstallEventArgs e)
-        {
-
-        }
     }
 }

@@ -16,17 +16,17 @@ namespace ActivityService
     public partial class Service1 : ServiceBase
     {
         private readonly string SERVICE_NAME = "Activity";
-        private static string HOST = "127.0.0.1:8000";
-        //private static string HOST = "labs-activity.up.railway.app";
-        private readonly string WORKSTATION = "A1-COM101PC02";
-        // private readonly string workstation = Environment.MachineName;
-        private string API_BASE_URI = $"https://{HOST}/api/";
+        // private static string DOMAIN = "127.0.0.1:8000";
+        private static string DOMAIN = "labs-activity.up.railway.app";
+        // private readonly string WORKSTATION = "A1-COM101PC02";
+        private readonly string WORKSTATION = Environment.MachineName;
+        private string API_BASE_URI = $"https://{DOMAIN}/api/";
         private readonly string START_ENDPOINT = "activity/session/start";
         private readonly string END_ENDPOINT = "activity/session/end";
-        private string WEBSOCKET_BASE_URI = $"wss://{HOST}/";
+        private string WEBSOCKET_BASE_URI = $"wss://{DOMAIN}/";
         private readonly string WEBSOCKET_ENDPOINT = "ws/activity/";
         private readonly string WEBSOCKET_SECRET = "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w";
-        
+
         static readonly HttpClient httpClient = new HttpClient();
         private readonly ClientWebSocket webSocket = new ClientWebSocket();
         private Timer aliveTimer;
@@ -35,20 +35,20 @@ namespace ActivityService
         public Service1()
         {
             startTimestamp = GetCurrentTimestamp();
-            
+
             InitializeComponent();
 
             ServiceName = SERVICE_NAME;
 
             RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\ActivityService\\Values");
-            if (key != null )
+            if (key != null)
             {
-                object registeredHost = key.GetValue("Host");
-                if ( registeredHost != null )
+                object registeredDomain = key.GetValue("DOMAIN");
+                if (registeredDomain != null)
                 {
-                    HOST = registeredHost.ToString();
-                    API_BASE_URI = $"https://{HOST}/api/";
-                    WEBSOCKET_BASE_URI = $"wss://{HOST}/";
+                    DOMAIN = registeredDomain.ToString();
+                    API_BASE_URI = $"https://{DOMAIN}/api/";
+                    WEBSOCKET_BASE_URI = $"wss://{DOMAIN}/";
                 }
                 key.Close();
             }
@@ -86,7 +86,7 @@ namespace ActivityService
             {
                 SendEndRequest();
             }
-            
+
             base.OnShutdown();
         }
 
