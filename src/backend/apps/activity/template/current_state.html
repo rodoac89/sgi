@@ -48,7 +48,7 @@
     const refreshTime = 1000 * 60 * 2 // Se traerán los datos cada dos minutos si no se refrezcan por un mensaje entrante de websocket.
 
     const webSocketUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}` +
-        `/ws/activity/${encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")}/`
+        "/ws/activity/{{adminEncrypted}}/"
 
     const campusSelect = document.getElementById("campus-select")
     const roomSelect = document.getElementById("room-select")
@@ -81,7 +81,7 @@
             const message = status === STATUS.NO_HISTORY ? "No hay historial"
                 : status === STATUS.ENDED ? `Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY")}`
                     : status === STATUS.OLD_ALIVE ? "Última señal de vida expirada"
-                        : status === STATUS.WEBSOCKET_DISCONNECTED ? "El Websocket se ha desconectado"
+                        : status === STATUS.WEBSOCKET_DISCONNECTED ? "El equipo se ha desconectado del servidor"
                             : status === STATUS.ALIVE ? "Encendido"
                                 : "Error"
             return acc + `
@@ -181,31 +181,6 @@
         }
 
         return socket
-    }
-
-    function encryptAES(plaintext, key) {
-        // Agregar padding al texto para que calce con los 16 bits que pide CBC
-        const paddingLength = 16 - (plaintext.length % 16) // Longitud del padding
-        const padding = String.fromCharCode(paddingLength).repeat(paddingLength) // Crea el padding con el byte de relleno
-        plaintext = plaintext + padding
-
-        // Convertir la clave y el IV a buffers
-        key = new TextEncoder().encode(key)
-        iv = new Uint8Array(16)
-
-        // Convertir el texto plano a un Uint8Array
-        plaintext = new TextEncoder().encode(plaintext)
-
-        // Crear una instancia de AES-256-CBC
-        const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
-
-        // Encriptar el texto plano
-        const encryptedBytes = aesCbc.encrypt(plaintext)
-
-        // Convertir el resultado en un string Base64
-        const encryptedBase64 = btoa(String.fromCharCode.apply(null, encryptedBytes))
-
-        return encryptedBase64
     }
 
 </script>

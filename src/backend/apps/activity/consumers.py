@@ -1,36 +1,34 @@
+import os
 import json
 from channels.generic.websocket import WebsocketConsumer
-from .utils import decryptAES, validateWorkstationByRegex, getCurrentTimestamp
+from .utils import decryptAES, getCurrentTimestamp
 from asgiref.sync import async_to_sync
-from apps.activity.models import Session
+from apps.activity.models import Session, Workstation
 
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        enc = self.scope["url_route"]["kwargs"]["enc"]
-        dec = decryptAES(enc, "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")
-        print("Intento de conexión desde la estación de trabajo " + dec)
-        if (dec == "iamadmin"):
+        enc = self.scope["url_route"]["kwargs"]["enc"] # obtener workstation encriptada desde url
+        workstation = decryptAES(enc, os.getenv("WS_SECRET"))
+        print("Intento de conexión desde la estación de trabajo " + workstation)
+        if (workstation == "iamadmin"): # Conexión desde dashboard
             self.room_group_name = "labs"
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)            
-            self.accept()
-        # elif (validateWorkstationByRegex(dec)):
-        #     self.room_group_name = "labs"
-        #     self.workstation = dec
-        #     async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
-        #     self.accept()
-        # else:            
-        #     self.close()    
-        else: 
-            self.room_group_name = "labs"
-            self.workstation = dec
-            async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
-            self.accept()
+            self.accept() 
+        else:
+            if Workstation.objects.filter(name=workstation).exists():
+                self.workstation = workstation   
+                self.room_group_name = "labs"   
+                async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
+                self.accept()
+            else:
+                print(f"Conexión denegada para estación de trabajo {workstation} inexistente.")
+                self.close()
+
+            
 
     def disconnect(self, _):
-        if not self.room_group_name:
-            print("Desconectado sin room")
-        else:
+        if self.room_group_name and self.workstation:
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {

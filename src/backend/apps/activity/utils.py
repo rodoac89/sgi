@@ -1,9 +1,8 @@
 import base64
-import re
 from apps.activity.models import Session
 from datetime import datetime, timedelta
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
+from Crypto.Util.Padding import unpad, pad
 
 def formatTimestamp(timestamp):
     return datetime.fromtimestamp(timestamp / 1000).strftime("%H:%M:%S  %d/%m/%Y")
@@ -89,6 +88,20 @@ def decryptAES(ciphertext, key):
     # Decodificar el resultado a una cadena de texto
     return plaintext.decode("utf-8")
 
-def validateWorkstationByRegex(workStation):
-    regex = r"[A-Z][0-9]-[A-Z]{3}[0-9]{3}PC[0-9]{2}"
-    return re.fullmatch(regex, workStation)
+
+def encryptAES(plaintext, key):
+    key = key.encode("utf-8")
+
+    # Configuración del cifrado
+    cipher = AES.new(key, AES.MODE_CBC, b"\x00" * 16)
+
+    # Rellenar el texto plano
+    plaintext_padded = pad(plaintext.encode("utf-8"), AES.block_size)
+
+    # Encriptar el texto plano
+    ciphertext = cipher.encrypt(plaintext_padded)
+
+    # Codificar el resultado en base64
+    ciphertext_base64 = base64.b64encode(ciphertext).decode("utf-8")
+
+    return ciphertext_base64

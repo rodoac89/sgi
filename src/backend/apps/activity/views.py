@@ -1,6 +1,8 @@
+import os
 from django.shortcuts import render
-from apps.core.models import Campus, Room, Workstation
 from django.contrib.auth.decorators import login_required
+from apps.core.models import Campus, Room, Workstation
+from .utils import encryptAES
 
 @login_required
 def index(request):
@@ -31,8 +33,10 @@ def state(request):
         rooms = Room.objects.filter(campus_id=first_campus_id).values()
     else:
         rooms = []
+    adminEncrypted = encryptAES("iamadmin", os.getenv("WS_SECRET"))
 
     return render(request, "current_state.html", {
         "campuses": campuses,
-        "rooms": rooms
+        "rooms": rooms,
+        "adminEncrypted": adminEncrypted
     })
