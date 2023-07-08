@@ -1,4 +1,6 @@
-﻿namespace ActivityService
+﻿using System.Collections;
+
+namespace ActivityService
 {
     partial class ProjectInstaller
     {
@@ -18,6 +20,16 @@
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public override void Install(IDictionary stateSaver)
+        {
+            // El dominio es ingresado en el instalador y aquí se guarda en el registro para ser usado dentro de la aplicación.
+            string activityDomain = Context.Parameters["DOMAIN"];
+            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("Software\\Labs\\Values");
+            key.SetValue("DOMAIN", activityDomain);
+            key.Close();
+            base.Install(stateSaver);
         }
 
         #region Código generado por el Diseñador de componentes

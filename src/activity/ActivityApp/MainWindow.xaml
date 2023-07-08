@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ActivityApp"
         mc:Ignorable="d"
         SizeToContent="Width"
         WindowStyle="None"
-        WindowStartupLocation="CenterScreen">
-    <Border BorderBrush="Transparent" BorderThickness="25">
-        <Grid Width="800">
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Border BorderBrush="#181533" BorderThickness="10" CornerRadius="7">
+        <Grid Width="700">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -29,10 +29,26 @@
                 FontWeight="Bold"/>
             <Image 
                 Grid.Row="1"
-                Grid.RowSpan="5"
-                Source="C:\Users\fperez\Downloads\undraw_loading.png"/>
+                Grid.RowSpan="4"
+                Source="https://lh3.googleusercontent.com/drive-viewer/AITFw-yHZOw6xz3X9mj_2WiRtTTgnhkHFgFCx36xeLUY-CrP5sXge47bY1JdkEniRhpl3BgBW9O5bwB_C9-WKXK_2A1C3GtUIQ=s2560"
+                Margin="0,0,0,20"/>
+
             <TextBlock 
-                Text="El computador se apagará en breves, presiona Cancelar para prevenirlo." 
+                Text="Este computador se apagará a continuación, presiona el botón CANCELAR si quieres prevenirlo."
+                Grid.Row="5"
+                Width="500"
+                Margin="10,0,0,0"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center" 
+                TextWrapping="Wrap"
+                TextAlignment="Justify"
+                FontFamily="Asap"
+                FontSize="20"
+                FontWeight="Bold"
+                Foreground="#CC0000"/>
+            
+            <TextBlock 
+                Text="Recuerda encender los computadores sólo cuando sea necesario, ya que así estaremos ayudando a reducir la huella de carbono generada por los laboratorios de computación y de esta forma contribuiremos a cuidar el medio ambiente."
                 Grid.Row="6"
                 Width="500"
                 VerticalAlignment="Top"
@@ -40,7 +56,8 @@
                 TextWrapping="Wrap"
                 TextAlignment="Justify"
                 FontFamily="Asap"
-                FontSize="20"/>
+                FontSize="16"
+                FontWeight="Bold"/>
             
             <Grid Grid.Row="8" Width="600">
                 <Grid.ColumnDefinitions>
