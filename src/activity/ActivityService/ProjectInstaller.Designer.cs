@@ -1,4 +1,7 @@
 ﻿using System.Collections;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Collections.Generic;
 
 namespace ActivityService
 {
@@ -22,14 +25,19 @@ namespace ActivityService
             base.Dispose(disposing);
         }
 
-        public override void Install(IDictionary stateSaver)
+        protected override void OnBeforeInstall(IDictionary savedState)
         {
-            // El dominio es ingresado en el instalador y aquí se guarda en el registro para ser usado dentro de la aplicación.
-            string activityDomain = Context.Parameters["DOMAIN"];
-            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("Software\\Labs\\Values");
-            key.SetValue("DOMAIN", activityDomain);
+            // El dominio y el secret para la conexion de WebSocket son ingresados en el instalador
+            // y aquí se guarda en el registro para ser usado dentro de la aplicación.
+            string ActivityDomain = Context.Parameters["DOMAIN"];
+            string Secret = Context.Parameters["SECRET"];
+
+            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Labs\\Values");
+            key.SetValue("DOMAIN", ActivityDomain);
+            key.SetValue("SECRET", Secret);
             key.Close();
-            base.Install(stateSaver);
+
+            base.OnBeforeInstall(savedState);
         }
 
         #region Código generado por el Diseñador de componentes
@@ -51,10 +59,10 @@ namespace ActivityService
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "Servicio Activity";
-            this.serviceInstaller1.DisplayName = "ActivityService";
-            this.serviceInstaller1.ServiceName = "ActivityService";
+            this.serviceInstaller1.DisplayName = "Activity Service";
+            this.serviceInstaller1.ServiceName = "Activity Service";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            this.serviceInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);
             // 
             // ProjectInstaller
             // 

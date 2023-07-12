@@ -18,12 +18,12 @@ namespace ActivityService
         private readonly string SERVICE_NAME = "Activity";
         private static string DOMAIN = "127.0.0.1:8000";
         private readonly string WORKSTATION = Environment.MachineName;
-        private string API_BASE_URI = $"https://{DOMAIN}/api/";
+        private readonly string API_BASE_URI = $"https://{DOMAIN}/api/";
         private readonly string START_ENDPOINT = "activity/session/start";
         private readonly string END_ENDPOINT = "activity/session/end";
-        private string WEBSOCKET_BASE_URI = $"wss://{DOMAIN}/";
+        private readonly string WEBSOCKET_BASE_URI = $"wss://{DOMAIN}/";
         private readonly string WEBSOCKET_ENDPOINT = "ws/activity/";
-        private readonly string WEBSOCKET_SECRET = "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w";
+        private readonly string WEBSOCKET_SECRET = "secretoenlamontana";
 
         static readonly HttpClient ActivityHttpClient = new HttpClient();
         private readonly ClientWebSocket ActivityWebSocket = new ClientWebSocket();
@@ -41,13 +41,20 @@ namespace ActivityService
             RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\Labs\\Values");
             if (key != null)
             {
-                object registeredDomain = key.GetValue("DOMAIN");
-                if (registeredDomain != null)
+                object RegisteredDomain = key.GetValue("DOMAIN");
+                if (RegisteredDomain != null)
                 {
-                    DOMAIN = registeredDomain.ToString();
+                    DOMAIN = RegisteredDomain.ToString();
                     API_BASE_URI = $"https://{DOMAIN}/api/";
                     WEBSOCKET_BASE_URI = $"wss://{DOMAIN}/";
                 }
+
+                object Secret = key.GetValue("SECRET");
+                if (Secret != null)
+                {
+                    WEBSOCKET_SECRET = Secret.ToString();
+                }
+
                 key.Close();
             }
 
