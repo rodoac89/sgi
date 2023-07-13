@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET') if os.getenv('DJANGO_SECRET') is not Non
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else True
 
-ALLOWED_HOSTS = ["127.0.0.1" if os.getenv('URL_HOST') is None else os.getenv('URL_HOST')]
+ALLOWED_HOSTS = [os.getenv('URL_HOST') if os.getenv('URL_HOST') is not None else "127.0.0.1"]
 
 
 # Application definition
@@ -63,6 +63,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -104,7 +105,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.getenv('REDIS_URL'), 6379)],
+            "hosts": [(os.getenv('REDIS_URL'))],
         },
     },
 }
@@ -196,30 +197,41 @@ HEROKU_DEPLOY = os.getenv('HEROKU_DEPLOY') if os.getenv('HEROKU_DEPLOY') is not 
 # Depending of "DB_type" this code configure the environment for works with Heroku, Local or Production DB
 # If the environtment it's not configured this project works as "dev mode" that implies works sqlite
 
-if HEROKU_DEPLOY:
-    config = {
-        'default': dj_database_url.config(
-            conn_max_age=600, ssl_require=True)
-        }
+# if HEROKU_DEPLOY:
+#     config = {
+#         'default': dj_database_url.config(
+#             conn_max_age=600, ssl_require=True)
+#         }
 
-elif not DEBUG:
-    config = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('NAME'),
-            'USER': os.getenv('USER'),
-            'PASSWORD': os.getenv('PASSWORD'),
-            'HOST': os.getenv('HOST'),
-        }
-    }
+# elif not DEBUG:
+#     config = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.getenv('NAME'),
+#             'USER': os.getenv('USER'),
+#             'PASSWORD': os.getenv('PASSWORD'),
+#             'HOST': os.getenv('HOST'),
+#         }
+#     }
     
-else:
-    config = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+# else:
+#     config = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+
+config = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('USER'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),
+        'PORT': os.getenv('PG_PORT'),
     }
+}
     
 DATABASES = config
 
@@ -260,11 +272,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # Static files (CSS, JavaScript, Images)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 # Media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

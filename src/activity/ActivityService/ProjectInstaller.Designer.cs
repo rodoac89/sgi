@@ -1,4 +1,9 @@
-﻿namespace ActivityService
+﻿using System.Collections;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Collections.Generic;
+
+namespace ActivityService
 {
     partial class ProjectInstaller
     {
@@ -20,6 +25,21 @@
             base.Dispose(disposing);
         }
 
+        protected override void OnBeforeInstall(IDictionary savedState)
+        {
+            // El dominio y el secret para la conexion de WebSocket son ingresados en el instalador
+            // y aquí se guarda en el registro para ser usado dentro de la aplicación.
+            string ActivityDomain = Context.Parameters["DOMAIN"];
+            string Secret = Context.Parameters["SECRET"];
+
+            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Labs\\Values");
+            key.SetValue("DOMAIN", ActivityDomain);
+            key.SetValue("SECRET", Secret);
+            key.Close();
+
+            base.OnBeforeInstall(savedState);
+        }
+
         #region Código generado por el Diseñador de componentes
 
         /// <summary>
@@ -28,32 +48,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ActivityServiceProcessInstaller = new System.ServiceProcess.ServiceProcessInstaller();
-            this.ActivityServiceInstaller = new System.ServiceProcess.ServiceInstaller();
+            this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
+            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
             // 
-            // ActivityServiceProcessInstaller
+            // serviceProcessInstaller1
             // 
-            this.ActivityServiceProcessInstaller.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
-            this.ActivityServiceProcessInstaller.Password = null;
-            this.ActivityServiceProcessInstaller.Username = null;
+            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
+            this.serviceProcessInstaller1.Password = null;
+            this.serviceProcessInstaller1.Username = null;
             // 
-            // ActivityServiceInstaller
+            // serviceInstaller1
             // 
-            this.ActivityServiceInstaller.ServiceName = "ActivityService";
-            this.ActivityServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            this.ActivityServiceInstaller.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.ActivityServiceInstaller_AfterInstall);
+            this.serviceInstaller1.DisplayName = "Activity Service";
+            this.serviceInstaller1.ServiceName = "Activity Service";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            this.serviceInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);
             // 
             // ProjectInstaller
             // 
             this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-            this.ActivityServiceProcessInstaller,
-            this.ActivityServiceInstaller});
+            this.serviceProcessInstaller1,
+            this.serviceInstaller1});
 
         }
 
         #endregion
 
-        private System.ServiceProcess.ServiceProcessInstaller ActivityServiceProcessInstaller;
-        private System.ServiceProcess.ServiceInstaller ActivityServiceInstaller;
+        private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
+        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
     }
 }

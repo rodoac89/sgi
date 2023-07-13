@@ -56,3 +56,24 @@ USER="username" # Nombre de usuario de la base de datos
 PASSWORD="password" # Contraseña de la base de datos
 
 ```
+
+## Instalación del servicio y aplicación Activity en Windows.
+
+### Contexto.
+
+Antes de todo se debe definir qué hacen estos dos programas:
+
+Servicio Activity: Servicio de Windows que envía datos de uso del computador, incluyendo hora de encendido y apagado, además de enviar una señal de vida recurrentemente.
+
+Aplicación de escritorio Activity: Aplicación de Windows que muestra una alerta de inactividad en el computador y que apagará el equipo después de un determinado tiempo si el usuario no cancela esta acción.
+
+### Ahora sí instalación.
+
+Para instalar el Servicio Activity se debe ejecutar el instalador con extensión .msi e ingresar los datos solicitados, que son el dominio del servidor al que se enviarán los datos de uso y el secret que se utiliza en la conexión con el servidor mediante Websocket. Como requisito para que funcione correctamente el servicio, se debe desactivar la opción de inicio rápido en la configuración de energía de Windows.
+
+Para instalar la Aplicación Activity se debe pegar el ejecutable con extensión .exe en la carpeta de inicio del usuario, para que se ejecute al iniciar sesión. Los pasos para hacer esto son:
+1. Tener la sesión iniciada en el usuario en el que se quiera instalar, en este caso sería el usuario dedicado para estudiantes.
+2. Pulsar las teclas Windows + R
+3. Escribir shell:startup
+4. A continuación verás una ventana, en ella simplemente tienes que arrastrar los accesos directos de aquellos programas que deseas que se inicien automáticamente al arrancar Windows 10
+
