@@ -154,7 +154,6 @@ class GetCurrent(APIView):
 
 class StartSession(APIView):
     def post(self, request):
-        print("Hola")
         ws = request.data.get("ws")
         timestamp = request.data.get("timestamp")
 

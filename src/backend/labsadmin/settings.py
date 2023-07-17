@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET') if os.getenv('DJANGO_SECRET') is not Non
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else True
 
-ALLOWED_HOSTS = ["127.0.0.1" if os.getenv('URL_HOST') is None else os.getenv('URL_HOST')]
+ALLOWED_HOSTS = [os.getenv('URL_HOST') if os.getenv('URL_HOST') is not None else "127.0.0.1"]
 
 
 # Application definition
@@ -63,6 +63,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -104,7 +105,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.getenv('REDIS_URL'), 6379)],
+            "hosts": [(os.getenv('REDIS_URL'))],
         },
     },
 }
@@ -212,7 +213,6 @@ elif DEFAULT_DEPLOY == "production":
             'HOST': os.getenv('HOST'),
         }
     }
-    
 else:
     config = {
         'default': {
@@ -260,11 +260,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # Static files (CSS, JavaScript, Images)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 # Media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
