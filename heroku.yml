@@ -1,6 +1,6 @@
 setup:
   config:
-    CHANNEL: heroku
+    DEFAULT_DEPLOY: heroku
 build:
   docker:
     web: src/backend/Dockerfile
