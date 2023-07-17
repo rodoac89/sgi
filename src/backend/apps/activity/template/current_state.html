@@ -37,37 +37,60 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
 <script type="text/javascript">
-    // Conectar WebSocket
-    const webSocketUrl = `ws://${window.location.host}/ws/activity/enc/${encryptAES("iamadmin", "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")}`
+    const STATUS = {
+        NO_HISTORY: "no-history",
+        ENDED: "has-end",
+        OLD_ALIVE: "alive-is-old",
+        WEBSOCKET_DISCONNECTED: "websocket-disconnected",
+        ALIVE: "is-alive"
+    }
+
+    const refreshTime = 1000 * 60 * 2 // Se traerán los datos cada dos minutos si no se refrezcan por un mensaje entrante de websocket.
+
+    const webSocketUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}` +
+        "/ws/activity/{{adminEncrypted}}/"
 
     const campusSelect = document.getElementById("campus-select")
     const roomSelect = document.getElementById("room-select")
     const wsContainer = document.getElementById("ws-container")
 
     let workstations
-    let disconnectedWorkstations = []
     let lastUpdate
+
+    const addStatusToWorkstations = (workstations) => {
+        Object.entries(workstations).forEach((workstation) => {
+            const [name, info] = workstation
+            if (!info) workstations[name] = { status: STATUS.NO_HISTORY }
+            else if (info.end) info.status = STATUS.ENDED
+            else if (info.alive && info.alive < moment().valueOf() - (refreshTime + 1000))
+                info.status = STATUS.OLD_ALIVE
+            // El estado WEBSOCKET_DISCONNECTED se da solamente 
+            // si se recibe ese mensaje por websocket.
+            else info.status = STATUS.ALIVE
+        })
+    }
 
     const drawWorkstations = () => {
         wsContainer.innerHTML = Object.entries(workstations).reduce((acc, curr) => {
-            const [workstation, info] = curr
-            const noHistory = !info
-            const hasEnd = info && info.end
-            const oldAlive = info && info.alive && info.alive < moment().valueOf() - 1000 * 60 * 2
-            const disconnected = disconnectedWorkstations.includes(workstation)
-            const color = noHistory || hasEnd ? "border-light" : oldAlive || disconnected ? "border-warning" : "border-success"
-            const message = noHistory ? "No hay historial"
-                : hasEnd ? `Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY")}`
-                    : oldAlive ? "Última señal de vida expirada"
-                        : disconnected ? "El Websocket se ha desconectado"
-                            : "Encendido"
+            const [name, info] = curr
+            const { status } = info
+            const color = status === STATUS.NO_HISTORY || status === STATUS.ENDED ? "border-light"
+                : status === STATUS.OLD_ALIVE || status === STATUS.WEBSOCKET_DISCONNECTED ? "border-warning"
+                    : status === STATUS.ALIVE ? "border-success"
+                        : "border-danger"
+            const message = status === STATUS.NO_HISTORY ? "No hay historial"
+                : status === STATUS.ENDED ? `Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY")}`
+                    : status === STATUS.OLD_ALIVE ? "Última señal de vida expirada"
+                        : status === STATUS.WEBSOCKET_DISCONNECTED ? "El equipo se ha desconectado del servidor"
+                            : status === STATUS.ALIVE ? "Encendido"
+                                : "Error"
             return acc + `
             <div style="width: 250px; height: 200px;" class="d-flex">
 
                 <div style="width: 200px; height: 150px;"
                     class="py-5 d-flex flex-column align-items-center border border-5 rounded ${color}">
-                    <h6 class="mb-5">${workstation}</h6>
-                    ${info
+                    <h6 class="mb-5">${name}</h6>
+                    ${info && info.start
                     ? ` <p>Inicio: ${moment(info.start).format("HH:mm:ss DD/MM/YYYY")}</p>
                         <p class="text-center">${message}`
                     : `<p>${message}</p>`
@@ -100,8 +123,7 @@
                             `<option value="${curr.id}">${curr.room_name}</option>`,
                             "")
                     workstations = data.workstations
-                    disconnectedWorkstations = []
-                    console.log("draw")
+                    addStatusToWorkstations(workstations)
                     drawWorkstations()
                 }
             })
@@ -113,10 +135,10 @@
 
     // Actualizar los datos si no se han actualizado en los últimos dos minutos.
     setInterval(() => {
-        if (lastUpdate < moment().valueOf() - 1000 * 60 * 0.5)
+        if (lastUpdate < moment().valueOf() - refreshTime * 2)
             loadData()
-        
-    }, 1000 * 60 * 1)
+
+    }, refreshTime)
 
     // Al cambiar el campus, cambiar rooms y workstations
     campusSelect.onchange = loadData
@@ -125,65 +147,40 @@
     function connectWebSocket(url) {
         const socket = new WebSocket(url)
 
-        // Función que se ejecuta cuando se establece la conexión con éxito
         socket.onopen = (event) => {
             console.log("Conexión WebSocket establecida")
         }
 
-        // Función que se ejecuta cuando se cierra la conexión
         socket.onclose = (event) => {
             console.log("Conexión WebSocket cerrada")
         }
 
-        // Función que se ejecuta cuando se recibe un mensaje del servidor
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data)
-            const { workstation, type } = data
+            const { workstation: name, type } = data
+            const wsInfo = workstations[name]
+            console.log(wsInfo, event.data)
+            if (!wsInfo) return
+
             if (type === "alive") {
-                const ws = workstations[workstation]
-                if (!ws) return
-                const { info } = ws
-                const oldAlive = info && info.alive && info.alive < moment().valueOf() - 1000 * 60 * 2
-                const isNotAlive = !info || oldAlive || disconnectedWorkstations.includes(workstation)
-                if (Object.keys(workstations).includes(workstation) && isNotAlive)
-                    loadData()
+                const { status: prevStatus } = wsInfo
+                // Solo se actualiza cuando el estado anterior no era alive.
+                if (prevStatus !== STATUS.ALIVE) loadData()
+
+            } else if (type === "end") {
+                loadData()
+
             } else if (type === "disconnect") {
-                disconnectedWorkstations.push(workstation)
+                wsInfo.status = STATUS.WEBSOCKET_DISCONNECTED
                 drawWorkstations()
             }
         }
 
-        // Función que se ejecuta cuando se produce un error en la conexión
         socket.onerror = (event) => {
             console.error("Error de WebSocket:", event)
         }
 
         return socket
-    }
-
-    function encryptAES(plaintext, key) {
-        // Agregar padding al texto para que calce con los 16 bits que pide CBC
-        const paddingLength = 16 - (plaintext.length % 16) // Longitud del padding
-        const padding = String.fromCharCode(paddingLength).repeat(paddingLength) // Crea el padding con el byte de relleno
-        plaintext = plaintext + padding
-
-        // Convertir la clave y el IV a buffers
-        key = new TextEncoder().encode(key)
-        iv = new Uint8Array(16)
-
-        // Convertir el texto plano a un Uint8Array
-        plaintext = new TextEncoder().encode(plaintext)
-
-        // Crear una instancia de AES-256-CBC
-        const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
-
-        // Encriptar el texto plano
-        const encryptedBytes = aesCbc.encrypt(plaintext)
-
-        // Convertir el resultado en un string Base64
-        const encryptedBase64 = btoa(String.fromCharCode.apply(null, encryptedBytes))
-
-        return encryptedBase64
     }
 
 </script>

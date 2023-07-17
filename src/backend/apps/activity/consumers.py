@@ -1,35 +1,42 @@
+import os
 import json
 from channels.generic.websocket import WebsocketConsumer
-from .utils import decryptAES, validateWorkstationByRegex, getCurrentTimestamp
+from .utils import decryptAES, getCurrentTimestamp
 from asgiref.sync import async_to_sync
-from apps.activity.models import Session
+from apps.activity.models import Session, Workstation
 
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        enc = self.scope["url_route"]["kwargs"]["enc"]
-        dec = decryptAES(enc, "gUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w")
-        if (dec == "iamadmin"):
+        enc = self.scope["url_route"]["kwargs"]["enc"] # obtener workstation encriptada desde url
+        workstation = decryptAES(enc, os.getenv("WS_SECRET"))
+        print("Intento de conexión desde la estación de trabajo " + workstation)
+        if (workstation == "iamadmin"): # Conexión desde dashboard
             self.room_group_name = "labs"
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)            
-            self.accept()
-        elif (validateWorkstationByRegex(dec)):
-            self.room_group_name = "labs"
-            self.workstation = dec
-            async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
-            self.accept()
-        else:            
-            self.close()        
+            self.accept() 
+        else:
+            if Workstation.objects.filter(name=workstation).exists():
+                self.workstation = workstation   
+                self.room_group_name = "labs"   
+                async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
+                self.accept()
+            else:
+                print(f"Conexión denegada para estación de trabajo {workstation} inexistente.")
+                self.close()
+
+            
 
     def disconnect(self, _):
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                "type": "workstation.disconnect",
-                "workstation": self.workstation
-            },
-        )
-        async_to_sync(self.channel_layer.group_discard)("labs", self.channel_name)
+        if self.room_group_name and self.workstation:
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "workstation.disconnect",
+                    "workstation": self.workstation
+                },
+            )
+            async_to_sync(self.channel_layer.group_discard)("labs", self.channel_name)
 
 
     def receive(self, text_data):
@@ -46,12 +53,28 @@ class ChatConsumer(WebsocketConsumer):
                     "workstation": self.workstation
                 },
             )
-        
+        if data["type"] == "end":
+            session = Session.objects.filter(workstation__name=self.workstation).order_by("start").last()
+            session.end = getCurrentTimestamp()
+            session.save()
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "workstation.end",
+                    "workstation": self.workstation
+                },
+            )
 
     def workstation_alive(self, event):
         self.send(text_data=json.dumps({
             "workstation": event["workstation"],
             "type": "alive"
+        }))
+
+    def workstation_end(self, event):
+        self.send(text_data=json.dumps({
+            "workstation": event["workstation"],
+            "type": "end"
         }))
 
     def workstation_disconnect(self, event):
