@@ -1,6 +1,5 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
-from django.conf.urls import url
 urlpatterns = [
 
     path('form_reports/', views.form_reports, name="form_reports"),

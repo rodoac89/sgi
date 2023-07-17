@@ -51,8 +51,10 @@ def form_reports(request, pc = 0):
         message = f"Hola,\nGracias por contactarnos, tu reporte ha sido resivido exitosamente.\nEl número de reporte es: {reportes.id}\nSi deseas ver el estado actual de este ticket, ingresa al siguiente enlace {request.build_absolute_uri(reverse('searchreport', kwargs={}))} y en el campo de búsqueda ingresa el numero correspondiente.\n\n--\nEquipos de Laboratorios"
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [reportes.email, ]
-        send_mail( subject, message, email_from, recipient_list ) if email_from is not None else print("No se pudo enviar el correo")
-        
+        try:
+            send_mail( subject, message, email_from, recipient_list ) if email_from is not None else print("No se pudo enviar el correo")
+        except Exception as e:
+            print(e)
         notificationreport(reportes.pc)
         return redirect ('gratitude')   
     if pc != 0:
@@ -129,7 +131,11 @@ def updateticketstate(request,id):
         message = f"Hola,\nTe contamos que tu reporte ha recibido una actualización.\nEl número de reporte es: {ticket.id}\nEstado ticket: {ticket.get_state_display()}\nMensaje publicado el {ticket.date_comment.strftime('%d-%m-%Y') }: {ticket.comment}\n\nSi deseas ver el estado actual de este ticket, ingresa al siguiente enlace {request.build_absolute_uri(reverse('searchreport', kwargs={}))} y en el campo de búsqueda ingresa el numero correspondiente.\n\n--\nEquipos de Laboratorios"
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [ticket.email, ]
-        send_mail( subject, message, email_from, recipient_list ) if email_from is not None else print("No se pudo enviar el correo")
+        try:
+            send_mail( subject, message, email_from, recipient_list ) if email_from is not None else print("No se pudo enviar el correo")
+        except Exception as e:
+            print(e)
+            
         return redirect ('reports')
     template_name="updateticketstate.html"
     context = {'report':report}

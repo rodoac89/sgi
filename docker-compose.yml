@@ -3,9 +3,10 @@ services:
 
   redis:
     image: "redis:alpine"
-  
   backend:
-    build: ./src/backend
+    build: 
+      context: ./src/backend/
+      dockerfile: develop.Dockerfile
     image: backend_labsadmin
     volumes:
       - ./src/backend:/app/
