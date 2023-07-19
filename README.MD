@@ -40,7 +40,11 @@ URL_HOST="www.example.com" # Dominio donde se alojará el servicio
 DEBUG=Bool # El proyecto está automáticamente configurado para trabajar en modo DEBUG=True por lo que se debe especificar False para que funcione en producción
 
 # Deploy method
-HEROKU_DEPLOY=Bool # True o False dependiendo si se ejecutará con Heroku container, si es falso o no se específica, el proyecto automaticamente se ejecutará funcionará con deploy tradicional o docker/kubernetes
+DEFAULT_DEPLOY="tipo de deploy" # se debe especificar si se va a desplegar en Heroku, Produccion o Desarrollo:
+
+# Heroku: DEFAULT_DEPLOY="heroku"
+# Producción(Tradicional o en contenedores): DEFAULT_DEPLOY="production"
+# Desarrollo: No es necesario especificar esta variable
 
 # Email config
 EMAIL_HOST = "smtp.example.com" # URL smtp del servicio de correo
@@ -49,7 +53,7 @@ EMAIL_PORT = 0 # Número del puerto de servicio
 EMAIL_HOST_USER = "username" # Nombre de usuario del servicio de correo
 EMAIL_HOST_PASSWORD = "password" # Contraseña del servicio de correo
 
-# Database config
+# Database config (Solo para producción o heroku)
 HOST="db.example.com" # URL del host de la base de datos
 NAME="example" # Nombre de la base de datos
 USER="username" # Nombre de usuario de la base de datos
@@ -57,9 +61,9 @@ PASSWORD="password" # Contraseña de la base de datos
 
 ```
 
-## Instalación del servicio y aplicación Activity en Windows.
+## Instalación del servicio y aplicación Activity en Windows
 
-### Contexto.
+### Contexto
 
 Antes de todo se debe definir qué hacen estos dos programas:
 
@@ -67,13 +71,13 @@ Servicio Activity: Servicio de Windows que envía datos de uso del computador, i
 
 Aplicación de escritorio Activity: Aplicación de Windows que muestra una alerta de inactividad en el computador y que apagará el equipo después de un determinado tiempo si el usuario no cancela esta acción.
 
-### Ahora sí instalación.
+### Ahora sí instalación
 
 Para instalar el Servicio Activity se debe ejecutar el instalador con extensión .msi e ingresar los datos solicitados, que son el dominio del servidor al que se enviarán los datos de uso y el secret que se utiliza en la conexión con el servidor mediante Websocket. Como requisito para que funcione correctamente el servicio, se debe desactivar la opción de inicio rápido en la configuración de energía de Windows.
 
 Para instalar la Aplicación Activity se debe pegar el ejecutable con extensión .exe en la carpeta de inicio del usuario, para que se ejecute al iniciar sesión. Los pasos para hacer esto son:
+
 1. Tener la sesión iniciada en el usuario en el que se quiera instalar, en este caso sería el usuario dedicado para estudiantes.
 2. Pulsar las teclas Windows + R
 3. Escribir shell:startup
 4. A continuación verás una ventana, en ella simplemente tienes que arrastrar los accesos directos de aquellos programas que deseas que se inicien automáticamente al arrancar Windows 10
-
