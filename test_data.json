@@ -1,0 +1,85 @@
+[
+    {
+        "campus":{
+            "name":"Antonio Varas",
+            "latitude": "-33.434850",
+            "longitude": "-70.615350",
+            "active": true,
+            "inactive_by": "",
+            "rooms": [
+                {
+                    "room_name":"COM301",
+                    "address":"Antonio Varas 807, Providencia",
+                    "active": true,
+                    "inactive_by":"",
+                    "cant_pc": 48
+                },
+                {
+                    "room_name":"COM302",
+                    "address":"Antonio Varas 807, Providencia",
+                    "active": true,
+                    "inactive_by":"",
+                    "cant_pc": 30
+                },
+                {
+                    "room_name":"COM303",
+                    "address":"Antonio Varas 807, Providencia",
+                    "active": true,
+                    "inactive_by":"",
+                    "cant_pc": 30                
+                },
+                {
+                    "room_name":"COM304",
+                    "address":"Antonio Varas 807, Providencia",
+                    "active": true,
+                    "inactive_by":"",
+                    "cant_pc": 30               
+                },
+                {
+                    "room_name":"COM305",
+                    "address":"Antonio Varas 807, Providencia",
+                    "active": true,
+                    "inactive_by":"",
+                    "cant_pc": 48                
+                },
+                {
+                    "room_name":"COM501",
+                    "address":"Antonio Varas 880, Providencia",
+                    "active": true,
+                    "inactive_by":"",
+                    "cant_pc": 28                
+                }
+            ]
+
+            
+        }
+    },
+    {
+        "campus":{
+            "name":"República",
+            "latitude": "-33.4516427",
+            "longitude": "-70.6691498",
+            "active": true,
+            "inactive_by": "",
+            "rooms": [
+                {
+                    "room_name":"COM001",
+                    "address":"República 250, Santiago",
+                    "active": true,
+                    "inactive_by":"",
+                    "cant_pc": 34               
+                },
+                {
+                    "room_name":"COM002",
+                    "address":"República 250, Providencia",
+                    "active": true,
+                    "inactive_by":"", 
+                    "cant_pc": 38                 
+                }
+
+            ]
+
+            
+        }
+    }
+]
