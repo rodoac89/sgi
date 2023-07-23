@@ -203,9 +203,9 @@ if DEFAULT_DEPLOY == "heroku":
     config = {
         'default': dj_database_url.config(
             conn_max_age=600, ssl_require=True)
-        }
+    }
 
-elif DEFAULT_DEPLOY == "production":
+elif not DEBUG:
     config = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -213,8 +213,10 @@ elif DEFAULT_DEPLOY == "production":
             'USER': os.getenv('USER'),
             'PASSWORD': os.getenv('PASSWORD'),
             'HOST': os.getenv('HOST'),
+            'PORT': os.getenv('PG_PORT'),
         }
     }
+    
 else:
     config = {
         'default': {
@@ -222,7 +224,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    
+
 DATABASES = config
 
 # Password validation
