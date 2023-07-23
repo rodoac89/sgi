@@ -98,6 +98,8 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('URL_HOST')]
+
 # Channels configuration
 ASGI_APPLICATION = 'labsadmin.asgi.application'
 
