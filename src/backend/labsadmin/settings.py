@@ -305,15 +305,15 @@ LOGGING = {
             'formatter': 'simple'
         },
     },
-    'loggers': {
-        'core.handlers': {
-            'level': 'INFO',
-            'handlers': ['console']
-        },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
         'django.request':{
-            'level': 'WARNING',
             'handlers': ['console'],
-            'propagate': False,            
+            'propagate': False,
+            'level': 'CRITICAL',
         },
     },
 }
