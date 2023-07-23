@@ -27,7 +27,7 @@ DATE_FORMAT = 'd/m/Y'
 SECRET_KEY = os.getenv('DJANGO_SECRET') if os.getenv('DJANGO_SECRET') is not None else 'django-insecure-qr_5n+&dx%l3-1t)-&m84nw-id707e#@$f9_e*)jdb6*e6ri6+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else True
+DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else False
 
 ALLOWED_HOSTS = [os.getenv('URL_HOST') if os.getenv('URL_HOST') is not None else "127.0.0.1"]
 
