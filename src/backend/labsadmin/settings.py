@@ -27,7 +27,7 @@ DATE_FORMAT = 'd/m/Y'
 SECRET_KEY = os.getenv('DJANGO_SECRET') if os.getenv('DJANGO_SECRET') is not None else 'django-insecure-qr_5n+&dx%l3-1t)-&m84nw-id707e#@$f9_e*)jdb6*e6ri6+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else False
 
 ALLOWED_HOSTS = [os.getenv('URL_HOST') if os.getenv('URL_HOST') is not None else "127.0.0.1"]
 
@@ -287,3 +287,29 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') if os.getenv('EMAIL_USE_TLS') is not 
 EMAIL_PORT = os.getenv('EMAIL_PORT') if os.getenv('EMAIL_PORT') is not None else ""
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') if os.getenv('EMAIL_HOST_USER') is not None else ""
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') if os.getenv('EMAIL_HOST_PASSWORD') is not None else ""
+
+# Logs settings
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'django.request':{
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'WARNING',
+        },
+    },
+}
