@@ -317,3 +317,5 @@ LOGGING = {
         },
     },
 }
+
+print(os.getenv('HOST'))
