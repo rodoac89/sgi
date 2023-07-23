@@ -306,10 +306,14 @@ LOGGING = {
         },
     },
     'loggers': {
+        'core.handlers': {
+            'level': 'INFO',
+            'handlers': ['console']
+        },
         'django.request':{
-            'handlers': ['console'],
-            'propagate': False,
             'level': 'WARNING',
+            'handlers': ['console'],
+            'propagate': False,            
         },
     },
 }
