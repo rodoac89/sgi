@@ -27,7 +27,7 @@ DATE_FORMAT = 'd/m/Y'
 SECRET_KEY = os.getenv('DJANGO_SECRET') if os.getenv('DJANGO_SECRET') is not None else 'django-insecure-qr_5n+&dx%l3-1t)-&m84nw-id707e#@$f9_e*)jdb6*e6ri6+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else True
+DEBUG = os.getenv('DEBUG') if os.getenv('DEBUG') is not None else False
 
 ALLOWED_HOSTS = [os.getenv('URL_HOST') if os.getenv('URL_HOST') is not None else "127.0.0.1"]
 
@@ -97,6 +97,8 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://' + (os.getenv('URL_HOST') if os.getenv('URL_HOST') is not None else '127.0.0.1')]
 
 # Channels configuration
 ASGI_APPLICATION = 'labsadmin.asgi.application'
@@ -201,9 +203,9 @@ if DEFAULT_DEPLOY == "heroku":
     config = {
         'default': dj_database_url.config(
             conn_max_age=600, ssl_require=True)
-        }
+    }
 
-elif DEFAULT_DEPLOY == "production":
+elif not DEBUG:
     config = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -211,8 +213,10 @@ elif DEFAULT_DEPLOY == "production":
             'USER': os.getenv('USER'),
             'PASSWORD': os.getenv('PASSWORD'),
             'HOST': os.getenv('HOST'),
+            'PORT': os.getenv('PG_PORT'),
         }
     }
+    
 else:
     config = {
         'default': {
@@ -220,7 +224,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    
+
 DATABASES = config
 
 # Password validation
@@ -283,3 +287,35 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') if os.getenv('EMAIL_USE_TLS') is not 
 EMAIL_PORT = os.getenv('EMAIL_PORT') if os.getenv('EMAIL_PORT') is not None else ""
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') if os.getenv('EMAIL_HOST_USER') is not None else ""
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') if os.getenv('EMAIL_HOST_PASSWORD') is not None else ""
+
+# Logs settings
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        'django.request':{
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'CRITICAL',
+        },
+    },
+}
+
+print(os.getenv('HOST'))
