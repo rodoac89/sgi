@@ -43,6 +43,8 @@ class ChatConsumer(WebsocketConsumer):
         data = json.loads(text_data)
         if data["type"] == "alive":
             session = Session.objects.filter(workstation__name=self.workstation).order_by("start").last()
+            if session is None:
+                return
             if session.end is None:
                 session.alive = getCurrentTimestamp()
                 session.save()
