@@ -28,7 +28,7 @@ class ChatConsumer(WebsocketConsumer):
             
 
     def disconnect(self, _):
-        if "room_group_name" in self and "workstation" in self:
+        if self.room_group_name not None and self.workstation not None:
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
