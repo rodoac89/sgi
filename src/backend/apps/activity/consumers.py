@@ -13,6 +13,7 @@ class ChatConsumer(WebsocketConsumer):
         print("Intento de conexión desde la estación de trabajo " + workstation)
         if (workstation == "iamadmin"): # Conexión desde dashboard
             self.room_group_name = "labs"
+            self.workstation = None
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)            
             self.accept() 
         else:
