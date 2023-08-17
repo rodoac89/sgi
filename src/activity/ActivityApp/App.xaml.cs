@@ -10,7 +10,7 @@ namespace ActivityApp
     // muestra la ventana de inactividad.
     public partial class App : Application
     {
-        private readonly uint CheckIdleIntervalInMinutes = 5;
+        private readonly uint CheckIdleIntervalInMinutes = 2;
         private readonly uint MaxIdleTimeInMinutes = 10;
         private static Timer? IdleTimer;
         MainWindow? NW;
@@ -18,9 +18,6 @@ namespace ActivityApp
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            NW = new();
-            NW.Show();
 
             IdleTimer = new Timer { Interval = CheckIdleIntervalInMinutes * 60 * 1000 };
             IdleTimer.Elapsed += new ElapsedEventHandler(IdleTimerTask);
