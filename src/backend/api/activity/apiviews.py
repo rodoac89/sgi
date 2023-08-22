@@ -89,29 +89,38 @@ class GetChart(APIView):
             condition &= Q(workstation__room__id = room)
         elif campus is not None:
             condition &= Q(workstation__room__campus__id = campus)
-        
-        sessions = Session.objects.filter(condition).order_by("start").values_list("start", "end")
+
+        sessions = Session.objects.filter(condition).order_by("start").values_list("start", "end", "alive")
 
         data = [0] * len(ranges) # array de ceros, donde se llenaran los valores para cada rango de tiempo.
-        for session in sessions:
-            sessionStart, sessionEnd = session
-            sessionTime = sessionEnd - sessionStart
-            for ranIndex in range(len(ranges)):
-                rangeStart, rangeEnd = ranges[ranIndex]
-                if (sessionStart >= rangeStart and sessionStart < rangeEnd):
-                    currentEnd = min(sessionEnd, rangeEnd)
-                    sessionRangeTime = currentEnd - sessionStart
-                elif (sessionEnd > rangeStart and sessionEnd <= rangeEnd):
-                    sessionRangeTime = sessionEnd - max(sessionStart, rangeStart)
-                else:
-                    continue
+        try:
+            for session in sessions:
+                sessionStart, sessionEnd, sessionLastAlive = session
+                if sessionEnd is None:
+                    if sessionLastAlive is None:
+                        continue
+                    else:
+                        sessionEnd = sessionLastAlive
+                sessionTime = sessionEnd - sessionStart
+                for ranIndex in range(len(ranges)):
+                    rangeStart, rangeEnd = ranges[ranIndex]
+                    if (sessionStart >= rangeStart and sessionStart < rangeEnd):
+                        currentEnd = min(sessionEnd, rangeEnd)
+                        sessionRangeTime = currentEnd - sessionStart
+                    elif (sessionEnd > rangeStart and sessionEnd <= rangeEnd):
+                        sessionRangeTime = sessionEnd - max(sessionStart, rangeStart)
+                    else:
+                        continue
 
-                data[ranIndex] += sessionRangeTime
-                sessionTime -= sessionRangeTime
-                if (sessionTime == 0):
-                    break
-                elif (sessionTime > 0):
-                    sessionStart = rangeEnd
+                    data[ranIndex] += sessionRangeTime
+                    sessionTime -= sessionRangeTime
+                    if (sessionTime == 0):
+                        break
+                    elif (sessionTime > 0):
+                        sessionStart = rangeEnd
+        except Exception as exception:
+            print(exception)
+
 
         return Response(data, HTTP_200_OK)
     
