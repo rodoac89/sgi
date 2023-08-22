@@ -11,9 +11,10 @@ class ChatConsumer(WebsocketConsumer):
         enc = self.scope["url_route"]["kwargs"]["enc"] # obtener workstation encriptada desde url
         workstation = decryptAES(enc, os.getenv("WS_SECRET"))
         print("Intento de conexión desde la estación de trabajo " + workstation)
+        self.workstation = None
+        self.room_group_name = None
         if (workstation == "iamadmin"): # Conexión desde dashboard
             self.room_group_name = "labs"
-            self.workstation = None
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)            
             self.accept() 
         else:
