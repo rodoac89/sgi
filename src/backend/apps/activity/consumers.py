@@ -11,6 +11,8 @@ class ChatConsumer(WebsocketConsumer):
         enc = self.scope["url_route"]["kwargs"]["enc"] # obtener workstation encriptada desde url
         workstation = decryptAES(enc, os.getenv("WS_SECRET"))
         print("Intento de conexión desde la estación de trabajo " + workstation)
+        self.workstation = None
+        self.room_group_name = None
         if (workstation == "iamadmin"): # Conexión desde dashboard
             self.room_group_name = "labs"
             async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)            
@@ -28,7 +30,7 @@ class ChatConsumer(WebsocketConsumer):
             
 
     def disconnect(self, _):
-        if "room_group_name" in self and "workstation" in self:
+        if self.room_group_name is not None and self.workstation is not None:
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
@@ -43,6 +45,8 @@ class ChatConsumer(WebsocketConsumer):
         data = json.loads(text_data)
         if data["type"] == "alive":
             session = Session.objects.filter(workstation__name=self.workstation).order_by("start").last()
+            if session is None:
+                return
             if session.end is None:
                 session.alive = getCurrentTimestamp()
                 session.save()

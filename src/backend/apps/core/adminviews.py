@@ -35,7 +35,7 @@ def add_masive_workstations(request, room):
         r = Room.objects.get(id=room)
         for pc in range(int(request.POST['cant_pc'])):
             Workstation.objects.create(
-                name = r.room_name + "PC" + ( ("0"+ str(pc+1)) if pc+1 < 10 else str(pc+1)),
+                name = r.room_name + "-" + ( ("0"+ str(pc+1)) if pc+1 < 10 else str(pc+1)),
                 pc_model = request.POST['pc_model'],
                 processor_model = request.POST['processor_model'],
                 ram_capacity = request.POST['ram_capacity'],
