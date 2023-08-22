@@ -80,4 +80,4 @@ Para instalar la Aplicación Activity se debe pegar el ejecutable con extensión
 1. Tener la sesión iniciada en el usuario en el que se quiera instalar, en este caso sería el usuario dedicado para estudiantes.
 2. Pulsar las teclas Windows + R
 3. Escribir shell:startup
-4. A continuación verás una ventana, en ella simplemente tienes que arrastrar los accesos directos de aquellos programas que deseas que se inicien automáticamente al arrancar Windows 10
+4. En la ventana que se abre pegar el ejecutable ActivityApp.exe
