@@ -4,12 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        SizeToContent="Width"
+        SizeToContent="WidthAndHeight"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
-    <Border BorderBrush="#181533" BorderThickness="10" CornerRadius="7">
-        <Grid Width="700">
+    <Border BorderBrush="#181533" BorderThickness="10">
+        <Grid Height="650">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -30,7 +30,7 @@
             <Image 
                 Grid.Row="1"
                 Grid.RowSpan="4"
-                Source="https://lh3.googleusercontent.com/drive-viewer/AITFw-yHZOw6xz3X9mj_2WiRtTTgnhkHFgFCx36xeLUY-CrP5sXge47bY1JdkEniRhpl3BgBW9O5bwB_C9-WKXK_2A1C3GtUIQ=s2560"
+                Source="/Resources/sick-planet.png"
                 Margin="0,0,0,20"/>
 
             <TextBlock 
