@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'apps.monitoring',
     'apps.schedules',
     'apps.notification',
+    'django_extensions'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -319,3 +320,8 @@ LOGGING = {
 }
 
 print(os.getenv('HOST'))
+
+GRAPH_MODELS = {
+    'all_applications': True,
+    'graph_models': True,
+}
