@@ -6,15 +6,15 @@
 
 {% block content %}
 
-<div class="col-12">
+<div class="col-12" style="min-width: 860px;">
     <div style="margin-left: auto; margin-right: auto;" class="card p-5 card-custom gutter-b example example-compact">
 
         <h1>Actividad</h1>
 
-        <form style="gap: 10px;" class="my-5 d-flex justify-content-end">
-            <div class="form-group">
+        <form style="gap: 10px;" class="my-5 d-flex">
+            <div class="form-group flex-fill">
                 <label for="campus-select">Campus</label>
-                <select id="campus-select" style="width: 200px;" class="form-control">
+                <select id="campus-select" class="form-control">
                     {% if campuses|length > 1 %}
                     <option value="">Todos</option>
                     {% endif %}
@@ -23,10 +23,9 @@
                     {% endfor %}
                 </select>
             </div>
-
-            <div class="form-group">
+            <div class="form-group flex-fill">
                 <label for="room-select">Room</label>
-                <select id="room-select" value="{{ rooms.0.id }}" style="width: 200px;" class="form-control">
+                <select id="room-select" value="{{ rooms.0.id }}" class="form-control">
                     {% if rooms|length > 1 %}
                     <option value="">Todos</option>
                     {% endif %}
@@ -37,9 +36,9 @@
                 </select>
             </div>
 
-            <div class="mb-0 form-group">
+            <div class="mb-0 form-group flex-fill">
                 <label for="ws-select">Workstation</label>
-                <select id="ws-select" style="width: 200px;" class="form-control">
+                <select id="ws-select" class="form-control">
                     {% if workstations|length > 1 %}
                     <option value="">Todos</option>
                     {% endif %}
@@ -49,9 +48,9 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group flex-fill">
                 <label for="interval-select">Intervalo</label>
-                <select id="interval-select" style="width: 200px;" class="form-control">
+                <select id="interval-select" class="form-control">
                     <option value="hourly">Horario</option>
                     <option value="daily" selected>Diario</option>
                     <option value="weekly">Semanal</option>
@@ -60,9 +59,9 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group flex-fill">
                 <label for="campus-select">Fecha</label>
-                <button id="date-picker" type="button" style="width: 200px;" class="form-control">Ultima Semana</button>
+                <button id="date-picker" style="min-width: max-content;" type="button" class="form-control">Ultima Semana</button>
             </div>
 
             <button id="submit-chart" type="button" style="width: 100px; height: 38.5px;"
