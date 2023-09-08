@@ -80,7 +80,7 @@
                         : "border-danger"
             const message = status === STATUS.NO_HISTORY ? "No hay historial"
                 : status === STATUS.ENDED ? `Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY")}`
-                    : status === STATUS.OLD_ALIVE ? "Última señal de vida expirada"
+                    : status === STATUS.OLD_ALIVE ? `Desconexión inesperada\nFecha: ${moment(info.alive).format("HH:mm:ss DD/MM/YYYY")}`
                         : status === STATUS.WEBSOCKET_DISCONNECTED ? "El equipo se ha desconectado del servidor"
                             : status === STATUS.ALIVE ? "Encendido"
                                 : "Error"
