@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -177,19 +176,7 @@ WSGI_APPLICATION = 'labsadmin.wsgi.application'
 
 config = {} # This initialize database config
 
-
-DEFAULT_DEPLOY = os.getenv('DEFAULT_DEPLOY') if os.getenv('DEFAULT_DEPLOY') is not None else ""
-
-# Depending of "DB_type" this code configure the environment for works with Heroku, Local or Production DB
-# If the environtment it's not configured this project works as "dev mode" that implies works sqlite
-
-if DEFAULT_DEPLOY == "heroku":
-    config = {
-        'default': dj_database_url.config(
-            conn_max_age=600, ssl_require=True)
-    }
-
-elif not DEBUG:
+if not DEBUG:
     config = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -303,6 +290,7 @@ LOGGING = {
 }
 
 print(os.getenv('HOST'))
+print(config)
 
 GRAPH_MODELS = {
     'all_applications': True,
