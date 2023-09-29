@@ -180,11 +180,11 @@ if not DEBUG:
     config = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('NAME'),
-            'USER': os.getenv('USER'),
-            'PASSWORD': os.getenv('PASSWORD'),
-            'HOST': os.getenv('HOST'),
-            'PORT': os.getenv('PG_PORT'),
+            'NAME': os.getenv('PGDATABASE'),
+            'HOST': os.getenv('PGHOST'),
+            'USER': os.getenv('PGUSER'),
+            'PASSWORD': os.getenv('PGPASSWORD'),
+            'PORT': os.getenv('PGPORT'),
         }
     }
     
@@ -289,8 +289,6 @@ LOGGING = {
     },
 }
 
-print(os.getenv('HOST'))
-print(config)
 
 GRAPH_MODELS = {
     'all_applications': True,
