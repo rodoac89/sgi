@@ -1,3 +1,4 @@
+import django
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -12,8 +13,9 @@ def index(request):
     try:
         user = User.objects.get(pk=1)
         return redirect('login')
-    except:
-        return redirect('wizard')
+    except Exception as e:
+        
+        return redirect('installation')
     
 
 @login_required
@@ -36,9 +38,11 @@ def viewroom(request, room):
         
     return render(request, template_name, context)
 
-        
-def wizard(request):
+
+def installation(request):
     if request.POST:
+        from django.core.management import call_command
+        call_command("migrate", interactive=False)        
         
         User.objects.create_superuser(request.POST["username"], request.POST["email"], request.POST["password"])
         
@@ -76,7 +80,7 @@ def wizard(request):
                         workstation.save()
                         
         return redirect('index')
-    template_name="wizard.html"
+    template_name="installation.html"
     context={}
     
     

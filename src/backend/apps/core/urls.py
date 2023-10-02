@@ -5,7 +5,7 @@ from . import adminviews
 urlpatterns = [
     path('', views.index, name="index"),
     path('dashboard/', views.dashboard, name="dashboard"),
-    path('installation/', views.wizard, name="wizard"),
+    path('installation/', views.installation, name="installation"),
     path('view/room/<room>', views.viewroom, name="viewroom"),
     
     # Admin views
