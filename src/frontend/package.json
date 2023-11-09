@@ -1,0 +1,65 @@
+{
+  "name": "black-dashboard-pro-react",
+  "version": "1.2.2",
+  "private": true,
+  "homepage": "https://demos.creative-tim.com/black-dashboard-pro-react/#/admin/dashboard",
+  "scripts": {
+    "serve": "nodemon index.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "compile-sass": "sass src/assets/scss/black-dashboard-pro-react.scss src/assets/css/black-dashboard-pro-react.css",
+    "minify-sass": "sass src/assets/scss/black-dashboard-pro-react.scss src/assets/css/black-dashboard-pro-react.min.css --style compressed"
+  },
+  "dependencies": {
+    "autoprefixer": "10.4.14",
+    "bootstrap": "4.6.2",
+    "chart.js": "3.9.1",
+    "classnames": "2.3.2",
+    "match-sorter": "6.3.1",
+    "moment": "2.29.4",
+    "sass": "1.62.1",
+    "nouislider": "15.4.0",
+    "perfect-scrollbar": "1.5.5",
+    "postcss": "8.4.23",
+    "prop-types": "15.8.1",
+    "react": ">=16.8.0",
+    "react-big-calendar": "1.6.9",
+    "react-bootstrap-sweetalert": "5.2.0",
+    "react-bootstrap-wizard": "0.0.9",
+    "react-chartjs-2": "3.3.0",
+    "react-datetime": "3.2.0",
+    "react-dom": ">=16.8.0",
+    "react-jvectormap": "0.0.16",
+    "react-notification-alert": "0.0.13",
+    "react-router-dom": "6.11.1",
+    "react-scripts": "5.0.1",
+    "react-select": "5.7.3",
+    "react-table": "7.8.0"
+  },
+  "devDependencies": {
+    "typescript": "5.0.4"
+  },
+  "optionalDependencies": {
+    "eslint-plugin-flowtype": "8.0.3",
+    "reactstrap": "8.10.1"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "overrides": {
+    "svgo": "3.0.2"
+  }
+}

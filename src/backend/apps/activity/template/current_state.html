@@ -1,0 +1,188 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+
+{% block pagetitle %}Estado Actual{% endblock %}
+
+{% block content %}
+
+<div class="col-12">
+    <div style="margin-left: auto; margin-right: auto;" class="card p-5 card-custom gutter-b example example-compact">
+
+        <h1>Estado Actual</h1>
+
+        <div class="d-flex justify-content-end">
+            <select id="campus-select" style="width: 200px;" class="form-control mr-4">
+                {% for campus in campuses %}
+                <option value="{{ campus.id }}">{{ campus.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select id="room-select" style="width: 200px" class="form-control">
+                {% for room in rooms %}
+                <option value="{{ room.id }}">{{ room.room_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="ws-container" class="p-10 d-flex flex-wrap justify-content-center"></div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.rawgit.com/ricmoo/aes-js/e27b99df/index.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<script type="text/javascript">
+    const STATUS = {
+        NO_HISTORY: "no-history",
+        ENDED: "has-end",
+        OLD_ALIVE: "alive-is-old",
+        WEBSOCKET_DISCONNECTED: "websocket-disconnected",
+        ALIVE: "is-alive"
+    }
+
+    const refreshTime = 1000 * 60 * 2 // Se traerán los datos cada dos minutos si no se refrezcan por un mensaje entrante de websocket.
+
+    const webSocketUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}` +
+        "/ws/activity/{{adminEncrypted}}/"
+
+    const campusSelect = document.getElementById("campus-select")
+    const roomSelect = document.getElementById("room-select")
+    const wsContainer = document.getElementById("ws-container")
+
+    let workstations
+    let lastUpdate
+
+    const addStatusToWorkstations = (workstations) => {
+        Object.entries(workstations).forEach((workstation) => {
+            const [name, info] = workstation
+            if (!info) workstations[name] = { status: STATUS.NO_HISTORY }
+            else if (info.end) info.status = STATUS.ENDED
+            else if (info.alive && info.alive < moment().valueOf() - (refreshTime + 1000))
+                info.status = STATUS.OLD_ALIVE
+            // El estado WEBSOCKET_DISCONNECTED se da solamente 
+            // si se recibe ese mensaje por websocket.
+            else info.status = STATUS.ALIVE
+        })
+    }
+
+    const drawWorkstations = () => {
+        wsContainer.innerHTML = Object.entries(workstations).reduce((acc, curr) => {
+            const [name, info] = curr
+            const { status } = info
+            const color = status === STATUS.NO_HISTORY || status === STATUS.ENDED ? "border-light"
+                : status === STATUS.OLD_ALIVE || status === STATUS.WEBSOCKET_DISCONNECTED ? "border-warning"
+                    : status === STATUS.ALIVE ? "border-success"
+                        : "border-danger"
+            const message = status === STATUS.NO_HISTORY ? "No hay historial"
+                : status === STATUS.ENDED ? `Fin: ${moment(info.end).format("HH:mm:ss DD/MM/YYYY")}`
+                    : status === STATUS.OLD_ALIVE ? `Desconexión inesperada\nFecha: ${moment(info.alive).format("HH:mm:ss DD/MM/YYYY")}`
+                        : status === STATUS.WEBSOCKET_DISCONNECTED ? "El equipo se ha desconectado del servidor"
+                            : status === STATUS.ALIVE ? "Encendido"
+                                : "Error"
+            return acc + `
+            <div style="width: 250px; height: 200px;" class="d-flex">
+
+                <div style="width: 200px; height: 150px;"
+                    class="py-5 d-flex flex-column align-items-center border border-5 rounded ${color}">
+                    <h6 class="mb-5">${name}</h6>
+                    ${info && info.start
+                    ? ` <p>Inicio: ${moment(info.start).format("HH:mm:ss DD/MM/YYYY")}</p>
+                        <p class="text-center">${message}`
+                    : `<p>${message}</p>`
+                }
+                </div>
+
+            </div>
+            `
+        }, "")
+    }
+
+    const loadData = (e) => {
+        lastUpdate = moment().valueOf()
+        const target = e && e.target && e.target.id
+        let error = false
+        const params = { campus: campusSelect.value }
+        if (roomSelect.value) params.room = roomSelect.value
+        fetch("{% url 'getstate' %}?" + new URLSearchParams(params))
+            .then((response) => {
+                if (response.status > 299) error = true
+                return response.json()
+            })
+            .then((data) => {
+                if (error || data.rooms.length == 0) {
+                    wsContainer.innerHTML = "<div>Sin datos</div>"
+                    roomSelect.innerHTML = ""
+                } else {
+                    if (target === "campus-select")
+                        roomSelect.innerHTML = data.rooms.reduce((acc, curr) => acc +
+                            `<option value="${curr.id}">${curr.room_name}</option>`,
+                            "")
+                    workstations = data.workstations
+                    addStatusToWorkstations(workstations)
+                    drawWorkstations()
+                }
+            })
+    }
+
+    // Primer render
+    loadData()
+    connectWebSocket(webSocketUrl)
+
+    // Actualizar los datos si no se han actualizado en los últimos dos minutos.
+    setInterval(() => {
+        if (lastUpdate < moment().valueOf() - refreshTime * 2)
+            loadData()
+
+    }, refreshTime)
+
+    // Al cambiar el campus, cambiar rooms y workstations
+    campusSelect.onchange = loadData
+    roomSelect.onchange = loadData
+
+    function connectWebSocket(url) {
+        const socket = new WebSocket(url)
+
+        socket.onopen = (event) => {
+            console.log("Conexión WebSocket establecida")
+        }
+
+        socket.onclose = (event) => {
+            console.log("Conexión WebSocket cerrada")
+        }
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+            const { workstation: name, type } = data
+            const wsInfo = workstations[name]
+            console.log(wsInfo, event.data)
+            if (!wsInfo) return
+
+            if (type === "alive") {
+                const { status: prevStatus } = wsInfo
+                // Solo se actualiza cuando el estado anterior no era alive.
+                if (prevStatus !== STATUS.ALIVE) loadData()
+
+            } else if (type === "end") {
+                loadData()
+
+            } else if (type === "disconnect") {
+                wsInfo.status = STATUS.WEBSOCKET_DISCONNECTED
+                drawWorkstations()
+            }
+        }
+
+        socket.onerror = (event) => {
+            console.error("Error de WebSocket:", event)
+        }
+
+        return socket
+    }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,379 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+
+
+{% block pagetitle %}Actividad{% endblock %}
+
+{% block content %}
+
+<div class="col-12" style="min-width: 860px;">
+    <div style="margin-left: auto; margin-right: auto;" class="card p-5 card-custom gutter-b example example-compact">
+
+        <h1>Actividad</h1>
+
+        <form style="gap: 10px;" class="my-5 d-flex">
+            <div class="form-group flex-fill">
+                <label for="campus-select">Campus</label>
+                <select id="campus-select" class="form-control">
+                    {% if campuses|length > 1 %}
+                    <option value="">Todos</option>
+                    {% endif %}
+                    {% for campus in campuses %}
+                    <option value="{{ campus.id }}" {% if forloop.first %}selected{% endif %}>{{ campus.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group flex-fill">
+                <label for="room-select">Room</label>
+                <select id="room-select" value="{{ rooms.0.id }}" class="form-control">
+                    {% if rooms|length > 1 %}
+                    <option value="">Todos</option>
+                    {% endif %}
+                    {% for room in rooms %}
+                    <option value="{{ room.id }}" {% if forloop.first %}selected{% endif %}>{{ room.room_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-0 form-group flex-fill">
+                <label for="ws-select">Workstation</label>
+                <select id="ws-select" class="form-control">
+                    {% if workstations|length > 1 %}
+                    <option value="">Todos</option>
+                    {% endif %}
+                    {% for ws in workstations %}
+                    <option value="{{ ws.id }}" {% if forloop.first %}selected{% endif %}>{{ ws.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group flex-fill">
+                <label for="interval-select">Intervalo</label>
+                <select id="interval-select" class="form-control">
+                    <option value="hourly">Horario</option>
+                    <option value="daily" selected>Diario</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="monthly">Mensual</option>
+                    <option value="yearly">Anual</option>
+                </select>
+            </div>
+
+            <div class="form-group flex-fill">
+                <label for="campus-select">Fecha</label>
+                <button id="date-picker" style="min-width: max-content;" type="button" class="form-control">Ultima Semana</button>
+            </div>
+
+            <button id="submit-chart" type="button" style="width: 100px; height: 38.5px;"
+                class="ml-5 mt-auto mb-7 btn btn-primary">
+                GRAFICAR
+            </button>
+        </form>
+
+        <h2 style="margin: 20px auto 25px;">
+            Emisión de CO2 vs Tiempo (<span id="chart-title-time">día</span>)
+        </h2>
+
+        <div>
+            <canvas id="session-chart"></canvas>
+        </div>
+
+        <div style="margin-top: 50px; margin-left: 60px; font-size: 18px;" class="font-weight-bold">
+            <div class="d-flex">
+                <p style="width: 110px;">Total</p>
+                <p id="total" style="min-width: 70px;" class="text-right">0</p>
+                <p>&nbsp;Kg de CO2</p>
+            </div>
+            <div class="d-flex">
+                <p style="width: 110px;">Promedio</p>
+                <p id="average" style="min-width: 70px;" class="text-right">0</p>
+                <p>&nbsp;Kg de CO2 por <span id="chart-avg-time">día</span></p>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+
+<script>
+    const campusSelect = document.getElementById("campus-select")
+    const roomSelect = document.getElementById("room-select")
+    const wsSelect = document.getElementById("ws-select")
+    const intervalSelect = document.getElementById("interval-select")
+    const datePicker = document.getElementById("date-picker")
+    const submit = document.getElementById("submit-chart")
+    const chartTitleTime = document.getElementById("chart-title-time")
+    const chartContext = document.getElementById("session-chart")
+    const totalEl = document.getElementById("total")
+    const averageEl = document.getElementById("average")
+    const chartAvgTime = document.getElementById("chart-avg-time")
+    
+    let co2Chart
+
+    const handleSelect = (e) => {
+        const target = e.target.id
+        const { value } = e.target
+        let error = false
+        if (value === "") {
+            if (target === "campus-select") {
+                roomSelect.value = ""
+                roomSelect.innerHTML = ""
+            }
+            if (target === "campus-select" || target === "room-select") {
+                wsSelect.value = ""
+                wsSelect.innerHTML = ""
+            }
+            return
+        }
+
+        const params = {}
+        if (campusSelect.value) params.campus = campusSelect.value
+        if (roomSelect.value) params.room = roomSelect.value
+
+        fetch("{% url 'getoptions' %}?" + new URLSearchParams(params))
+            .then(response => {
+                if (response.status > 299) {
+                    error = true
+                    if (target === "campus-select") {
+                        roomSelect.value = ""
+                        roomSelect.innerHTML = ""
+                    }
+                    if (target === "campus-select" || target === "room-select") {
+                        wsSelect.value = ""
+                        wsSelect.innerHTML = ""
+                    }
+                    return
+                }
+                return response.json()
+            })
+            .then(data => {
+                if (error) return
+                if (target === "campus-select") {
+                    roomSelect.innerHTML = (data.rooms.length > 1 ? "<option value=''>Todos</option>" : "") +
+                        data.rooms.reduce((acc, curr) => acc +
+                            `<option value="${curr.id}">${curr.room_name}</option>`,
+                            "")
+                    if (data.rooms.length > 1) roomSelect.value = data.rooms[0].id
+                }
+                if (target === "campus-select" || target === "room-select") {
+                    wsSelect.innerHTML = (data.workstations.length > 1 ? "<option value=''>Todos</option>" : "") +
+                        data.workstations.reduce((acc, curr) => acc +
+                            `<option value="${curr.id}">${curr.name}</option>`,
+                            "")
+                    if (data.workstations.length > 1) wsSelect.value = data.workstations[0].id
+                }
+            })
+    }
+
+    campusSelect.onchange = handleSelect
+    roomSelect.onchange = handleSelect
+
+    $("#date-picker").daterangepicker({
+        alwaysShowCalendars: true,
+        showDropdowns: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        ranges: {
+            "Hoy": [moment().startOf("day"), moment()],
+            "Ayer": [moment().subtract(1, "days").startOf("day"), moment().subtract(1, "days").endOf("day")],
+            "Ultima Semana": [moment().subtract(6, "days"), moment()],
+            "Ultimos 30 Dias": [moment().subtract(29, "days"), moment()],
+            "Este Mes": [moment().startOf("month"), moment()],
+            "Mes Pasado": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+        },
+        locale: {
+            format: "DD/MM/YYYY",
+            separator: " - ",
+            applyLabel: "Aceptar",
+            cancelLabel: "Cancelar",
+            fromLabel: "Desde",
+            toLabel: "Hasta",
+            customRangeLabel: "Personalizado",
+            weekLabel: "Semana",
+            daysOfWeek: [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            monthNames: [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            firstDay: 1
+        },
+        linkedCalendars: false,
+        startDate: moment().subtract(6, "days"),
+        endDate: moment(),
+        opens: "left"
+    }, (start, end, label) => { datePicker.innerHTML = label })
+
+    const createChart = (data, labels) => {
+        co2Chart = new Chart(chartContext, {
+            type: "line",
+            data: {
+                labels,
+                datasets: [{
+                    label: "",
+                    data,
+                    backgroundColor: "rgba(27, 197, 189, 0.5)",
+                    borderColor: "#1BC5BD",
+                    pointStyle: "circle",
+                    pointRadius: 8,
+                    pointHoverRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        })
+    }
+
+    const getChart = (e) => {
+        const { startDate, endDate } = $("#date-picker").data("daterangepicker")
+        const start = startDate.valueOf()
+        const end = endDate.valueOf()
+
+        const interval = intervalSelect.value
+        const ranges = getRanges(start, end, interval)
+
+        const body = { ranges }
+        if (wsSelect.value !== "") body.ws = wsSelect.value
+        else if (roomSelect.value !== "") body.room = roomSelect.value
+        else if (campusSelect.value !== "") body.campus = campusSelect.value
+
+        fetch("{% url 'getchart' %}", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: { "Content-type": "application/json" }
+        })
+            .then((response) => {
+                if (response.status > 299) error = true
+                return response.json()
+            })
+            .then((data) => {
+                if (co2Chart) co2Chart.destroy()
+                const { values, fixed } = getValuesAndFixedFromDurations(data)
+                const fixedValues = values.map(val => val.toFixed(fixed))
+                const labels = getLabels(ranges, interval)
+                createChart(fixedValues, labels)
+                chartTitleTime.innerHTML = getChartTitleTime(interval)
+                const total = values.reduce((acc, curr) => acc + curr)
+                totalEl.innerHTML = total.toFixed(fixed)
+                averageEl.innerHTML = (values.length == 0 ? 0 : (total / values.length)).toFixed(fixed)
+                chartAvgTime.innerHTML = getChartTitleTime(interval)
+            })
+    }
+
+    submit.onclick = getChart
+
+    function getRanges(start, end, interval) {
+        let period
+        switch (interval) {
+            case "hourly":
+                period = "hour"
+                break
+            case "daily":
+                period = "day"
+                break
+            case "weekly":
+                period = "week"
+                break
+            case "monthly":
+                period = "month"
+                break
+            case "yearly":
+                period = "year"
+                break
+            default:
+                return
+        }
+        const ranges = []
+        let eop = moment(start).endOf(period).valueOf() // end of period
+        let i = start
+        while (eop < end) {
+            ranges.push([i, eop])
+            const nextPeriod = moment(i).add(1, `${period}s`)
+            i = nextPeriod.startOf(period).valueOf()
+            eop = nextPeriod.endOf(period).valueOf()
+        }
+        ranges.push([i, end])
+        return ranges
+    }
+
+    function getLabels(ranges, interval) {
+        return ranges.map(range => {
+            if (interval === "hourly")
+                return moment(range[0]).startOf("hour").format("DD/MM/YY HH:mm:ss")
+            if (interval === "daily")
+                return moment(range[0]).format("DD/MM/YY")
+            if (interval === "weekly")
+                return "Semana " + moment(range[0]).startOf("week").format("DD/MM/YY")
+            if (interval === "monthly") {
+                const month = moment(range[0]).format("MMMM")
+                return month.charAt(0).toUpperCase() + month.slice(1)
+            }
+            if (interval === "yearly")
+                return moment(range[0]).format("YYYY")
+        })
+    }
+
+    function getValuesAndFixedFromDurations(durationsInMillis) {
+        const co2List = durationsInMillis.map(duration => {
+            const hours = duration / (1000 * 60 * 60)
+            const co2 = (100 * hours * 0.475) / 1000
+            return co2
+        })
+        const minCO2 = Math.min(...co2List)
+        let fixed
+        if (minCO2 < 1) fixed = 3
+        else if (minCO2 < 10) fixed = 2
+        else if (minCO2 < 100) fixed = 1
+        else fixed = 0
+        return { values: co2List, fixed }
+    }
+
+    function getChartTitleTime(interval) {
+        if (interval === "hourly") return "hora"
+        if (interval === "daily") return "día"
+        if (interval === "weekly") return "semana"
+        if (interval === "monthly") return "mes"
+        if (interval === "yearly") return "año"
+    }
+
+    getChart()
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Reservar{% endblock %}
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+{% block content %}
+
+<body>
+    <div class="card card-custom">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">{{ room.campus }} - {{ room.room_name }}</h3>
+            </div>
+            <div class="card-toolbar">
+                <a href="{% url 'reserve_room' %}" class="btn btn-light-primary font-weight-bold" id="timeGridWeek">
+                    <i class="ki ki-plus icon-md mr-2"></i>Crear solicitud</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="kt_calendar" class="fc fc-ltr fc-unthemed">
+                
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+{% block scripts %}
+<link href="{%static 'plugins/custom/fullcalendar/fullcalendar2.bundle.css'%}" rel="stylesheet" type="text/css" />
+<script src="{%static 'plugins/custom/fullcalendar/fullcalendar2.bundle.js'%}"></script>
+<script>
+    var KTCalendarBasic = function() {
+
+return {
+    //main function to initiate the module
+    init: function() {
+        var calendarEl = document.getElementById('kt_calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+            themeSystem: 'bootstrap',
+
+            isRTL: KTUtil.isRTL(),
+            
+            locale: 'es',
+            height: 'auto',
+            contentHeight: 'auto',
+            aspectRatio: 'auto',
+            minTime: '7:00',
+            maxTime: '23:59',
+            expandRows: true,
+            defaultView: 'timeGridWeek',
+            firstDay:1,
+            editable: false,
+            eventLimit: false,
+            navLinks: true,
+            displayEventTime: true,
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay',
+            },
+            validRange: {
+                start: '2021-01-01',
+                end: '2022-12-28'
+            },
+            titleFormat: {
+                month: 'long',
+                year: 'numeric',
+                day: 'numeric',
+                timeZone: 'locale',
+            },
+            slotLabelFormat: [{ 
+                hour: 'numeric',
+                minute: '2-digit',
+                meridiem: false,
+                hour12: false, 
+            },],
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+            },
+            events: [
+                {% for rp in roompetition %}
+                {% for me in modulevent %}
+                {% if me.module.start_module == rp.time_start_petition %}
+                {
+                    title: '{{me.petition.event_petition}}',
+                    start: '{{me.day|date:"Y-m-d"}} {{rp.time_start_petition}}',
+                    end: '{{me.day|date:"Y-m-d"}} {{rp.time_finish_petition}}',
+                    description: '',
+                    className: "fc-event-solid-primary fc-event-light",
+                    resourceId:{}
+                },
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+            ],
+
+            eventRender: function(info) {
+                var element = $(info.el);
+
+                if (info.event.extendedProps && info.event.extendedProps.description) {
+                    if (element.hasClass('fc-day-grid-event')) {
+                        element.data('content', info.event.extendedProps.description);
+                        element.data('placement', 'top');
+                        KTApp.initPopover(element);
+                    } else if (element.hasClass('fc-time-grid-event')) {
+                        element.find('.fc-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                    } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                        element.find('.fc-list-item-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                    }
+                }
+            }
+        });
+
+        calendar.render();
+    }
+};
+}();
+jQuery(document).ready(function() {
+    KTCalendarBasic.init();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Modulo de licencias{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+{% block notificaciones %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+
+{% endblock %}
+
+<!--Probando git-->
+{% block content %}
+    <div class="d-flex flex-column-fluid">
+							<!--begin::Container-->
+							<div class="container">
+								<div class="row justify-content-center">
+									<div class="col-8">	
+										<!--begin::Card-->
+										<div class="card card-custom gutter-b example example-compact">
+											<div class="card-header">
+												<h3 class="card-title">Solicitud de software</h3>
+												<div class="card-toolbar">
+													<!--AQUI LOGO UNAB-->
+												</div>
+											</div>
+											<!--begin::Form-->
+											<form action="{% url 'licenses:form_create' %}" method="POST">
+
+												{% csrf_token %} 
+												<div class="card-body row justify-content-center">
+													
+													<div class="form-group row col-12">
+														<label class="col-2 col-form-label">Nombre</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="name_user" value="{{ formulario.name_user }}" />
+														</div>
+														<label class="col-2 col-form-label">Apellido</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="last_name" value="{{ formulario.last_name }}" />
+														</div>
+													</div>
+													<div class="form-group row col-12">
+														<label for="example-search-input" class="col-2 col-form-label">Rut</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="rut" value="{{ formulario.rut }}" />
+														</div>
+														<label for="example-search-input" class="col-2 col-form-label">Correo institucional</label>
+														<div class="col-4">
+															<input class="form-control" type="text" name="email" value="{{ formulario.email }}" />
+														</div>
+													</div>
+													
+
+													<div class="form-group row fv-plugins-icon-container col-12">
+														<table class="table table-bordered">
+															
+															<thead class="table-dark col-12">
+																<tr>
+																	<th class="" style="width: 70%;">Asignatura</th>
+																	<th class="" style="width: 15%;">Codigo del curso</th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="subject" value="{{ formulario.subject }}" id="example-text-input" /></th>
+																	<th ><input class="form-control" type="text" name="nrc" value="{{ formulario.nrc }}" id="example-text-input" /></th>
+																	
+																</tr>
+
+															</tbody>
+
+															
+
+														</table>
+													</div>
+													<div class="form-group row fv-plugins-icon-container col-12">
+														<label for="">Software a instalar:</label>
+														<table class="table table-bordered">
+															
+															<thead class="table-dark">
+																<tr>
+																	<th class="" style="width: 60%;">Nombre</th>
+																	<th class="" style="width: 10%;">Tipo de licencia</th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" /></th>
+																	<th >
+																		<div class="dropdown">
+																			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																				Dropdown button
+																			</button>
+																			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+																				<a class="dropdown-item" href="#">Action</a>
+																				<a class="dropdown-item" href="#">Another action</a>
+																				<a class="dropdown-item" href="#">Something else here</a>
+																			</div>
+																		</div>
+																	</th>
+																</tr>
+
+															</tbody>
+
+														
+															
+
+														</table>
+													</div>
+
+													<div class="form-group row fv-plugins-icon-container col-8">
+														<table class="table table-bordered">
+															
+															<thead class="table-dark">
+																<tr>
+																	<th class="" style="width: 60%;">Laboratorio</th>
+																	<th class="" style="width: 10%;"></th>
+																</tr>
+															</thead>
+															
+
+															<tbody>
+																<tr>
+																	<th ><input class="form-control" type="text" name="software_name" value="{{ formulario.software_name }}" id="example-text-input" /></th>
+																	<th >
+																		<div class="dropdown">
+																			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																				Dropdown button
+																			</button>
+																			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+																				<a class="dropdown-item" href="#">Action</a>
+																				<a class="dropdown-item" href="#">Another action</a>
+																				<a class="dropdown-item" href="#">Something else here</a>
+																			</div>
+																		</div>
+																		
+																	</th>
+																</tr>
+
+															</tbody>
+
+														
+															
+
+														</table>
+													</div>
+
+													
+													<div class="form-group row " style="width: 90%;">
+														<label for="exampleFormControlTextarea1">Detalles por considerar para la instalación (Enlace de descarga, instrucciones específicas de instalación o configuración, etc.):</label>
+														<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" value="{{ formulario.details }}"></textarea>
+													</div>
+
+													<div class="form-group mb-8">
+														<div class="alert alert-custom alert-default" role="alert">
+															<div class="alert-text">
+																<p>Observaciones</p>
+																<p>•	Existe un plazo mínimo de 2 semanas a contar de la fecha solicitud para que el software esté instalado, el cual puede variar dependiendo de: 
+																	<br>	- Disponibilidad Laboratorio 
+																	<br>	- Licencia de software
+																	<br>	- Cara de trabajo una vez iniciado el semestre academico
+																</p>
+																<p>•	Si el software requiere licencia para ser utilizado, el equipo de Laboratorios, no se hace responsable por no disponer de licencias. Gestionar licencias con dirección de escuela.</p>
+																<p>•	Si dispone de software a instalar, favor facilitar a encargados de laboratorios, para disminuir los tiempos de instalación.</p>
+																<p>•	En caso de tener guía de instalación, o protocolos especiales, favor entregar al equipo de Laboratorios.</p>
+																<p style="color: red;">•	Si el software solicitado es “TRIAL” o es una versión de prueba, el software será desinstalado una vez que expire.</p>
+															</div>
+														</div>
+													</div>
+													
+												</div>
+												<div class="card-footer">
+													<div class="row col-12 justify-content-end">
+														<div class="col-2">
+															<button  type="submit" class="btn btn-success mr-2">Submit</button>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<!--end::Card-->
+										</div>
+									
+								</div>
+							</div>
+							<!--end::Container-->
+						</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

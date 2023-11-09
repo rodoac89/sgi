@@ -1,0 +1,43 @@
+version: "3"
+services:
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - cache:/data
+
+  backend:
+    build: 
+      context: ./src/backend/
+      dockerfile: develop.Dockerfile
+      args:
+        REDIS_URL: redis
+        URL_HOST: 127.0.0.1
+    image: backend_labsadmin
+    depends_on:
+      - redis
+    volumes:
+      - ./src/backend:/app/
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: 
+      context: ./src/frontend/
+      dockerfile: develop.Dockerfile
+    image: frontend
+    depends_on:
+      - backend
+    volumes:
+      - ./src/frontend:/code
+      - /code/node_modules
+    ports:
+      - "3000:3000"
+
+volumes:
+  cache:
+    driver: local

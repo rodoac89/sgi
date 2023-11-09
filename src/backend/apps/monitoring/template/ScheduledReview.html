@@ -1,0 +1,189 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Revisiones Agendadas{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock css %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+<!-- Modal-->
+<div class="modal fade" id="exampleModalLong" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agendar Revisión</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <form method="POST" onsubmit="return validate_form();">
+                {% csrf_token %}
+                <input type="hidden" name="user" value="{{ request.user.username }}">
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label  class="col-2 col-form-label">Titulo</label>
+                    <div class="col-10">
+                     <input class="form-control" name="title" type="text"  id="title"/>
+                     <label id="titleerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Ingrese un título</span></label> 
+                    </div>
+                   </div>
+                <div class="form-group row">
+                    <label for="example-datetime-local-input" class="col-2 col-form-label">Fecha</label>
+                    <div class="col-10">
+                        <input id="date" class="form-control" name="date" type="datetime-local" id="example-datetime-local-input" />
+                        <label id="dateerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione una fecha</span></label> 
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-inline">
+                        <label class="checkbox checkbox-rounded">
+                            <input type="checkbox" onclick="showdate()" id="daterecurrent" name="recurrent"/>
+                            <span></span>
+                            Recurrente
+                        </label>
+                    </div>      
+                </div>
+                <div id="recurrent" style="display: none;">
+                <div class="form-group row" >
+                    <span class="text-muted pt-2 font-size-sm d-block">Nota: Debe seleccionar el mismo día de semana que seleccionó en la primera fecha.</span>
+                    <label for="example-datetime-local-input" class="col-2 col-form-label">Fecha Fin</label>
+                    <div class="col-10">
+                        <input id="dateend" class="form-control" name="dateend" type="datetime-local" id="example-datetime-local-input" />
+                        <label id="dateenderror" style="display: none;" for="exampleTextarea"><span class="text-danger">Debe seleccionar una fecha final</span></label> 
+                    </div>
+                </div>      
+            </div>        
+                   <div class="form-group">
+                    <label for="exampleSelect1">Seleccionar un laboratorio<span class="text-danger">*</span></label>
+                    <select class="form-control" name="room" id="room">
+                        <option selected disabled="true"></option>
+                        {% for i in room %}
+                            <option value="{{i.id}}">{{i.room_name}}</option>  
+                            {% endfor %}
+
+                    </select>
+                    <label id="roomerror" style="display: none;" for="exampleTextarea"><span class="text-danger">Seleccione un laboratorio de la lista</span></label> 
+                   </div>   
+        <br>
+            
+            
+        <br> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success font-weight-bold">Agendar</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+<div class="card card-custom">
+    
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Revisiones Agendadas</h3>
+        </div>
+        <button type="button" class="btn btn-light-primary font-weight-bold" data-toggle="modal" data-target="#exampleModalLong">
+                <i class="ki ki-plus icon-md mr-2"></i>Programar Revisión</button> 
+    </div>
+    <div class="card-body">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/pages/features/calendar/main.js' %}"></script>
+<script src="{% static 'js/pages/features/calendar/locales-all.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        var calendarUI = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarUI,{ 
+            headerToolbar:{
+                left: 'prev,next,today',
+                center: 'title',
+            },
+            eventClick: function() {
+                window.location.href = "{% url 'computer_management' %}";
+            },    
+            eventColor: '#CA0909',
+            events: [
+                {% for revision in schedule %}
+                    {
+                        title: "{{ revision.title }}",
+                        start:'{{ revision.date_scheduled | date:"Y-m-d" }}',
+                        end: '{{ revision.date_scheduled | date:"Y-m-d" }}',
+                        
+                    },
+
+                {% endfor %}
+            ],
+            selectable: true,
+                selectHelper: true,
+                editable: true,
+                eventLimit: true,
+            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
+   
+            
+        });
+        calendar.render();
+        calendar.setOption('locales','es')
+    });
+</script>
+
+
+<script type="text/javascript">
+    function validate_form(){
+        var room = document.getElementById("room").value;
+        var date = document.getElementById("date").value;
+        var title = document.getElementById("title").value;
+        var dateend = document.getElementById("dateend").value;
+        if (title == ""){
+            titleerror.style.display = "block";
+            return false;
+        }
+        else if (date == ""){
+            dateerror.style.display = "block";
+            return false;
+        }
+        else if (document.getElementById('daterecurrent').checked){
+            if (dateend == ""){
+                dateenderror.style.display = "block";
+                return false;
+            }
+       }
+        else if (room == ""){
+            roomerror.style.display = "block";
+            return false;
+        }
+    }
+</script>  
+
+ <script>
+     function showdate(){
+        var recurrent = document.getElementById("recurrent");
+        if (document.getElementById('daterecurrent').checked){
+         recurrent.style.display = "block";
+        }
+        else {
+            recurrent.style.display = "none";
+        }
+
+    }
+</script>  
+{% endblock %}

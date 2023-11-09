@@ -1,0 +1,179 @@
+{% extends '_partials/_base.html' %}
+{% load static %}
+{% block pagetitle %}Pagina en blanco{% endblock %}
+
+{% block title %}Blanco{% endblock %}
+
+{% block breadcumbs %}
+
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">Camino</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">a</a>
+</li>
+<li class="breadcrumb-item text-muted">
+    <a href="" class="text-muted">su pagina</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-5">
+        <div class="card card-custom gutter-b">
+            <div class="card-header">
+                <div class="card-title">
+                    <h1>Módulos</h1>
+                </div>
+                <div class="card-toolbar">
+                    <input type="text" class="form-control datatable-input" id="name_module" onkeyup="Name()"
+                        placeholder="Identificador">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="myTabTables9">
+                    <div class="tab-pane fade show active" id="kt_tab_pane_9_2" role="tabpanel" aria-labelledby="kt_tab_pane_9_2">
+                        <div class="table-responsive"  id="table_data">
+                            <table class="table table-borderless table-vertical-center">
+                                <thead>
+                                    <tr>
+                                        <th data-field="ModuleName" class="p-0 min-w-130px min-w-lg-50px w-50"></th>
+                                        <th data-field="Hours" class="p-0 min-w-105px"></th>
+                                        <th class="p-0 min-w-50px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="datatable-body">
+                                    {% for module in moduledata %}
+                                    <tr data-row="{{ lab.id }}" class="datatable-row">
+                                        <td data-field="ModuleName" class="pl-0">
+                                            <span class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{{ module.name_module }}</span>
+                                            <span class="text-muted font-weight-bold d-block">{{ module.resume_module }}</span>
+                                        </td>
+                                        <td data-field="Hours" class="text-left">
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ module.start_module }} - {{ module.finish_module }}</span>
+                                            <span class="text-muted font-weight-bold d-block font-size-sm">Rango de horas</span>
+                                        </td>
+                                        <td class="text-right pr-0">
+                                            <a href="{% url 'manage_module_id' module.id %}" class="btn btn-icon btn-light btn-sm">
+                                                <span class="svg-icon svg-icon-md svg-icon-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                            <rect x="0" y="0" width="24" height="24"/>
+                                                            <path d="M15.9497475,3.80761184 L13.0246125,6.73274681 C12.2435639,7.51379539 12.2435639,8.78012535 13.0246125,9.56117394 L14.4388261,10.9753875 C15.2198746,11.7564361 16.4862046,11.7564361 17.2672532,10.9753875 L20.1923882,8.05025253 C20.7341101,10.0447871 20.2295941,12.2556873 18.674559,13.8107223 C16.8453326,15.6399488 14.1085592,16.0155296 11.8839934,14.9444337 L6.75735931,20.0710678 C5.97631073,20.8521164 4.70998077,20.8521164 3.92893219,20.0710678 C3.1478836,19.2900192 3.1478836,18.0236893 3.92893219,17.2426407 L9.05556629,12.1160066 C7.98447038,9.89144078 8.36005124,7.15466739 10.1892777,5.32544095 C11.7443127,3.77040588 13.9552129,3.26588995 15.9497475,3.80761184 Z" fill="#000000"/>
+                                                            <path d="M16.6568542,5.92893219 L18.0710678,7.34314575 C18.4615921,7.73367004 18.4615921,8.36683502 18.0710678,8.75735931 L16.6913928,10.1370344 C16.3008685,10.5275587 15.6677035,10.5275587 15.2771792,10.1370344 L13.8629656,8.7228208 C13.4724413,8.33229651 13.4724413,7.69913153 13.8629656,7.30860724 L15.2426407,5.92893219 C15.633165,5.5384079 16.26633,5.5384079 16.6568542,5.92893219 Z" fill="#000000" opacity="0.3"/>
+                                                        </g>
+                                                    </svg>
+                                                </span>
+                                            </a>
+                                            <a class="btn btn-icon btn-light btn-sm" data-toggle="modal" data-target="#moduledelete-{{module.id}}">
+                                                <span class="svg-icon svg-icon-md svg-icon-danger">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                            <rect x="0" y="0" width="24" height="24"/>
+                                                            <path d="M6,8 L18,8 L17.106535,19.6150447 C17.04642,20.3965405 16.3947578,21 15.6109533,21 L8.38904671,21 C7.60524225,21 6.95358004,20.3965405 6.89346498,19.6150447 L6,8 Z M8,10 L8.45438229,14.0894406 L15.5517885,14.0339036 L16,10 L8,10 Z" fill="#000000" fill-rule="nonzero"/>
+                                                            <path d="M14,4.5 L14,3.5 C14,3.22385763 13.7761424,3 13.5,3 L10.5,3 C10.2238576,3 10,3.22385763 10,3.5 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"/>
+                                                        </g>
+                                                    </svg>
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <div class="modal fade" id="moduledelete-{{module.id}}" tabindex="-1" aria-labelledby="moduledelete-ModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="moduledelete-ModalLabel">Desea Borrar "{{module.name_module}}"</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <i aria-hidden="true" class="ki ki-close"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    La información del módulo "{{module.resume_module}}" no podra recuperarse
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a href="{% url 'deletemodule' module.id %}" class="btn btn-light-danger font-weight-bold">Borrar</a>
+                                                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Cancelar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card card-custom">
+            <div class="card-header">
+                <div class="card-title">
+                    <h1 class="mb-0">Crear módulo</h1>
+                </div>
+            </div>
+            <div class="card-body pb-0 mt-n3">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.resume_module.label }}</label>
+                            {{ moduleform.resume_module }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.name_module.label }}</label>
+                            {{ moduleform.name_module }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.start_module.label }}</label>
+                            {{ moduleform.start_module }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label>{{ moduleform.finish_module.label }}</label>
+                            {{ moduleform.finish_module }}
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <div class="login-actions">
+                            <button type="submit" class="btn btn-light-success font-weight-bold" id="kt_sweetalert_demo_3_3">Crear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    function Name() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("name_module");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table_data");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script src="{%static 'js/pages/widgets.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/engage_code.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-timepicker.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-datepicker.js'%}"></script>
+<script src="{%static 'js/pages/crud/forms/widgets/bootstrap-sweetalert2.js'%}"></script>
+{% endblock %}
