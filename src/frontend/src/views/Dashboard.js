@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
@@ -68,10 +68,125 @@ var mapData = {
 };
 
 const Dashboard = () => {
+  let [chartData, setChartData] = useState({
+    labels: ['1','2','3','4','5','6','7'] ,
+    datasets: [
+      {
+        label: "Data",
+        fill: true,
+        borderColor: "#1f8ef1",
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: "#1f8ef1",
+        pointBorderColor: "rgba(255,255,255,0)",
+        pointHoverBackgroundColor: "#1f8ef1",
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+        data: [0,0,0,0,0,0],
+      },
+    ]
+  });
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+
+  useEffect(() => {
+    var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "ranges": [
+    [
+      1701529774623,
+      1701572399999
+    ],
+    [
+      1701572400000,
+      1701658799999
+    ],
+    [
+      1701658800000,
+      1701745199999
+    ],
+    [
+      1701745200000,
+      1701831599999
+    ],
+    [
+      1701831600000,
+      1701917999999
+    ],
+    [
+      1701918000000,
+      1702004399999
+    ],
+    [
+      1702004400000,
+      1702048174623
+    ]
+  ],
+  "room": "1"
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+///calculo de los ultimos 7 dias
+const dias = ['DO', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA'];
+
+function getLast7Days() {
+  const today = new Date();
+  const daysArray = [];
+
+  const day = today.getDay();
+
+  for (let i = day; daysArray.length < 7; i = i === 0 ? 6 : (i - 1)) {
+      const dayDate = dias[i];
+      daysArray.push(dayDate);
+  }
+
+  return daysArray.reverse();
+}
+
+    fetch('http://127.0.0.1:8000/api/activity/session/chart', requestOptions)
+    .then(
+      async response => {
+        console.log('recibo datos');
+        var datos = await response.text();
+        console.log("datos", JSON.parse(datos));
+
+        setChartData({
+            labels: getLast7Days(),
+            datasets: [
+              {
+                label: "Data",
+                fill: true,
+                borderColor: "#1f8ef1",
+                borderWidth: 2,
+                borderDash: [],
+                borderDashOffset: 0.0,
+                pointBackgroundColor: "#1f8ef1",
+                pointBorderColor: "rgba(255,255,255,0)",
+                pointHoverBackgroundColor: "#1f8ef1",
+                pointBorderWidth: 20,
+                pointHoverRadius: 4,
+                pointHoverBorderWidth: 15,
+                pointRadius: 4,
+                data: JSON.parse(datos),
+              },
+            ]
+          });
+      }
+    )
+  }, [])
   return (
     <>
       <div className="content">
@@ -79,15 +194,15 @@ const Dashboard = () => {
         <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Hola</h5>
+                <h5 className="card-category">Últimos 7 días</h5>
                 <CardTitle tag="h3">
-                  <i className="tim-icons icon-bell-55 text-primary" /> 763,215
+                  <i className="tim-icons icon-bulb-63 text-primary" /> CO2 vs tiempo 
                 </CardTitle>
               </CardHeader>
               <CardBody>
                 <div className="chart-area">
                   <Line
-                    data={chartExample2.data}
+                    data={chartData}
                     options={chartExample2.options}
                   />
                 </div>
@@ -116,9 +231,9 @@ const Dashboard = () => {
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Completed Tasks</h5>
+                <h5 className="card-category">Tickets abiertos</h5>
                 <CardTitle tag="h3">
-                  <i className="tim-icons icon-send text-success" /> 12,100K
+                  <i className="tim-icons icon-send text-success" /> 
                 </CardTitle>
               </CardHeader>
               <CardBody>

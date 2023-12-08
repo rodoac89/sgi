@@ -8,6 +8,7 @@ ARG USER
 ARG REDIS_URL
 ARG URL_HOST
 ARG PORT
+ARG WS_SECRET
 WORKDIR /app
 ADD ./requirements.txt /app/
 RUN pip3 install --no-cache-dir -r requirements.txt

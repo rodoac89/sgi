@@ -17,6 +17,7 @@ services:
       args:
         REDIS_URL: redis
         URL_HOST: 127.0.0.1
+        
     image: backend_labsadmin
     depends_on:
       - redis
@@ -25,18 +26,21 @@ services:
     ports:
       - "8000:8000"
 
-  frontend:
-    build: 
-      context: ./src/frontend/
-      dockerfile: develop.Dockerfile
-    image: frontend
-    depends_on:
-      - backend
-    volumes:
-      - ./src/frontend:/code
-      - /code/node_modules
-    ports:
-      - "3000:3000"
+    environment:
+      - WS_SECRET="1313"
+
+  # frontend:
+  #   build: 
+  #     context: ./src/frontend/
+  #     dockerfile: develop.Dockerfile
+  #   image: frontend
+  #   depends_on:
+  #     - backend
+  #   volumes:
+  #     - ./src/frontend:/code
+  #     - /code/node_modules
+  #   ports:
+  #     - "3000:3000"
 
 volumes:
   cache:

@@ -211,7 +211,48 @@ let chartExample1 = {
 // #########################################
 // // // used inside src/views/Dashboard.js
 // #########################################
+
+// function getRanges(start, end) {
+//   const period = "week"
+//   const ranges = []
+//   let eop = moment(start).endOf(period).valueOf() // end of period
+//   let i = start
+//   while (eop < end) {
+//       ranges.push([i, eop])
+//       const nextPeriod = moment(i).add(1, `${period}s`)
+//       i = nextPeriod.startOf(period).valueOf()
+//       eop = nextPeriod.endOf(period).valueOf()
+//   }
+//   ranges.push([i, end])
+//   return ranges
+// }
+
+
+function range(start, stop, step) {
+    if (typeof stop == 'undefined') {
+        // one param defined
+        stop = start;
+        start = 0;
+    }
+
+    if (typeof step == 'undefined') {
+        step = 1;
+    }
+
+    if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+        return [];
+    }
+
+    var result = [];
+    for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+        result.push(i);
+    }
+
+    return result;
+};
+
 let chartExample2 = {
+  
   data: (canvas) => {
     let ctx = canvas.getContext("2d");
 
@@ -222,7 +263,7 @@ let chartExample2 = {
     gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
 
     return {
-      labels: ["JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+      labels: [1,2,3,4,5,6,7] ,
       datasets: [
         {
           label: "Data",
@@ -239,7 +280,7 @@ let chartExample2 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [80, 100, 70, 80, 120, 80],
+          data: [80, 15, 30,40,90, 100, 200],
         },
       ],
     };
