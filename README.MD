@@ -1,4 +1,4 @@
-# Proyecto Gestor de Salas
+# Sistema Gestor de Infraestructura
 
 ## Requisitos para ejecutar en "Dev mode"
 
